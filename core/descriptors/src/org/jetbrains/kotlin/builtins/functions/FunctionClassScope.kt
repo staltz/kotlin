@@ -63,7 +63,7 @@ class FunctionClassScope(
                     /* membersFromSupertypes = */ descriptors as Collection<FunctionDescriptor>,
                     /* membersFromCurrent = */ if (name == invoke?.getName()) listOf(invoke) else listOf(),
                     functionClass,
-                    object : OverridingUtil.DescriptorSink {
+                    object : OverridingUtil.DescriptorSink() {
                         override fun addFakeOverride(fakeOverride: CallableMemberDescriptor) {
                             OverridingUtil.resolveUnknownVisibilityForMember(fakeOverride, null)
                             result.add(fakeOverride as FunctionDescriptor)

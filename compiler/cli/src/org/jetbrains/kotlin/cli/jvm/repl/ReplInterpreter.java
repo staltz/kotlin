@@ -45,7 +45,8 @@ import org.jetbrains.kotlin.context.MutableModuleContext;
 import org.jetbrains.kotlin.descriptors.ScriptDescriptor;
 import org.jetbrains.kotlin.descriptors.impl.CompositePackageFragmentProvider;
 import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl;
-import org.jetbrains.kotlin.di.InjectorForReplWithJava;
+import org.jetbrains.kotlin.frontend.java.di.ContainerForReplWithJava;
+import org.jetbrains.kotlin.frontend.java.di.DiPackage;
 import org.jetbrains.kotlin.idea.JetLanguage;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.parsing.JetParserDefinition;
@@ -118,7 +119,7 @@ public class ReplInterpreter {
             }
         };
 
-        InjectorForReplWithJava injector = new InjectorForReplWithJava(
+        ContainerForReplWithJava injector = DiPackage.createContainerForReplWithJava(
                 moduleContext,
                 trace,
                 scriptDeclarationFactory,

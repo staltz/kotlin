@@ -66,7 +66,10 @@ public class LazyJavaClassMemberScope(
             result.add(descriptor)
             result.addIfNotNull(c.samConversionResolver.resolveSamAdapter(descriptor))
         }
-        result ifEmpty { emptyOrSingletonList(createDefaultConstructor()) }
+        
+        c.externalSignatureResolver.enhanceSignatures(
+                result ifEmpty { emptyOrSingletonList(createDefaultConstructor()) }
+        ).toReadOnlyList()
     }
 
     override fun computeNonDeclaredFunctions(result: MutableCollection<SimpleFunctionDescriptor>, name: Name) {

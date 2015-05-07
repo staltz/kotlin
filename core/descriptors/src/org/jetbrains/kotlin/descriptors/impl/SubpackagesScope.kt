@@ -19,11 +19,11 @@ package org.jetbrains.kotlin.descriptors.impl
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.PackageViewDescriptor
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.resolve.scopes.JetScopeImpl
-import org.jetbrains.kotlin.utils.*
-
-import java.util.ArrayList
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
+import org.jetbrains.kotlin.resolve.scopes.JetScopeImpl
+import org.jetbrains.kotlin.utils.Printer
+import org.jetbrains.kotlin.utils.addIfNotNull
+import java.util.ArrayList
 
 public class SubpackagesScope(private val containingDeclaration: PackageViewDescriptor) : JetScopeImpl() {
     override fun getContainingDeclaration(): DeclarationDescriptor {
@@ -38,7 +38,7 @@ public class SubpackagesScope(private val containingDeclaration: PackageViewDesc
                                 nameFilter: (Name) -> Boolean): Collection<DeclarationDescriptor> {
         if (!kindFilter.acceptsKinds(DescriptorKindFilter.PACKAGES_MASK)) return listOf()
 
-        val subFqNames = containingDeclaration.getModule().getSubPackagesOf(containingDeclaration.getFqName(), nameFilter)
+        val subFqNames = containingDeclaration.getModule().packageViewManager.getSubPackagesOf(containingDeclaration.getFqName(), nameFilter)
         val result = ArrayList<DeclarationDescriptor>(subFqNames.size())
         for (subFqName in subFqNames) {
             val shortName = subFqName.shortName()

@@ -24,10 +24,10 @@ import org.jetbrains.kotlin.resolve.scopes.JetScope
 import org.jetbrains.kotlin.types.TypeSubstitutor
 
 public class PackageViewDescriptorImpl(
-        private val module: ModuleDescriptor,
-        private val fqName: FqName,
+        module: ModuleDescriptor,
+        fqName: FqName,
         private val fragments: List<PackageFragmentDescriptor>
-) : DeclarationDescriptorImpl(Annotations.EMPTY, fqName.shortNameOrSpecial()), PackageViewDescriptor {
+) : AbstractPackageViewDescriptor(fqName, module) {
     private val memberScope: JetScope = run {
         assert(fragments.isNotEmpty()) { "$fqName in module" }
 
@@ -35,7 +35,26 @@ public class PackageViewDescriptorImpl(
         ChainedScope(this, "package view scope for $fqName in ${module.getName()}", *scopes.toTypedArray())
     }
 
-    override fun getContainingDeclaration(): PackageViewDescriptor? = if (fqName.isRoot()) null else module.getPackage(fqName.parent())
+    override fun getMemberScope(): JetScope = memberScope
+
+    override fun getFragments() = fragments
+}
+
+public abstract class AbstractPackageViewDescriptor(private val fqName: FqName, private val module: ModuleDescriptor) :
+        DeclarationDescriptorImpl(Annotations.EMPTY, fqName.shortNameOrSpecial()), PackageViewDescriptor {
+
+    override fun getContainingDeclaration(): PackageViewDescriptor? = getModule().packageViewManager.getParentView(this)
+
+    override fun equals(other: Any?): Boolean {
+        val that = other as? AbstractPackageViewDescriptor ?: return false
+        return this.getFqName() == that.getFqName() && this.getModule() == that.getModule()
+    }
+
+    override fun hashCode(): Int {
+        var result = getModule().hashCode()
+        result = 31 * result + getFqName().hashCode()
+        return result
+    }
 
     override fun substitute(substitutor: TypeSubstitutor): DeclarationDescriptor? = this
 
@@ -43,22 +62,5 @@ public class PackageViewDescriptorImpl(
 
     override fun getFqName(): FqName = fqName
 
-    override fun getMemberScope(): JetScope = memberScope
-
     override fun getModule(): ModuleDescriptor = module
-
-    override fun getFragments() = fragments
-
-    override fun equals(other: Any?): Boolean {
-        if (javaClass != other?.javaClass) return false
-
-        val that = other as PackageViewDescriptorImpl
-        return fqName == that.fqName && module == that.module
-    }
-
-    override fun hashCode(): Int {
-        var result = module.hashCode()
-        result = 31 * result + fqName.hashCode()
-        return result
-    }
 }

@@ -26,6 +26,18 @@ fun generators(): List<GenericFunction> {
             """
         }
 
+        returns("SELF", Sets)
+        // TODO: use build scope function when available
+        // TODO: use immutable sets when available
+        // TODO: precalculate size
+        body(Sets) {
+            """
+            val copyOfSet = toMutableSet()
+            copyOfSet.add(element)
+            return copyOfSet
+            """
+        }
+
         doc(Sequences) { "Returns a sequence containing all elements of original sequence and then the given [element]." }
         returns(Sequences) { "Sequence<T>" }
         body(Sequences) {
@@ -36,7 +48,7 @@ fun generators(): List<GenericFunction> {
     }
 
     templates add f("plus(collection: Iterable<T>)") {
-        exclude(Strings, Sequences)
+        exclude(Strings)
         doc { "Returns a list containing all elements of original collection and then all elements of the given [collection]." }
         returns("List<T>")
         body {
@@ -54,6 +66,23 @@ fun generators(): List<GenericFunction> {
             for (thisElement in this) answer.add(thisElement)
             answer.addAll(collection)
             return answer
+            """
+        }
+
+        returns("SELF", Sets)
+        // TODO: try to precalculate size
+        // TODO: use immutable set builder when available
+        body(Sets) {
+            """
+            return this.union(collection)
+            """
+        }
+
+        doc(Sequences) { "Returns a sequence containing all elements of original sequence and then all elements of the given [collection]" }
+        returns("SELF", Sequences)
+        body(Sequences) {
+            """
+            return sequenceOf(this, collection.sequence()).flatten()
             """
         }
     }
@@ -80,13 +109,12 @@ fun generators(): List<GenericFunction> {
         }
     }
 
-    templates add f("plus(collection: Iterable<T>)") {
-        only(Sequences)
-        doc { "Returns a sequence containing all elements of original sequence and then all elements of the given [collection]." }
-        returns("Sequence<T>")
+    templates add f("plus(collection: SELF)") {
+        only(ArraysOfObjects, ArraysOfPrimitives)
+        returns("SELF")
         body {
             """
-            return sequenceOf(this, collection.asSequence()).flatten()
+            val
             """
         }
     }

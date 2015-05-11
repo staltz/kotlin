@@ -37,7 +37,7 @@ import java.util.regex.Pattern
 
 abstract public class AbstractConstraintSystemTest() : JetLiteFixture() {
     private val typePattern = """([\w|<|>|\(|\)]+)"""
-    val constraintPattern = Pattern.compile("""(SUBTYPE|SUPERTYPE)\s+${typePattern}\s+${typePattern}\s+(weak)?""", Pattern.MULTILINE)
+    val constraintPattern = Pattern.compile("""(SUBTYPE|SUPERTYPE|EQUAL)\s+${typePattern}\s+${typePattern}\s+(weak)?""", Pattern.MULTILINE)
     val variablesPattern = Pattern.compile("VARIABLES\\s+(.*)")
 
     private var _typeResolver: TypeResolver? = null
@@ -99,10 +99,9 @@ abstract public class AbstractConstraintSystemTest() : JetLiteFixture() {
             when (constraint.kind) {
                 MyConstraintKind.SUBTYPE -> constraintSystem.addSubtypeConstraint(firstType, secondType, position)
                 MyConstraintKind.SUPERTYPE -> constraintSystem.addSupertypeConstraint(firstType, secondType, position)
+                MyConstraintKind.EQUAL -> constraintSystem.addConstraint(ConstraintSystemImpl.ConstraintKind.EQUAL, firstType, secondType, position)
             }
         }
-        constraintSystem.processDeclaredBoundConstraints()
-
         val resultingStatus = Renderers.RENDER_CONSTRAINT_SYSTEM_SHORT.render(constraintSystem)
 
         val resultingSubstitutor = constraintSystem.getResultingSubstitutor()
@@ -118,7 +117,7 @@ abstract public class AbstractConstraintSystemTest() : JetLiteFixture() {
 
     class MyConstraint(val kind: MyConstraintKind, val firstType: String, val secondType: String, val isWeak: Boolean)
     enum class MyConstraintKind {
-        SUBTYPE, SUPERTYPE
+        SUBTYPE, SUPERTYPE, EQUAL
     }
 
     private fun parseVariables(text: String): List<String> {

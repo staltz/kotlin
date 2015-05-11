@@ -60,5 +60,5 @@ class CompoundConstraintPosition(
 
     override fun isStrong() = positions.any { it.isStrong() }
 
-    override fun toString() = "$kind(${positions.joinToString()}"
+    override fun toString() = "$kind(${positions.joinToString()})"
 }

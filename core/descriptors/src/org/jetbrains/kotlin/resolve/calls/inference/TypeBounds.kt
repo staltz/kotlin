@@ -16,10 +16,14 @@
 
 package org.jetbrains.kotlin.resolve.calls.inference
 
-import org.jetbrains.kotlin.types.Variance
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
-import org.jetbrains.kotlin.types.JetType
+import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind
+import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.EXACT_BOUND
+import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.LOWER_BOUND
+import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.UPPER_BOUND
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPosition
+import org.jetbrains.kotlin.types.JetType
+import org.jetbrains.kotlin.types.Variance
 
 public trait TypeBounds {
     public val varianceOfPosition: Variance
@@ -38,5 +42,37 @@ public trait TypeBounds {
         EXACT_BOUND
     }
 
-    public class Bound(public val constrainingType: JetType, public val kind: BoundKind, public val position: ConstraintPosition)
+    public class Bound(
+            public val constrainingType: JetType,
+            public val kind: BoundKind,
+            public val position: ConstraintPosition,
+            public val pure: Boolean = true
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other == null || javaClass != other.javaClass) return false
+
+            val bound = other as Bound
+
+            if (constrainingType != bound.constrainingType) return false
+            if (kind != bound.kind) return false
+
+            if (position.isStrong() != bound.position.isStrong()) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = constrainingType.hashCode()
+            result = 31 * result + kind.hashCode()
+            result = 31 * result + if (position.isStrong()) 1 else 0
+            return result
+        }
+    }
+}
+
+fun BoundKind.reverse() = when (this) {
+    LOWER_BOUND -> UPPER_BOUND
+    UPPER_BOUND -> LOWER_BOUND
+    EXACT_BOUND -> EXACT_BOUND
 }

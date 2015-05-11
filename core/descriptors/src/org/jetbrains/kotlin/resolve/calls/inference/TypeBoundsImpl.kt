@@ -26,23 +26,23 @@ import org.jetbrains.kotlin.types.CommonSupertypes
 import org.jetbrains.kotlin.types.TypeUtils
 import org.jetbrains.kotlin.types.checker.JetTypeChecker
 import org.jetbrains.kotlin.resolve.constants.IntegerValueTypeConstructor
-import java.util.LinkedHashSet
 import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.*
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPosition
 import org.jetbrains.kotlin.utils.addIfNotNull
 import org.jetbrains.kotlin.types.singleBestRepresentative
+import java.util.*
 
 public class TypeBoundsImpl(
         override val typeVariable: TypeParameterDescriptor,
         override val varianceOfPosition: Variance
 ) : TypeBounds {
-    override val bounds = LinkedHashSet<Bound>()
+    override val bounds = ArrayList<Bound>()
 
     private var resultValues: Collection<JetType>? = null
 
-    public fun addBound(kind: BoundKind, constrainingType: JetType, position: ConstraintPosition) {
+    public fun addBound(bound: Bound) {
         resultValues = null
-        bounds.add(Bound(constrainingType, kind, position))
+        bounds.add(bound)
     }
 
     private fun filterBounds(bounds: Collection<Bound>, kind: BoundKind): Set<JetType> {
@@ -90,6 +90,8 @@ public class TypeBoundsImpl(
 
     private fun computeValues(): Collection<JetType> {
         val values = LinkedHashSet<JetType>()
+        val bounds = bounds.filter { it.pure }
+
         if (bounds.isEmpty()) {
             return listOf()
         }

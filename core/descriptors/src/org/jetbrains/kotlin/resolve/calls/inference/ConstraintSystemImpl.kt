@@ -147,9 +147,9 @@ public class ConstraintSystemImpl : ConstraintSystem {
 
     public fun copy(): ConstraintSystem = createNewConstraintSystemFromThis({ it }, { it.copy() }, { true })
 
-    public fun substituteTypeVariables(typeVariablesMap: (TypeParameterDescriptor) -> TypeParameterDescriptor): ConstraintSystem {
+    public fun substituteTypeVariables(typeVariablesMap: (TypeParameterDescriptor) -> TypeParameterDescriptor?): ConstraintSystem {
         // type bounds are proper types and don't contain other variables
-        return createNewConstraintSystemFromThis(typeVariablesMap, { it }, { true })
+        return createNewConstraintSystemFromThis(typeVariablesMap, { it.copy(typeVariablesMap) }, { true })
     }
 
     public fun filterConstraintsOut(vararg excludePositions: ConstraintPosition): ConstraintSystem {
@@ -162,21 +162,22 @@ public class ConstraintSystemImpl : ConstraintSystem {
     }
 
     public fun getSystemWithoutWeakConstraints(): ConstraintSystem {
-        return filterConstraints {
-            constraintPosition ->
+        fun ConstraintPosition.hasOnlyStrongConstraints(): Boolean {
             // 'isStrong' for compound means 'has some strong constraints'
             // but for testing absence of weak constraints we need 'has only strong constraints' here
-            if (constraintPosition is CompoundConstraintPosition) {
-                constraintPosition.positions.all { it.isStrong() }
+            return if (this is CompoundConstraintPosition) {
+                this.positions.all { it.hasOnlyStrongConstraints() }
             }
             else {
-                constraintPosition.isStrong()
+                this.isStrong()
             }
         }
+
+        return filterConstraints { it.hasOnlyStrongConstraints() }
     }
 
     private fun createNewConstraintSystemFromThis(
-            substituteTypeVariable: (TypeParameterDescriptor) -> TypeParameterDescriptor,
+            substituteTypeVariable: (TypeParameterDescriptor) -> TypeParameterDescriptor?,
             replaceTypeBounds: (TypeBoundsImpl) -> TypeBoundsImpl,
             filterConstraintPosition: (ConstraintPosition) -> Boolean
     ): ConstraintSystem {

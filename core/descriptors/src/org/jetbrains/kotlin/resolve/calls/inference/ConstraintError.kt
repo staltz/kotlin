@@ -27,5 +27,5 @@ class ErrorInConstrainingType(constraintPosition: ConstraintPosition): Constrain
 
 class CannotCapture(constraintPosition: ConstraintPosition, val typeVariable: TypeParameterDescriptor): ConstraintError(constraintPosition)
 
-fun ConstraintError.substituteTypeVariable(substitution: (TypeParameterDescriptor) -> TypeParameterDescriptor) =
-        if (this is CannotCapture) CannotCapture(constraintPosition, substitution(typeVariable)) else this
+fun ConstraintError.substituteTypeVariable(substitution: (TypeParameterDescriptor) -> TypeParameterDescriptor?) =
+        if (this is CannotCapture) CannotCapture(constraintPosition, substitution(typeVariable) ?: typeVariable) else this

@@ -17,19 +17,16 @@
 package org.jetbrains.kotlin.resolve.calls.inference
 
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
-import org.jetbrains.kotlin.types.Variance
+import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.Bound
-import org.jetbrains.kotlin.types.JetType
 import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind
-import org.jetbrains.kotlin.types.ErrorUtils
-import org.jetbrains.kotlin.types.CommonSupertypes
-import org.jetbrains.kotlin.types.TypeUtils
 import org.jetbrains.kotlin.types.checker.JetTypeChecker
 import org.jetbrains.kotlin.resolve.constants.IntegerValueTypeConstructor
 import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.*
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPosition
+import org.jetbrains.kotlin.resolve.scopes.JetScope
+import org.jetbrains.kotlin.types.*
 import org.jetbrains.kotlin.utils.addIfNotNull
-import org.jetbrains.kotlin.types.singleBestRepresentative
 import java.util.*
 
 public class TypeBoundsImpl(
@@ -64,11 +61,40 @@ public class TypeBoundsImpl(
         return result
     }
 
-    fun copy(): TypeBoundsImpl {
+    fun copy(substituteTypeVariable: ((TypeParameterDescriptor) -> TypeParameterDescriptor?)? = null): TypeBoundsImpl {
         val typeBounds = TypeBoundsImpl(typeVariable, varianceOfPosition)
-        typeBounds.bounds.addAll(bounds)
+        if (substituteTypeVariable == null) {
+            typeBounds.bounds.addAll(bounds)
+        }
+        else {
+            val typeSubstitutor = createTypeSubstitutor(substituteTypeVariable)
+            bounds.forEach {
+                //todo captured types
+                val substitutedType = if (it.constrainingType.getConstructor().isDenotable()) {
+                    typeSubstitutor.substitute(it.constrainingType, Variance.INVARIANT)
+                } else {
+                    it.constrainingType
+                }
+                if (substitutedType != null) {
+                    typeBounds.addBound(Bound(substitutedType, it.kind, it.position, it.pure))
+                }
+            }
+        }
         typeBounds.resultValues = resultValues
         return typeBounds
+    }
+
+    private fun createTypeSubstitutor(substituteTypeVariable: (TypeParameterDescriptor) -> TypeParameterDescriptor?): TypeSubstitutor {
+        return TypeSubstitutor.create(object : TypeSubstitution() {
+            override fun get(key: TypeConstructor): TypeProjection? {
+                val descriptor = key.getDeclarationDescriptor()
+                if (descriptor !is TypeParameterDescriptor) return null
+                val typeParameterDescriptor = substituteTypeVariable(descriptor) ?: return null
+
+                val type = JetTypeImpl(Annotations.EMPTY, typeParameterDescriptor.getTypeConstructor(), false, listOf(), JetScope.Empty)
+                return TypeProjectionImpl(type)
+            }
+        })
     }
 
     public fun filter(condition: (ConstraintPosition) -> Boolean): TypeBoundsImpl {
@@ -103,7 +129,7 @@ public class TypeBoundsImpl(
         val exactBounds = filterBounds(bounds, EXACT_BOUND, values)
         val bestFit = exactBounds.singleBestRepresentative()
         if (bestFit != null) {
-            if (tryPossibleAnswer(bestFit)) {
+            if (tryPossibleAnswer(bounds, bestFit)) {
                 return listOf(bestFit)
             }
         }
@@ -113,7 +139,7 @@ public class TypeBoundsImpl(
                 filterBounds(bounds, LOWER_BOUND, values).partition { it.getConstructor() is IntegerValueTypeConstructor }
 
         val superTypeOfLowerBounds = CommonSupertypes.commonSupertypeForNonDenotableTypes(generalLowerBounds)
-        if (tryPossibleAnswer(superTypeOfLowerBounds)) {
+        if (tryPossibleAnswer(bounds, superTypeOfLowerBounds)) {
             return setOf(superTypeOfLowerBounds!!)
         }
         values.addIfNotNull(superTypeOfLowerBounds)
@@ -123,14 +149,14 @@ public class TypeBoundsImpl(
         //foo(1, c: Consumer<Any>) - infer Int, not Any here
 
         val superTypeOfNumberLowerBounds = TypeUtils.commonSupertypeForNumberTypes(numberLowerBounds)
-        if (tryPossibleAnswer(superTypeOfNumberLowerBounds)) {
+        if (tryPossibleAnswer(bounds, superTypeOfNumberLowerBounds)) {
             return setOf(superTypeOfNumberLowerBounds!!)
         }
         values.addIfNotNull(superTypeOfNumberLowerBounds)
 
         if (superTypeOfLowerBounds != null && superTypeOfNumberLowerBounds != null) {
             val superTypeOfAllLowerBounds = CommonSupertypes.commonSupertypeForNonDenotableTypes(listOf(superTypeOfLowerBounds, superTypeOfNumberLowerBounds))
-            if (tryPossibleAnswer(superTypeOfAllLowerBounds)) {
+            if (tryPossibleAnswer(bounds, superTypeOfAllLowerBounds)) {
                 return setOf(superTypeOfAllLowerBounds!!)
             }
         }
@@ -138,7 +164,7 @@ public class TypeBoundsImpl(
         val upperBounds = filterBounds(bounds, TypeBounds.BoundKind.UPPER_BOUND, values)
         val intersectionOfUpperBounds = TypeUtils.intersect(JetTypeChecker.DEFAULT, upperBounds)
         if (!upperBounds.isEmpty() && intersectionOfUpperBounds != null) {
-            if (tryPossibleAnswer(intersectionOfUpperBounds)) {
+            if (tryPossibleAnswer(bounds, intersectionOfUpperBounds)) {
                 return setOf(intersectionOfUpperBounds)
             }
         }
@@ -148,7 +174,7 @@ public class TypeBoundsImpl(
         return values
     }
 
-    private fun tryPossibleAnswer(possibleAnswer: JetType?): Boolean {
+    private fun tryPossibleAnswer(bounds: Collection<Bound>, possibleAnswer: JetType?): Boolean {
         if (possibleAnswer == null) return false
         // a captured type might be an answer
         if (!possibleAnswer.getConstructor().isDenotable() && !possibleAnswer.isCaptured()) return false

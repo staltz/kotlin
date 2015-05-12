@@ -380,9 +380,12 @@ public class CandidateResolver {
         CallableDescriptor candidateWithFreshVariables = FunctionDescriptorUtil.alphaConvertTypeParameters(candidate);
 
         Map<TypeParameterDescriptor, Variance> typeVariables = Maps.newLinkedHashMap();
+        final Map<TypeParameterDescriptor, TypeParameterDescriptor> backConversion = Maps.newHashMap();
         for (TypeParameterDescriptor typeParameterDescriptor : candidateWithFreshVariables.getTypeParameters()) {
             typeVariables.put(typeParameterDescriptor, Variance.INVARIANT); // TODO: variance of the occurrences
+            backConversion.put(typeParameterDescriptor, candidate.getTypeParameters().get(typeParameterDescriptor.getIndex()));
         }
+
         constraintSystem.registerTypeVariables(typeVariables);
 
         TypeSubstitutor substituteDontCare =
@@ -426,7 +429,7 @@ public class CandidateResolver {
                 new Function1<TypeParameterDescriptor, TypeParameterDescriptor>() {
                     @Override
                     public TypeParameterDescriptor invoke(@NotNull TypeParameterDescriptor typeParameterDescriptor) {
-                        return candidate.getTypeParameters().get(typeParameterDescriptor.getIndex());
+                        return backConversion.get(typeParameterDescriptor);
                     }
                 }
         );

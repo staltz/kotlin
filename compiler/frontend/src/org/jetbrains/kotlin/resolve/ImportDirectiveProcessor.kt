@@ -21,11 +21,11 @@ import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.descriptors.PackageViewDescriptor
 import org.jetbrains.kotlin.diagnostics.Errors
-import org.jetbrains.kotlin.psi.JetImportDirective
-import org.jetbrains.kotlin.psi.JetPsiUtil
-import org.jetbrains.kotlin.psi.JetQualifiedExpression
-import org.jetbrains.kotlin.psi.JetSimpleNameExpression
+import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.psiUtil.getReceiverExpression
 import org.jetbrains.kotlin.resolve.scopes.JetScope
+import org.jetbrains.kotlin.utils.sure
 import kotlin.platform.platformStatic
 
 public class ImportDirectiveProcessor(
@@ -44,20 +44,9 @@ public class ImportDirectiveProcessor(
         }
 
         val importedReference = importDirective.getImportedReference() ?: return JetScope.Empty
-
-        val scope = JetModuleUtil.getImportsResolutionScope(moduleDescriptor, allowClassesFromDefaultPackage)
-        val descriptors = if (importedReference is JetQualifiedExpression) {
-            //store result only when we find all descriptors, not only classes on the second phase
-            qualifiedExpressionResolver.lookupDescriptorsForQualifiedExpression(
-                    importedReference, scope, moduleDescriptor, trace, lookupMode, lookupMode.isEverything()
-            )
-        }
-        else {
-            assert(importedReference is JetSimpleNameExpression)
-            qualifiedExpressionResolver.lookupDescriptorsForSimpleNameReference(
-                    importedReference as JetSimpleNameExpression, scope, moduleDescriptor, trace, lookupMode, true, lookupMode.isEverything()
-            )
-        }
+        //TODO_R: not valid import
+        val (packageViewDescriptor, selectorsToLookUp) = tryResolvePackagesFromRightToLeft(moduleDescriptor, trace, importDirective.getImportPath()!!.fqnPart(), importedReference, emptyList())
+        val descriptors = lookUpMembersFromLeftToRight(moduleDescriptor, trace, listOf(packageViewDescriptor), selectorsToLookUp, lookupMode)
 
         val referenceExpression = JetPsiUtil.getLastReference(importedReference)
         if (importDirective.isAllUnder()) {
@@ -80,6 +69,64 @@ public class ImportDirectiveProcessor(
             val aliasName = JetPsiUtil.getAliasName(importDirective) ?: return JetScope.Empty
             return SingleImportScope(aliasName, descriptors)
         }
+    }
+
+    private fun tryResolvePackagesFromRightToLeft(
+            moduleDescriptor: ModuleDescriptor,
+            trace: BindingTrace,
+            fqName: FqName,
+            jetExpression: JetExpression?,
+            selectorsToLookUp: List<JetSimpleNameExpression>
+    ): Pair<PackageViewDescriptor, List<JetSimpleNameExpression>> {
+        //TODO_R: verify
+        val packageView = moduleDescriptor.getPackage(fqName)
+        if (jetExpression == null) {
+            assert(fqName.isRoot())
+            return Pair(packageView.sure { "Root package does not exist in module $moduleDescriptor" }, selectorsToLookUp)
+        }
+        return when {
+            packageView != null -> {
+                recordPackageViews(jetExpression, packageView, trace)
+                Pair(packageView, selectorsToLookUp)
+            }
+            else -> {
+                assert(!fqName.isRoot())
+                val (expressionRest, selector) = jetExpression.getReceiverAndSelector()
+                tryResolvePackagesFromRightToLeft(moduleDescriptor, trace, fqName.parent(), expressionRest, listOf(selector) + selectorsToLookUp)
+            }
+        }
+    }
+
+    private fun recordPackageViews(jetExpression: JetExpression, packageView: PackageViewDescriptor, trace: BindingTrace) {
+        trace.record(BindingContext.REFERENCE_TARGET, JetPsiUtil.getLastReference(jetExpression), packageView)
+        val containingView = packageView.getContainingDeclaration()
+        val (receiver, _) = jetExpression.getReceiverAndSelector()
+        if (containingView != null && receiver != null) {
+            recordPackageViews(receiver, containingView, trace)
+        }
+    }
+
+    private fun lookUpMembersFromLeftToRight(
+            moduleDescriptor: ModuleDescriptor,
+            trace: BindingTrace,
+            descriptors: Collection<DeclarationDescriptor>,
+            selectorsToLookUp: List<JetSimpleNameExpression>,
+            lookupMode: QualifiedExpressionResolver.LookupMode
+    ): Collection<DeclarationDescriptor> {
+        if (selectorsToLookUp.isEmpty()) {
+            return descriptors
+        }
+        val nameReference = selectorsToLookUp.first()
+        val selectorsRest = selectorsToLookUp.subList(1, selectorsToLookUp.size())
+        val descriptorsBySelector = qualifiedExpressionResolver.lookupSelectorDescriptors(
+                nameReference, descriptors, trace, moduleDescriptor, lookupMode, lookupMode.isEverything()
+        )
+        if (selectorsRest.isNotEmpty() && !canImportMembersFrom(descriptorsBySelector, nameReference, trace, lookupMode)) {
+            return emptyList()
+        }
+        return lookUpMembersFromLeftToRight(
+                moduleDescriptor, trace, descriptorsBySelector, selectorsRest, lookupMode
+        )
     }
 
     public companion object {
@@ -127,6 +174,20 @@ public class ImportDirectiveProcessor(
             }
             trace.report(Errors.CANNOT_IMPORT_FROM_ELEMENT.on(reference, descriptor))
             return false
+        }
+    }
+
+    private fun JetExpression.getReceiverAndSelector(): Pair<JetExpression?, JetSimpleNameExpression> {
+        when (this) {
+            is JetDotQualifiedExpression -> {
+                return Pair(this.getReceiverExpression(), this.getSelectorExpression() as JetSimpleNameExpression)
+            }
+            is JetSimpleNameExpression -> {
+                return Pair(null, this)
+            }
+            else -> {
+                throw AssertionError("Invalid expession in import $this of class ${this.javaClass}")
+            }
         }
     }
 }

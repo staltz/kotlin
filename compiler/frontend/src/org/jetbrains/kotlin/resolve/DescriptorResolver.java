@@ -46,6 +46,7 @@ import org.jetbrains.kotlin.resolve.scopes.JetScope;
 import org.jetbrains.kotlin.resolve.scopes.JetScopeUtils;
 import org.jetbrains.kotlin.resolve.scopes.WritableScope;
 import org.jetbrains.kotlin.resolve.scopes.WritableScopeImpl;
+import org.jetbrains.kotlin.storage.LockBasedStorageManager;
 import org.jetbrains.kotlin.storage.StorageManager;
 import org.jetbrains.kotlin.types.*;
 import org.jetbrains.kotlin.types.checker.JetTypeChecker;
@@ -1211,12 +1212,11 @@ public class DescriptorResolver {
         for (JetSimpleNameExpression nameExpression : packageDirective.getPackageNames()) {
             FqName fqName = packageDirective.getFqName(nameExpression);
 
-            PackageViewDescriptor packageView = module.getPackage(fqName);
-            assert packageView != null : "package not found: " + fqName;
+            PackageViewDescriptor packageView = module.getPackageViewManager().getExistingPackage(fqName);
             trace.record(REFERENCE_TARGET, nameExpression, packageView);
 
             PackageViewDescriptor parentPackageView = packageView.getContainingDeclaration();
-            assert parentPackageView != null : "package has no parent: " + packageView;
+            assert parentPackageView != null : "Should not be null since " + fqName + " should not be root";
             trace.record(RESOLUTION_SCOPE, nameExpression, parentPackageView.getMemberScope());
         }
     }

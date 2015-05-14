@@ -31,7 +31,7 @@ public class PackageViewDescriptorImpl(
     private val memberScope: JetScope = run {
         assert(fragments.isNotEmpty()) { "$fqName in module" }
 
-        val scopes = fragments.map { it.getMemberScope() } + SubpackagesScope(this)
+        val scopes = fragments.map { it.getMemberScope() } + SubpackagesScope(module, fqName)
         ChainedScope(this, "package view scope for $fqName in ${module.getName()}", *scopes.toTypedArray())
     }
 

@@ -17,28 +17,31 @@
 package org.jetbrains.kotlin.descriptors.impl
 
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.descriptors.PackageViewDescriptor
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
 import org.jetbrains.kotlin.resolve.scopes.JetScopeImpl
 import org.jetbrains.kotlin.utils.Printer
 import org.jetbrains.kotlin.utils.addIfNotNull
+import org.jetbrains.kotlin.utils.sure
 import java.util.ArrayList
 
-public class SubpackagesScope(private val containingDeclaration: PackageViewDescriptor) : JetScopeImpl() {
+public class SubpackagesScope(private val moduleDescriptor: ModuleDescriptor, private val fqName: FqName) : JetScopeImpl() {
     override fun getContainingDeclaration(): DeclarationDescriptor {
-        return containingDeclaration
+        return moduleDescriptor.getPackage(fqName).sure { "Created ${this.javaClass} of non-existing package $fqName" }
     }
 
     override fun getPackage(name: Name): PackageViewDescriptor? {
-        return if (name.isSpecial()) null else containingDeclaration.getModule().getPackage(containingDeclaration.getFqName().child(name))
+        return if (name.isSpecial()) null else moduleDescriptor.getPackage(fqName.child(name))
     }
 
     override fun getDescriptors(kindFilter: DescriptorKindFilter,
                                 nameFilter: (Name) -> Boolean): Collection<DeclarationDescriptor> {
         if (!kindFilter.acceptsKinds(DescriptorKindFilter.PACKAGES_MASK)) return listOf()
 
-        val subFqNames = containingDeclaration.getModule().packageViewManager.getSubPackagesOf(containingDeclaration.getFqName(), nameFilter)
+        val subFqNames = moduleDescriptor.packageViewManager.getSubPackagesOf(fqName, nameFilter)
         val result = ArrayList<DeclarationDescriptor>(subFqNames.size())
         for (subFqName in subFqNames) {
             val shortName = subFqName.shortName()
@@ -53,7 +56,7 @@ public class SubpackagesScope(private val containingDeclaration: PackageViewDesc
         p.println(javaClass.getSimpleName(), " {")
         p.pushIndent()
 
-        p.println("thisDescriptor = ", containingDeclaration)
+        p.println("thisDescriptor = ", getContainingDeclaration())
 
         p.popIndent()
         p.println("}")

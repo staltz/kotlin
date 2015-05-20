@@ -217,24 +217,21 @@ public class ArgumentTypeResolver {
             @NotNull ResolveArgumentsMode resolveArgumentsMode
     ) {
         if (resolveArgumentsMode == SHAPE_FUNCTION_ARGUMENTS) {
-            JetType type = getShapeTypeOfFunctionLiteral(functionLiteral, context.scope, context.trace, true);
+            JetType type = getShapeTypeOfFunctionLiteral(functionLiteral, context.scope, context.trace);
             return TypeInfoFactoryPackage.createTypeInfo(type, context);
         }
-        return expressionTypingServices.getTypeInfo(expression, context.replaceContextDependency(INDEPENDENT));
+        return expressionTypingServices.getTypeInfo(expression, context);
     }
 
-    @Nullable
+    @NotNull
     public JetType getShapeTypeOfFunctionLiteral(
             @NotNull JetFunction function,
             @NotNull JetScope scope,
-            @NotNull BindingTrace trace,
-            boolean expectedTypeIsUnknown
+            @NotNull BindingTrace trace
     ) {
         boolean isFunctionLiteral = function instanceof JetFunctionLiteral;
         if (function.getValueParameterList() == null && isFunctionLiteral) {
-            return expectedTypeIsUnknown
-                   ? ErrorUtils.createFunctionPlaceholderType(Collections.<JetType>emptyList(), /* hasDeclaredArguments = */ false)
-                   : builtIns.getFunctionType(Annotations.EMPTY, null, Collections.<JetType>emptyList(), DONT_CARE);
+            return ErrorUtils.createFunctionPlaceholderType(Collections.<JetType>emptyList(), /* hasDeclaredArguments = */ false);
         }
         List<JetParameter> valueParameters = function.getValueParameters();
         TemporaryBindingTrace temporaryTrace = TemporaryBindingTrace.create(
@@ -247,7 +244,7 @@ public class ArgumentTypeResolver {
         assert returnType != null;
         JetType receiverType = resolveTypeRefWithDefault(function.getReceiverTypeReference(), scope, temporaryTrace, null);
 
-        return expectedTypeIsUnknown && isFunctionLiteral
+        return isFunctionLiteral
                ? ErrorUtils.createFunctionPlaceholderType(parameterTypes, /* hasDeclaredArguments = */ true)
                : builtIns.getFunctionType(Annotations.EMPTY, receiverType, parameterTypes, returnType);
     }

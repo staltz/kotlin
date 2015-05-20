@@ -189,7 +189,10 @@ public class FunctionsTypingVisitor(facade: ExpressionTypingInternals) : Express
                 return components.builtIns.getUnitType()
             }
         }
-        return returnType ?: CANT_INFER_FUNCTION_PARAM_TYPE
+        if (returnType == null || !returnType.getConstructor().isDenotable()) {
+            return CANT_INFER_FUNCTION_PARAM_TYPE
+        }
+        return returnType
     }
 
     private fun computeUnsafeReturnType(

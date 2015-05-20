@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.descriptors.CallableDescriptor;
 import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor;
 import org.jetbrains.kotlin.descriptors.ReceiverParameterDescriptor;
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor;
+import org.jetbrains.kotlin.diagnostics.rendering.Renderers;
 import org.jetbrains.kotlin.psi.Call;
 import org.jetbrains.kotlin.psi.JetExpression;
 import org.jetbrains.kotlin.psi.JetSimpleNameExpression;
@@ -48,7 +49,8 @@ public class CallResolverUtil {
 
 
     public static boolean hasUnknownFunctionParameter(@NotNull JetType type) {
-        assert KotlinBuiltIns.isFunctionOrExtensionFunctionType(type);
+        assert KotlinBuiltIns.isFunctionOrExtensionFunctionType(type) :
+                "Function or extension function type expected, not " + Renderers.RENDER_TYPE.render(type);
         List<TypeProjection> arguments = type.getArguments();
         // last argument is return type of function type
         List<TypeProjection> functionParameters = arguments.subList(0, arguments.size() - 1);
@@ -61,18 +63,13 @@ public class CallResolverUtil {
         return false;
     }
 
-    public static boolean hasUnknownReturnType(@NotNull JetType type) {
-        assert KotlinBuiltIns.isFunctionOrExtensionFunctionType(type);
-        JetType returnTypeFromFunctionType = KotlinBuiltIns.getReturnTypeFromFunctionType(type);
-        return ErrorUtils.containsErrorType(returnTypeFromFunctionType);
-    }
-
-    public static JetType replaceReturnTypeByUnknown(@NotNull JetType type) {
-        assert KotlinBuiltIns.isFunctionOrExtensionFunctionType(type);
+    public static JetType replaceReturnTypeBy(@NotNull JetType type, @NotNull JetType replacement) {
+        assert KotlinBuiltIns.isFunctionOrExtensionFunctionType(type) :
+                "Function or extension function type expected, not " + Renderers.RENDER_TYPE.render(type);
         List<TypeProjection> arguments = type.getArguments();
         List<TypeProjection> newArguments = Lists.newArrayList();
         newArguments.addAll(arguments.subList(0, arguments.size() - 1));
-        newArguments.add(new TypeProjectionImpl(Variance.INVARIANT, DONT_CARE));
+        newArguments.add(new TypeProjectionImpl(Variance.INVARIANT, replacement));
         return new JetTypeImpl(type.getAnnotations(), type.getConstructor(), type.isMarkedNullable(), newArguments, type.getMemberScope());
     }
 

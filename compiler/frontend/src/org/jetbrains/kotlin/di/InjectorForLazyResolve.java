@@ -52,6 +52,7 @@ import org.jetbrains.kotlin.types.expressions.ValueParameterResolver;
 import org.jetbrains.kotlin.resolve.StatementFilter;
 import org.jetbrains.kotlin.resolve.calls.CallCompleter;
 import org.jetbrains.kotlin.resolve.calls.CandidateResolver;
+import org.jetbrains.kotlin.resolve.calls.FunctionLiteralArgumentResolver;
 import org.jetbrains.kotlin.resolve.calls.tasks.TaskPrioritizer;
 import org.jetbrains.kotlin.psi.JetImportsFactory;
 import org.jetbrains.kotlin.resolve.lazy.LazyDeclarationResolver;
@@ -101,6 +102,7 @@ public class InjectorForLazyResolve {
     private final StatementFilter statementFilter;
     private final CallCompleter callCompleter;
     private final CandidateResolver candidateResolver;
+    private final FunctionLiteralArgumentResolver functionLiteralArgumentResolver;
     private final TaskPrioritizer taskPrioritizer;
     private final JetImportsFactory jetImportsFactory;
     private final LazyDeclarationResolver lazyDeclarationResolver;
@@ -150,7 +152,8 @@ public class InjectorForLazyResolve {
         this.valueParameterResolver = new ValueParameterResolver(additionalCheckerProvider, expressionTypingServices);
         this.statementFilter = new StatementFilter();
         this.candidateResolver = new CandidateResolver();
-        this.callCompleter = new CallCompleter(argumentTypeResolver, candidateResolver);
+        this.functionLiteralArgumentResolver = new FunctionLiteralArgumentResolver(argumentTypeResolver);
+        this.callCompleter = new CallCompleter(argumentTypeResolver, candidateResolver, functionLiteralArgumentResolver);
         this.taskPrioritizer = new TaskPrioritizer(storageManager);
         this.jetImportsFactory = new JetImportsFactory();
         this.lazyDeclarationResolver = new LazyDeclarationResolver(moduleContext, bindingTrace);
@@ -180,6 +183,7 @@ public class InjectorForLazyResolve {
         callResolver.setCallCompleter(callCompleter);
         callResolver.setCandidateResolver(candidateResolver);
         callResolver.setExpressionTypingServices(expressionTypingServices);
+        callResolver.setFunctionLiteralArgumentResolver(functionLiteralArgumentResolver);
         callResolver.setTaskPrioritizer(taskPrioritizer);
         callResolver.setTypeResolver(typeResolver);
 

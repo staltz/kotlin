@@ -45,6 +45,7 @@ import org.jetbrains.kotlin.types.expressions.ValueParameterResolver;
 import org.jetbrains.kotlin.resolve.calls.ArgumentTypeResolver;
 import org.jetbrains.kotlin.resolve.calls.CallCompleter;
 import org.jetbrains.kotlin.resolve.calls.CandidateResolver;
+import org.jetbrains.kotlin.resolve.calls.FunctionLiteralArgumentResolver;
 import org.jetbrains.kotlin.resolve.calls.tasks.TaskPrioritizer;
 import org.jetbrains.kotlin.resolve.QualifiedExpressionResolver;
 import org.jetbrains.kotlin.resolve.TypeResolver.FlexibleTypeCapabilitiesProvider;
@@ -85,6 +86,7 @@ public class InjectorForMacros {
     private final ArgumentTypeResolver argumentTypeResolver;
     private final CallCompleter callCompleter;
     private final CandidateResolver candidateResolver;
+    private final FunctionLiteralArgumentResolver functionLiteralArgumentResolver;
     private final TaskPrioritizer taskPrioritizer;
     private final QualifiedExpressionResolver qualifiedExpressionResolver;
     private final FlexibleTypeCapabilitiesProvider flexibleTypeCapabilitiesProvider;
@@ -125,7 +127,8 @@ public class InjectorForMacros {
         this.valueParameterResolver = new ValueParameterResolver(defaultProvider, getExpressionTypingServices());
         this.argumentTypeResolver = new ArgumentTypeResolver();
         this.candidateResolver = new CandidateResolver();
-        this.callCompleter = new CallCompleter(argumentTypeResolver, candidateResolver);
+        this.functionLiteralArgumentResolver = new FunctionLiteralArgumentResolver(argumentTypeResolver);
+        this.callCompleter = new CallCompleter(argumentTypeResolver, candidateResolver, functionLiteralArgumentResolver);
         this.taskPrioritizer = new TaskPrioritizer(storageManager);
 
         this.expressionTypingServices.setStatementFilter(statementFilter);
@@ -155,6 +158,7 @@ public class InjectorForMacros {
         this.callResolver.setCallCompleter(callCompleter);
         this.callResolver.setCandidateResolver(candidateResolver);
         this.callResolver.setExpressionTypingServices(expressionTypingServices);
+        this.callResolver.setFunctionLiteralArgumentResolver(functionLiteralArgumentResolver);
         this.callResolver.setTaskPrioritizer(taskPrioritizer);
         this.callResolver.setTypeResolver(typeResolver);
 

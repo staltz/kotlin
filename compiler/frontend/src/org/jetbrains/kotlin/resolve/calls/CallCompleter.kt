@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.resolve.BindingContextUtils
 import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.TemporaryBindingTrace
 import org.jetbrains.kotlin.resolve.calls.CallResolverUtil.ResolveArgumentsMode.RESOLVE_FUNCTION_ARGUMENTS
+import org.jetbrains.kotlin.resolve.calls.CallResolverUtil.getEffectiveExpectedType
 import org.jetbrains.kotlin.resolve.calls.callUtil.getCall
 import org.jetbrains.kotlin.resolve.calls.context.BasicCallResolutionContext
 import org.jetbrains.kotlin.resolve.calls.context.CallCandidateResolutionContext
@@ -43,12 +44,12 @@ import org.jetbrains.kotlin.types.JetType
 import org.jetbrains.kotlin.types.TypeUtils
 import org.jetbrains.kotlin.types.expressions.DataFlowUtils
 import org.jetbrains.kotlin.types.expressions.ExpressionTypingUtils
-import org.jetbrains.kotlin.types.typeUtil.isSubtypeOf
 import java.util.ArrayList
 
 public class CallCompleter(
         val argumentTypeResolver: ArgumentTypeResolver,
-        val candidateResolver: CandidateResolver
+        val candidateResolver: CandidateResolver,
+        val functionLiteralArgumentResolver: FunctionLiteralArgumentResolver
 ) {
     fun <D : CallableDescriptor> completeCall(
             context: BasicCallResolutionContext,
@@ -209,7 +210,7 @@ public class CallCompleter(
         for (valueArgument in context.call.getValueArguments()) {
             val argumentMapping = getArgumentMapping(valueArgument!!)
             val expectedType = when (argumentMapping) {
-                is ArgumentMatch -> CandidateResolver.getEffectiveExpectedType(argumentMapping.valueParameter, valueArgument)
+                is ArgumentMatch -> getEffectiveExpectedType(argumentMapping.valueParameter, valueArgument)
                 else -> TypeUtils.NO_EXPECTED_TYPE
             }
             val newContext = context.replaceDataFlowInfo(getDataFlowInfoForArgument(valueArgument)).replaceExpectedType(expectedType)

@@ -57,11 +57,9 @@ import java.util.*;
 import static org.jetbrains.kotlin.diagnostics.Errors.PROJECTION_ON_NON_CLASS_TYPE_ARGUMENT;
 import static org.jetbrains.kotlin.diagnostics.Errors.SUPER_CANT_BE_EXTENSION_RECEIVER;
 import static org.jetbrains.kotlin.resolve.calls.ArgumentTypeResolver.getLastElementDeparenthesized;
-import static org.jetbrains.kotlin.resolve.calls.CallResolverUtil.ResolveArgumentsMode.RESOLVE_FUNCTION_ARGUMENTS;
 import static org.jetbrains.kotlin.resolve.calls.CallResolverUtil.ResolveArgumentsMode.SHAPE_FUNCTION_ARGUMENTS;
+import static org.jetbrains.kotlin.resolve.calls.CallResolverUtil.getEffectiveExpectedType;
 import static org.jetbrains.kotlin.resolve.calls.CallTransformer.CallForImplicitInvoke;
-import static org.jetbrains.kotlin.resolve.calls.context.ContextDependency.DEPENDENT;
-import static org.jetbrains.kotlin.resolve.calls.inference.InferencePackage.createCorrespondingFunctionTypeForFunctionPlaceholder;
 import static org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.RECEIVER_POSITION;
 import static org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.VALUE_PARAMETER_POSITION;
 import static org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus.*;
@@ -289,65 +287,6 @@ public class CandidateResolver {
         if (expectedThis == null) return null;
         DeclarationDescriptor descriptor = expectedThis.getContainingDeclaration();
         return descriptor instanceof ClassDescriptor ? (ClassDescriptor) descriptor : null;
-    }
-
-    public <D extends CallableDescriptor> void completeTypeInferenceDependentOnFunctionLiteralsForCall(
-            CallCandidateResolutionContext<D> context
-    ) {
-        MutableResolvedCall<D> resolvedCall = context.candidateCall;
-        ConstraintSystem constraintSystem = resolvedCall.getConstraintSystem();
-        if (constraintSystem == null) return;
-
-        // constraints for function literals
-        // Value parameters
-        for (Map.Entry<ValueParameterDescriptor, ResolvedValueArgument> entry : resolvedCall.getValueArguments().entrySet()) {
-            ResolvedValueArgument resolvedValueArgument = entry.getValue();
-            ValueParameterDescriptor valueParameterDescriptor = entry.getKey();
-
-            for (ValueArgument valueArgument : resolvedValueArgument.getArguments()) {
-                addConstraintForFunctionLiteral(valueArgument, valueParameterDescriptor, constraintSystem, context);
-            }
-        }
-        resolvedCall.setResultingSubstitutor(constraintSystem.getResultingSubstitutor());
-    }
-
-    private <D extends CallableDescriptor> void addConstraintForFunctionLiteral(
-            @NotNull ValueArgument valueArgument,
-            @NotNull ValueParameterDescriptor valueParameterDescriptor,
-            @NotNull ConstraintSystem constraintSystem,
-            @NotNull CallCandidateResolutionContext<D> context
-    ) {
-        JetExpression argumentExpression = valueArgument.getArgumentExpression();
-        if (argumentExpression == null) return;
-        if (!ArgumentTypeResolver.isFunctionLiteralArgument(argumentExpression, context)) return;
-
-        JetFunction functionLiteral = ArgumentTypeResolver.getFunctionLiteralArgument(argumentExpression, context);
-
-        JetType effectiveExpectedType = getEffectiveExpectedType(valueParameterDescriptor, valueArgument);
-        JetType expectedType = constraintSystem.getCurrentSubstitutor().substitute(effectiveExpectedType, Variance.INVARIANT);
-        if (expectedType == null || TypeUtils.isDontCarePlaceholder(expectedType)
-            || !KotlinBuiltIns.isFunctionOrExtensionFunctionType(expectedType)) {
-            JetType shape = argumentTypeResolver.getShapeTypeOfFunctionLiteral(functionLiteral, context.scope, context.trace);
-            //todo it won't work for extension function literals!
-            expectedType = createCorrespondingFunctionTypeForFunctionPlaceholder(shape, KotlinBuiltIns.getInstance().getAnyType());
-        }
-        if (CallResolverUtil.hasUnknownFunctionParameter(expectedType)) return;
-
-        MutableDataFlowInfoForArguments dataFlowInfoForArguments = context.candidateCall.getDataFlowInfoForArguments();
-        DataFlowInfo dataFlowInfoForArgument = dataFlowInfoForArguments.getInfo(valueArgument);
-
-        JetType expectedReturnType = KotlinBuiltIns.getReturnTypeFromFunctionType(expectedType);
-        boolean hasUnitReturnType = KotlinBuiltIns.isUnit(expectedReturnType);
-        // Unit is not replaced by DONT_CARE to be able to do COERCION_TO_UNIT
-        JetType expectedTypeWithNoOrUnitReturnType =
-                hasUnitReturnType ? expectedType : CallResolverUtil.replaceReturnTypeBy(expectedType, DONT_CARE);
-        CallCandidateResolutionContext<D> newContext = context
-                .replaceExpectedType(expectedTypeWithNoOrUnitReturnType).replaceDataFlowInfo(dataFlowInfoForArgument)
-                .replaceContextDependency(DEPENDENT);
-        JetType type = argumentTypeResolver.getFunctionLiteralTypeInfo(
-                argumentExpression, functionLiteral, newContext, RESOLVE_FUNCTION_ARGUMENTS).getType();
-        constraintSystem.addSubtypeConstraint(
-                type, effectiveExpectedType, VALUE_PARAMETER_POSITION.position(valueParameterDescriptor.getIndex()));
     }
 
     private <D extends CallableDescriptor> ResolutionStatus inferTypeArguments(CallCandidateResolutionContext<D> context) {
@@ -681,27 +620,6 @@ public class CandidateResolver {
         private ValueArgumentsCheckingResult(@NotNull ResolutionStatus status, @NotNull List<JetType> argumentTypes) {
             this.status = status;
             this.argumentTypes = argumentTypes;
-        }
-    }
-
-    @NotNull
-    public static JetType getEffectiveExpectedType(ValueParameterDescriptor parameterDescriptor, ValueArgument argument) {
-        if (argument.getSpreadElement() != null) {
-            if (parameterDescriptor.getVarargElementType() == null) {
-                // Spread argument passed to a non-vararg parameter, an error is already reported by ValueArgumentsToParametersMapper
-                return DONT_CARE;
-            }
-            else {
-                return parameterDescriptor.getType();
-            }
-        }
-        else {
-            JetType varargElementType = parameterDescriptor.getVarargElementType();
-            if (varargElementType != null) {
-                return varargElementType;
-            }
-
-            return parameterDescriptor.getType();
         }
     }
 

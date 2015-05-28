@@ -483,7 +483,7 @@ public class CallResolver {
 
         CallCandidateResolutionContext<D> candidateContext = CallCandidateResolutionContext.createForCallBeingAnalyzed(
                 results.getResultingCall(), context, tracing);
-        functionLiteralArgumentResolver.completeTypeInferenceDependentOnFunctionLiteralsForCall(candidateContext);
+        functionLiteralArgumentResolver.completeTypeInferenceDependentOnFunctionLiteralsForCall(candidateContext, false);
     }
 
     private static <F extends CallableDescriptor> void cacheResults(

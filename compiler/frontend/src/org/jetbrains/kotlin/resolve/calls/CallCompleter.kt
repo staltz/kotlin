@@ -23,10 +23,13 @@ import org.jetbrains.kotlin.resolve.BindingContext.CONSTRAINT_SYSTEM_COMPLETER
 import org.jetbrains.kotlin.resolve.BindingContextUtils
 import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.TemporaryBindingTrace
-import org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.RESOLVE_FUNCTION_ARGUMENTS
 import org.jetbrains.kotlin.resolve.calls.CallResolverUtil.getEffectiveExpectedType
 import org.jetbrains.kotlin.resolve.calls.callUtil.getCall
-import org.jetbrains.kotlin.resolve.calls.context.*
+import org.jetbrains.kotlin.resolve.calls.context.BasicCallResolutionContext
+import org.jetbrains.kotlin.resolve.calls.context.CallCandidateResolutionContext
+import org.jetbrains.kotlin.resolve.calls.context.ContextDependency
+import org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode
+import org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.SHAPE_FUNCTION_ARGUMENTS
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystem
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl
 import org.jetbrains.kotlin.resolve.calls.inference.InferenceErrorData
@@ -64,7 +67,7 @@ public class CallCompleter(
 
             completeResolvedCallAndArguments(resolvedCall, results, context.replaceBindingTrace(temporaryTrace), tracing)
 
-            completeAllCandidates(context, results)
+            completeAllCandidates(context.replaceResolveArgumentsMode(SHAPE_FUNCTION_ARGUMENTS), results)
 
             temporaryTrace.commit()
         }
@@ -115,17 +118,18 @@ public class CallCompleter(
             resolvedCall?.markCallAsCompleted()
             return
         }
+        val contextWithResolvedCall = CallCandidateResolutionContext.createForCallBeingAnalyzed(resolvedCall, context, tracing)
 
-        resolvedCall.completeConstraintSystem(context.expectedType, context.trace)
-
+        resolvedCall.completeConstraintSystem(contextWithResolvedCall, context.trace)
+        
         completeArguments(context, results)
-
-        resolvedCall.updateResolutionStatusFromConstraintSystem(context, tracing)
+        
+        resolvedCall.updateResolutionStatusFromConstraintSystem(contextWithResolvedCall, tracing)
         resolvedCall.markCallAsCompleted()
     }
 
     private fun <D : CallableDescriptor> MutableResolvedCall<D>.completeConstraintSystem(
-            expectedType: JetType,
+            context: CallCandidateResolutionContext<D>,
             trace: BindingTrace
     ) {
         fun updateSystemIfSuccessful(update: (ConstraintSystem) -> Boolean) {
@@ -137,7 +141,7 @@ public class CallCompleter(
 
         val returnType = getCandidateDescriptor().getReturnType()
         if (returnType != null) {
-            getConstraintSystem()!!.addSupertypeConstraint(expectedType, returnType, EXPECTED_TYPE_POSITION.position())
+            getConstraintSystem()!!.addSupertypeConstraint(context.expectedType, returnType, EXPECTED_TYPE_POSITION.position())
         }
 
         val constraintSystemCompleter = trace[CONSTRAINT_SYSTEM_COMPLETER, getCall().getCalleeExpression()]
@@ -150,7 +154,7 @@ public class CallCompleter(
             }
         }
 
-        if (returnType != null && expectedType === TypeUtils.UNIT_EXPECTED_TYPE) {
+        if (returnType != null && context.expectedType === TypeUtils.UNIT_EXPECTED_TYPE) {
             updateSystemIfSuccessful {
                 system ->
                 system.addSupertypeConstraint(KotlinBuiltIns.getInstance().getUnitType(), returnType, EXPECTED_TYPE_POSITION.position())
@@ -158,16 +162,15 @@ public class CallCompleter(
             }
         }
 
+        functionLiteralArgumentResolver.completeTypeInferenceDependentOnFunctionLiteralsForCall(context, inCompleter = true)
         setResultingSubstitutor(getConstraintSystem()!!.getResultingSubstitutor())
     }
 
     private fun <D : CallableDescriptor> MutableResolvedCall<D>.updateResolutionStatusFromConstraintSystem(
-            context: BasicCallResolutionContext,
+            context: CallCandidateResolutionContext<D>,
             tracing: TracingStrategy
     ) {
-        val contextWithResolvedCall = CallCandidateResolutionContext.createForCallBeingAnalyzed(this, context, tracing)
-        val valueArgumentsCheckingResult = candidateResolver.checkAllValueArguments(
-                contextWithResolvedCall.replaceResolveArgumentsMode(RESOLVE_FUNCTION_ARGUMENTS), context.trace)
+        val valueArgumentsCheckingResult = candidateResolver.checkAllValueArguments(context, context.trace)
 
         val status = getStatus()
         if (getConstraintSystem()!!.getStatus().isSuccessful()) {
@@ -272,8 +275,7 @@ public class CallCompleter(
         // but they should be analyzed when the expected type is known (during the call completion).
         if (ArgumentTypeResolver.isFunctionLiteralArgument(expression, context)) {
             argumentTypeResolver.getFunctionLiteralTypeInfo(
-                    expression, ArgumentTypeResolver.getFunctionLiteralArgument(expression, context),
-                    context.replaceResolveArgumentsMode(RESOLVE_FUNCTION_ARGUMENTS))
+                    expression, ArgumentTypeResolver.getFunctionLiteralArgument(expression, context), context)
         }
 
         DataFlowUtils.checkType(updatedType, deparenthesized, context)
@@ -292,8 +294,9 @@ public class CallCompleter(
         val (cachedResolutionResults, cachedContext, tracing) = cachedDataForCall
         @suppress("UNCHECKED_CAST")
         val cachedResults = cachedResolutionResults as OverloadResolutionResultsImpl<CallableDescriptor>
-        val contextForArgument = cachedContext.replaceBindingTrace(context.trace) .replaceExpectedType(context.expectedType)
+        val contextForArgument = cachedContext.replaceBindingTrace(context.trace).replaceExpectedType(context.expectedType)
                 .replaceCollectAllCandidates(false).replaceContextDependency(ContextDependency.INDEPENDENT)
+                .replaceResolveArgumentsMode(context.resolveArguments)
 
         return completeCall(contextForArgument, cachedResults, tracing)
     }

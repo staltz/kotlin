@@ -277,7 +277,7 @@ public class ConstraintSystemImpl : ConstraintSystem {
                 // we don't add it without knowing whether it's a function type or an extension function type
                 return
             }
-            createCorrespondingFunctionTypeForFunctionPlaceholder(subType, superType)
+            createTypeForFunctionPlaceholder(subType, superType)
         }
         else {
             subType
@@ -409,11 +409,12 @@ public class ConstraintSystemImpl : ConstraintSystem {
     override fun getCurrentSubstitutor() = replaceUninferredBy(TypeUtils.DONT_CARE).setApproximateCapturedTypes()
 }
 
-fun createCorrespondingFunctionTypeForFunctionPlaceholder(
+fun createTypeForFunctionPlaceholder(
         functionPlaceholder: JetType,
         expectedType: JetType
 ): JetType {
-    assert(ErrorUtils.isFunctionPlaceholder(functionPlaceholder)) { "Function placeholder type expected: $functionPlaceholder" }
+    if (!ErrorUtils.isFunctionPlaceholder(functionPlaceholder)) return functionPlaceholder
+
     val functionPlaceholderTypeConstructor = functionPlaceholder.getConstructor() as FunctionPlaceholderTypeConstructor
 
     val isExtension = KotlinBuiltIns.isExtensionFunctionType(expectedType)

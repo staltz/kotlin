@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.resolve.calls.model;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +42,7 @@ import org.jetbrains.kotlin.types.TypeSubstitutor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus.INCOMPLETE_TYPE_INFERENCE;
 import static org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus.UNKNOWN_STATUS;
@@ -83,6 +85,7 @@ public class ResolvedCallImpl<D extends CallableDescriptor> implements MutableRe
     private final Map<ValueParameterDescriptor, ResolvedValueArgument> valueArguments = Maps.newLinkedHashMap();
     private final MutableDataFlowInfoForArguments dataFlowInfoForArguments;
     private final Map<ValueArgument, ArgumentMatchImpl> argumentToParameterMap = Maps.newHashMap();
+    private final Set<ValueArgument> processedFunctionLiteralArguments = Sets.newHashSet();
 
     private DelegatingBindingTrace trace;
     private TracingStrategy tracing;
@@ -278,6 +281,17 @@ public class ResolvedCallImpl<D extends CallableDescriptor> implements MutableRe
             return ArgumentUnmapped.INSTANCE$;
         }
         return argumentMatch;
+    }
+
+
+    @Override
+    public boolean isProcessed(@NotNull ValueArgument functionLiteralArgument) {
+        return processedFunctionLiteralArguments.contains(functionLiteralArgument);
+    }
+
+    @Override
+    public void markAsProcessed(@NotNull ValueArgument functionLiteralArgument) {
+        processedFunctionLiteralArguments.add(functionLiteralArgument);
     }
 
     @NotNull

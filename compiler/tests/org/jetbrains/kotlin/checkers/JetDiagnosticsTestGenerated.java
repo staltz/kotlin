@@ -10911,9 +10911,21 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                 doTest(fileName);
             }
 
+            @TestMetadata("ambiguityWithTwoCorrespondingFunctionTypes.kt")
+            public void testAmbiguityWithTwoCorrespondingFunctionTypes() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/ambiguityWithTwoCorrespondingFunctionTypes.kt");
+                doTest(fileName);
+            }
+
             @TestMetadata("incompleteConstructorInvocation.kt")
             public void testIncompleteConstructorInvocation() throws Exception {
                 String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/incompleteConstructorInvocation.kt");
+                doTest(fileName);
+            }
+
+            @TestMetadata("inferenceInLinkedLambdas.kt")
+            public void testInferenceInLinkedLambdas() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/inferenceInLinkedLambdas.kt");
                 doTest(fileName);
             }
 

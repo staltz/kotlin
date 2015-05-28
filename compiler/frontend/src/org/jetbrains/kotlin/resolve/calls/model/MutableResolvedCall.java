@@ -45,6 +45,10 @@ public interface MutableResolvedCall<D extends CallableDescriptor> extends Resol
 
     void recordArgumentMatchStatus(@NotNull ValueArgument valueArgument, @NotNull ArgumentMatchStatus matchStatus);
 
+    boolean isProcessed(@NotNull ValueArgument functionLiteralArgument);
+
+    void markAsProcessed(@NotNull ValueArgument functionLiteralArgument);
+
     @Override
     @NotNull
     MutableDataFlowInfoForArguments getDataFlowInfoForArguments();

@@ -19,35 +19,43 @@ package org.jetbrains.kotlin.resolve.calls
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
+import org.jetbrains.kotlin.psi.JetFunction
 import org.jetbrains.kotlin.psi.ValueArgument
 import org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.RESOLVE_FUNCTION_ARGUMENTS
 import org.jetbrains.kotlin.resolve.calls.CallResolverUtil.getEffectiveExpectedType
 import org.jetbrains.kotlin.resolve.calls.context.CallCandidateResolutionContext
 import org.jetbrains.kotlin.resolve.calls.context.ContextDependency.DEPENDENT
+import org.jetbrains.kotlin.resolve.calls.context.ContextDependency.INDEPENDENT
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystem
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.VALUE_PARAMETER_POSITION
-import org.jetbrains.kotlin.resolve.calls.inference.createCorrespondingFunctionTypeForFunctionPlaceholder
+import org.jetbrains.kotlin.resolve.calls.inference.createTypeForFunctionPlaceholder
+import org.jetbrains.kotlin.resolve.calls.model.ResolvedValueArgument
+import org.jetbrains.kotlin.types.ErrorUtils
+import org.jetbrains.kotlin.types.ErrorUtils.*
 import org.jetbrains.kotlin.types.TypeUtils
 import org.jetbrains.kotlin.types.TypeUtils.DONT_CARE
 import org.jetbrains.kotlin.types.Variance
+import java.util.*
 
 class FunctionLiteralArgumentResolver(
         val argumentTypeResolver: ArgumentTypeResolver
 ) {
 
     public fun <D : CallableDescriptor> completeTypeInferenceDependentOnFunctionLiteralsForCall(
-            context: CallCandidateResolutionContext<D>
+            context: CallCandidateResolutionContext<D>,
+            inCompleter: Boolean
     ) {
         val resolvedCall = context.candidateCall
         val constraintSystem = resolvedCall.getConstraintSystem() ?: return
 
         // constraints for function literals
-        for (entry in resolvedCall.getValueArguments().entrySet()) {
-            val resolvedValueArgument = entry.getValue()
-            val valueParameterDescriptor = entry.getKey()
+        for ((valueParameterDescriptor, resolvedValueArgument) in resolvedCall.getValueArguments()) {
 
             for (valueArgument in resolvedValueArgument.getArguments()) {
-                addConstraintForFunctionLiteral(valueArgument, valueParameterDescriptor, constraintSystem, context)
+                val argumentExpression = valueArgument.getArgumentExpression()
+                if (argumentExpression != null && ArgumentTypeResolver.isFunctionLiteralArgument(argumentExpression, context)) {
+                    addConstraintForFunctionLiteral(valueArgument, valueParameterDescriptor, context, inCompleter)
+                }
             }
         }
         resolvedCall.setResultingSubstitutor(constraintSystem.getResultingSubstitutor())
@@ -56,23 +64,26 @@ class FunctionLiteralArgumentResolver(
     private fun <D : CallableDescriptor> addConstraintForFunctionLiteral(
             valueArgument: ValueArgument,
             valueParameterDescriptor: ValueParameterDescriptor,
-            constraintSystem: ConstraintSystem,
-            context: CallCandidateResolutionContext<D>
+            context: CallCandidateResolutionContext<D>,
+            inCompleter: Boolean
     ) {
         val argumentExpression = valueArgument.getArgumentExpression() ?: return
-        if (!ArgumentTypeResolver.isFunctionLiteralArgument(argumentExpression, context)) return
-
         val functionLiteral = ArgumentTypeResolver.getFunctionLiteralArgument(argumentExpression, context)
 
-        val effectiveExpectedType = getEffectiveExpectedType(valueParameterDescriptor, valueArgument)
+        val constraintSystem = context.candidateCall.getConstraintSystem()!!
+
+        val effectiveExpectedType = getEffectiveExpectedType(valueParameterDescriptor.getOriginal(), valueArgument)
         var expectedType = constraintSystem.getCurrentSubstitutor().substitute(effectiveExpectedType, Variance.INVARIANT)
         if (expectedType == null || TypeUtils.isDontCarePlaceholder(expectedType)
                 || !KotlinBuiltIns.isFunctionOrExtensionFunctionType(expectedType)) {
             val shape = argumentTypeResolver.getShapeTypeOfFunctionLiteral(functionLiteral, context.scope, context.trace)
-            //todo it won't work for extension function literals!
-            expectedType = createCorrespondingFunctionTypeForFunctionPlaceholder(shape, KotlinBuiltIns.getInstance().getAnyType())
+            if (!inCompleter && isFunctionPlaceholder(shape)) return
+
+            expectedType = createTypeForFunctionPlaceholder(shape, KotlinBuiltIns.getInstance().getAnyType())
         }
-        if (CallResolverUtil.hasUnknownFunctionParameter(expectedType)) return
+        if (!inCompleter && CallResolverUtil.hasUnknownFunctionParameter(expectedType)) return
+
+        if (context.candidateCall.isProcessed(valueArgument)) return
 
         val dataFlowInfoForArguments = context.candidateCall.getDataFlowInfoForArguments()
         val dataFlowInfoForArgument = dataFlowInfoForArguments.getInfo(valueArgument)
@@ -82,9 +93,9 @@ class FunctionLiteralArgumentResolver(
         // Unit is not replaced by DONT_CARE to be able to do COERCION_TO_UNIT
         val expectedTypeWithNoOrUnitReturnType = if (hasUnitReturnType) expectedType else CallResolverUtil.replaceReturnTypeBy(expectedType, DONT_CARE)
         val newContext = context.replaceExpectedType(expectedTypeWithNoOrUnitReturnType)
-                .replaceDataFlowInfo(dataFlowInfoForArgument).replaceContextDependency(DEPENDENT)
-        val type = argumentTypeResolver.getFunctionLiteralTypeInfo(
-                argumentExpression, functionLiteral, newContext.replaceResolveArgumentsMode(RESOLVE_FUNCTION_ARGUMENTS)).type
+                .replaceDataFlowInfo(dataFlowInfoForArgument).replaceContextDependency(if (inCompleter) INDEPENDENT else DEPENDENT)
+        val type = argumentTypeResolver.getFunctionLiteralTypeInfo(argumentExpression, functionLiteral, newContext).type
         constraintSystem.addSubtypeConstraint(type, effectiveExpectedType, VALUE_PARAMETER_POSITION.position(valueParameterDescriptor.getIndex()))
+        context.candidateCall.markAsProcessed(valueArgument);
     }
 }

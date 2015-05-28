@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.resolve.calls.callUtil.getCall
 import org.jetbrains.kotlin.resolve.calls.checkers.AdditionalTypeChecker
 import org.jetbrains.kotlin.resolve.calls.checkers.CompositeChecker
 import org.jetbrains.kotlin.resolve.calls.context.BasicCallResolutionContext
-import org.jetbrains.kotlin.resolve.calls.context.CheckValueArgumentsMode
 import org.jetbrains.kotlin.resolve.calls.context.ContextDependency
 import org.jetbrains.kotlin.resolve.calls.util.DelegatingCall
 import org.jetbrains.kotlin.resolve.scopes.ChainedScope
@@ -164,9 +163,9 @@ public class ShadowedDeclarationsFilter(
         }
 
         val dataFlowInfo = bindingContext.getDataFlowInfo(calleeExpression)
-        val context = BasicCallResolutionContext.create(bindingTrace, resolutionScope, newCall, TypeUtils.NO_EXPECTED_TYPE, dataFlowInfo,
-                                                        ContextDependency.INDEPENDENT, CheckValueArgumentsMode.ENABLED,
-                                                        CompositeChecker(listOf()), SymbolUsageValidator.Empty, AdditionalTypeChecker.Composite(listOf()), false)
+        val context = BasicCallResolutionContext.create(
+                bindingTrace, resolutionScope, newCall, TypeUtils.NO_EXPECTED_TYPE, dataFlowInfo, ContextDependency.INDEPENDENT,
+                CompositeChecker(listOf()), SymbolUsageValidator.Empty, AdditionalTypeChecker.Composite(listOf()), false)
         val callResolver = InjectorForMacros(project, moduleDescriptor).getCallResolver()
         val results = if (isFunction) callResolver.resolveFunctionCall(context) else callResolver.resolveSimpleProperty(context)
         val resultingDescriptors = results.getResultingCalls().map { it.getResultingDescriptor() }.toSet()

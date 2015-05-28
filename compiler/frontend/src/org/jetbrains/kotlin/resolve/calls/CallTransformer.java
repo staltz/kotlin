@@ -235,7 +235,7 @@ public class CallTransformer<D extends CallableDescriptor, F extends D> {
             DelegatingBindingTrace variableCallTrace = context.candidateCall.getTrace();
             BasicCallResolutionContext basicCallResolutionContext = BasicCallResolutionContext.create(
                     context.replaceBindingTrace(variableCallTrace).replaceContextDependency(ContextDependency.DEPENDENT),
-                    functionCall, context.checkArguments, context.dataFlowInfoForArguments);
+                    functionCall, context.dataFlowInfoForArguments);
 
             // 'invoke' call resolve
             TracingStrategyForInvoke tracingForInvoke = new TracingStrategyForInvoke(

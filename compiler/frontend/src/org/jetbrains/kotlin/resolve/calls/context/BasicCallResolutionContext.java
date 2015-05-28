@@ -37,19 +37,20 @@ public class BasicCallResolutionContext extends CallResolutionContext<BasicCallR
             @NotNull JetType expectedType,
             @NotNull DataFlowInfo dataFlowInfo,
             @NotNull ContextDependency contextDependency,
-            @NotNull CheckValueArgumentsMode checkArguments,
             @NotNull ResolutionResultsCache resolutionResultsCache,
             @Nullable MutableDataFlowInfoForArguments dataFlowInfoForArguments,
             @NotNull CallChecker callChecker,
             @NotNull SymbolUsageValidator symbolUsageValidator,
             @NotNull AdditionalTypeChecker additionalTypeChecker,
             @NotNull StatementFilter statementFilter,
+            @NotNull ResolveArgumentsMode resolveArgumentsMode,
             boolean isAnnotationContext,
             boolean collectAllCandidates,
             boolean insideSafeCallChain
     ) {
-        super(trace, scope, call, expectedType, dataFlowInfo, contextDependency, checkArguments, resolutionResultsCache,
-              dataFlowInfoForArguments, callChecker, symbolUsageValidator, additionalTypeChecker, statementFilter, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
+        super(trace, scope, call, expectedType, dataFlowInfo, contextDependency, resolutionResultsCache,
+              dataFlowInfoForArguments, callChecker, symbolUsageValidator, additionalTypeChecker, statementFilter,
+              resolveArgumentsMode, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
     }
 
     @NotNull
@@ -60,34 +61,31 @@ public class BasicCallResolutionContext extends CallResolutionContext<BasicCallR
             @NotNull JetType expectedType,
             @NotNull DataFlowInfo dataFlowInfo,
             @NotNull ContextDependency contextDependency,
-            @NotNull CheckValueArgumentsMode checkArguments,
             @NotNull CallChecker callChecker,
             @NotNull SymbolUsageValidator symbolUsageValidator,
             @NotNull AdditionalTypeChecker additionalTypeChecker,
             boolean isAnnotationContext
     ) {
-        return new BasicCallResolutionContext(trace, scope, call, expectedType, dataFlowInfo, contextDependency, checkArguments,
-             new ResolutionResultsCacheImpl(), null,
-             callChecker, symbolUsageValidator, additionalTypeChecker, StatementFilter.NONE, isAnnotationContext, false, false);
+        return new BasicCallResolutionContext(
+                trace, scope, call, expectedType, dataFlowInfo, contextDependency, new ResolutionResultsCacheImpl(), null,
+                callChecker, symbolUsageValidator, additionalTypeChecker, StatementFilter.NONE,
+                ResolveArgumentsMode.RESOLVE_FUNCTION_ARGUMENTS, isAnnotationContext, false, false);
     }
 
     @NotNull
     public static BasicCallResolutionContext create(
-            @NotNull ResolutionContext context, @NotNull Call call, @NotNull CheckValueArgumentsMode checkArguments,
-            @Nullable MutableDataFlowInfoForArguments dataFlowInfoForArguments
+            @NotNull ResolutionContext context, @NotNull Call call, @Nullable MutableDataFlowInfoForArguments dataFlowInfoForArguments
     ) {
         return new BasicCallResolutionContext(
-                context.trace, context.scope, call, context.expectedType, context.dataFlowInfo, context.contextDependency, checkArguments,
-                context.resolutionResultsCache, dataFlowInfoForArguments,
-                context.callChecker, context.symbolUsageValidator, context.additionalTypeChecker,
-                context.statementFilter, context.isAnnotationContext, context.collectAllCandidates, context.insideCallChain);
+                context.trace, context.scope, call, context.expectedType, context.dataFlowInfo, context.contextDependency,
+                context.resolutionResultsCache, dataFlowInfoForArguments, context.callChecker, context.symbolUsageValidator,
+                context.additionalTypeChecker, context.statementFilter, context.resolveArguments, context.isAnnotationContext,
+                context.collectAllCandidates, context.insideCallChain);
     }
 
     @NotNull
-    public static BasicCallResolutionContext create(
-            @NotNull ResolutionContext context, @NotNull Call call, @NotNull CheckValueArgumentsMode checkArguments
-    ) {
-        return create(context, call, checkArguments, null);
+    public static BasicCallResolutionContext create(@NotNull ResolutionContext context, @NotNull Call call) {
+        return create(context, call, null);
     }
 
     @Override
@@ -99,18 +97,21 @@ public class BasicCallResolutionContext extends CallResolutionContext<BasicCallR
             @NotNull ContextDependency contextDependency,
             @NotNull ResolutionResultsCache resolutionResultsCache,
             @NotNull StatementFilter statementFilter,
+            @NotNull ResolveArgumentsMode resolveArgumentsMode,
             boolean collectAllCandidates,
             boolean insideSafeCallChain
     ) {
         return new BasicCallResolutionContext(
-                trace, scope, call, expectedType, dataFlowInfo, contextDependency, checkArguments, resolutionResultsCache,
-                dataFlowInfoForArguments, callChecker, symbolUsageValidator, additionalTypeChecker, statementFilter, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
+                trace, scope, call, expectedType, dataFlowInfo, contextDependency, resolutionResultsCache,
+                dataFlowInfoForArguments, callChecker, symbolUsageValidator, additionalTypeChecker,
+                statementFilter, resolveArgumentsMode, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
     }
 
     @NotNull
     public BasicCallResolutionContext replaceCall(@NotNull Call newCall) {
         return new BasicCallResolutionContext(
-                trace, scope, newCall, expectedType, dataFlowInfo, contextDependency, checkArguments, resolutionResultsCache,
-                dataFlowInfoForArguments, callChecker, symbolUsageValidator, additionalTypeChecker, statementFilter, isAnnotationContext, collectAllCandidates, insideCallChain);
+                trace, scope, newCall, expectedType, dataFlowInfo, contextDependency, resolutionResultsCache,
+                dataFlowInfoForArguments, callChecker, symbolUsageValidator, additionalTypeChecker, statementFilter,
+                resolveArguments, isAnnotationContext, collectAllCandidates, insideCallChain);
     }
 }

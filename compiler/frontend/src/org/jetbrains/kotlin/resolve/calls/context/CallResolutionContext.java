@@ -34,8 +34,6 @@ public abstract class CallResolutionContext<Context extends CallResolutionContex
     @NotNull
     public final Call call;
     @NotNull
-    public final CheckValueArgumentsMode checkArguments;
-    @NotNull
     public final MutableDataFlowInfoForArguments dataFlowInfoForArguments;
 
     protected CallResolutionContext(
@@ -45,7 +43,6 @@ public abstract class CallResolutionContext<Context extends CallResolutionContex
             @NotNull JetType expectedType,
             @NotNull DataFlowInfo dataFlowInfo,
             @NotNull ContextDependency contextDependency,
-            @NotNull CheckValueArgumentsMode checkArguments,
             @NotNull ResolutionResultsCache resolutionResultsCache,
             @SuppressWarnings("NullableProblems")
             @Nullable MutableDataFlowInfoForArguments dataFlowInfoForArguments,
@@ -53,19 +50,18 @@ public abstract class CallResolutionContext<Context extends CallResolutionContex
             SymbolUsageValidator symbolUsageValidator,
             @NotNull AdditionalTypeChecker additionalTypeChecker,
             @NotNull StatementFilter statementFilter,
+            @NotNull ResolveArgumentsMode resolveArgumentsMode,
             boolean isAnnotationContext,
             boolean collectAllCandidates,
             boolean insideSafeCallChain
     ) {
         super(trace, scope, expectedType, dataFlowInfo, contextDependency, resolutionResultsCache, callChecker, symbolUsageValidator,
-              additionalTypeChecker,
-              statementFilter, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
+              additionalTypeChecker, statementFilter, resolveArgumentsMode, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
         this.call = call;
-        this.checkArguments = checkArguments;
         if (dataFlowInfoForArguments != null) {
             this.dataFlowInfoForArguments = dataFlowInfoForArguments;
         }
-        else if (checkArguments == CheckValueArgumentsMode.ENABLED) {
+        else if (resolveArgumentsMode != ResolveArgumentsMode.DISABLED) {
             this.dataFlowInfoForArguments = new DataFlowInfoForArgumentsImpl(call);
         }
         else {
@@ -75,6 +71,6 @@ public abstract class CallResolutionContext<Context extends CallResolutionContex
 
     @NotNull
     public BasicCallResolutionContext toBasic() {
-        return BasicCallResolutionContext.create(this, call, checkArguments);
+        return BasicCallResolutionContext.create(this, call);
     }
 }

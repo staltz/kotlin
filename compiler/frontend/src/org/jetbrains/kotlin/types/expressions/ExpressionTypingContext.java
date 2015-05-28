@@ -22,10 +22,7 @@ import org.jetbrains.kotlin.resolve.AdditionalCheckerProvider;
 import org.jetbrains.kotlin.resolve.BindingTrace;
 import org.jetbrains.kotlin.resolve.StatementFilter;
 import org.jetbrains.kotlin.resolve.calls.checkers.AdditionalTypeChecker;
-import org.jetbrains.kotlin.resolve.calls.context.ContextDependency;
-import org.jetbrains.kotlin.resolve.calls.context.ResolutionContext;
-import org.jetbrains.kotlin.resolve.calls.context.ResolutionResultsCache;
-import org.jetbrains.kotlin.resolve.calls.context.ResolutionResultsCacheImpl;
+import org.jetbrains.kotlin.resolve.calls.context.*;
 import org.jetbrains.kotlin.resolve.calls.checkers.CallChecker;
 import org.jetbrains.kotlin.resolve.calls.smartcasts.DataFlowInfo;
 import org.jetbrains.kotlin.resolve.constants.CompileTimeConstantChecker;
@@ -60,17 +57,16 @@ public class ExpressionTypingContext extends ResolutionContext<ExpressionTypingC
                           callChecker != null ? callChecker : additionalCheckerProvider.getCallChecker(),
                           additionalCheckerProvider.getSymbolUsageValidator(),
                           additionalCheckerProvider.getTypeChecker(),
-                          StatementFilter.NONE, false);
+                          StatementFilter.NONE, ResolveArgumentsMode.RESOLVE_FUNCTION_ARGUMENTS, false);
     }
 
     @NotNull
     public static ExpressionTypingContext newContext(@NotNull ResolutionContext context) {
         return new ExpressionTypingContext(
-                context.trace, context.scope, context.dataFlowInfo, context.expectedType,
-                context.contextDependency, context.resolutionResultsCache,
-                context.callChecker, context.symbolUsageValidator, context.additionalTypeChecker,
-                context.statementFilter,
-                context.isAnnotationContext, context.collectAllCandidates, context.insideCallChain
+                context.trace, context.scope, context.dataFlowInfo, context.expectedType, context.contextDependency,
+                context.resolutionResultsCache, context.callChecker, context.symbolUsageValidator, context.additionalTypeChecker,
+                context.statementFilter, context.resolveArguments, context.isAnnotationContext, context.collectAllCandidates,
+                context.insideCallChain
         );
     }
 
@@ -86,12 +82,12 @@ public class ExpressionTypingContext extends ResolutionContext<ExpressionTypingC
             @NotNull SymbolUsageValidator symbolUsageValidator,
             @NotNull AdditionalTypeChecker additionalTypeChecker,
             @NotNull StatementFilter statementFilter,
+            @NotNull ResolveArgumentsMode resolveArgumentsMode,
             boolean isAnnotationContext
     ) {
         return new ExpressionTypingContext(
                 trace, scope, dataFlowInfo, expectedType, contextDependency, resolutionResultsCache, callChecker, symbolUsageValidator,
-                additionalTypeChecker,
-                statementFilter, isAnnotationContext, false, false);
+                additionalTypeChecker, statementFilter, resolveArgumentsMode, isAnnotationContext, false, false);
     }
 
     private CompileTimeConstantChecker compileTimeConstantChecker;
@@ -107,13 +103,14 @@ public class ExpressionTypingContext extends ResolutionContext<ExpressionTypingC
             @NotNull SymbolUsageValidator symbolUsageValidator,
             @NotNull AdditionalTypeChecker additionalTypeChecker,
             @NotNull StatementFilter statementFilter,
+            @NotNull ResolveArgumentsMode resolveArgumentsMode,
             boolean isAnnotationContext,
             boolean collectAllCandidates,
             boolean insideSafeCallChain
     ) {
         super(trace, scope, expectedType, dataFlowInfo, contextDependency, resolutionResultsCache,
               callChecker, symbolUsageValidator, additionalTypeChecker,
-              statementFilter, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
+              statementFilter, resolveArgumentsMode, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
     }
 
     @Override
@@ -125,13 +122,14 @@ public class ExpressionTypingContext extends ResolutionContext<ExpressionTypingC
             @NotNull ContextDependency contextDependency,
             @NotNull ResolutionResultsCache resolutionResultsCache,
             @NotNull StatementFilter statementFilter,
+            @NotNull ResolveArgumentsMode resolveArgumentsMode,
             boolean collectAllCandidates,
             boolean insideSafeCallChain
     ) {
-        return new ExpressionTypingContext(trace, scope, dataFlowInfo,
-                                           expectedType, contextDependency, resolutionResultsCache,
-                                           callChecker, symbolUsageValidator, additionalTypeChecker,
-                                           statementFilter, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
+        return new ExpressionTypingContext(
+                trace, scope, dataFlowInfo, expectedType, contextDependency, resolutionResultsCache,
+                callChecker, symbolUsageValidator, additionalTypeChecker, statementFilter, resolveArgumentsMode,
+                isAnnotationContext, collectAllCandidates, insideSafeCallChain);
     }
 
 ///////////// LAZY ACCESSORS

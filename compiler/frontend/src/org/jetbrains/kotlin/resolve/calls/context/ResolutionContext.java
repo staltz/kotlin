@@ -53,8 +53,10 @@ public abstract class ResolutionContext<Context extends ResolutionContext<Contex
     public final SymbolUsageValidator symbolUsageValidator;
     @NotNull
     public final StatementFilter statementFilter;
-
+    @NotNull
     public final AdditionalTypeChecker additionalTypeChecker;
+    @NotNull
+    public final ResolveArgumentsMode resolveArguments;
 
     public final boolean isAnnotationContext;
 
@@ -74,6 +76,7 @@ public abstract class ResolutionContext<Context extends ResolutionContext<Contex
             @NotNull SymbolUsageValidator symbolUsageValidator,
             @NotNull AdditionalTypeChecker additionalTypeChecker,
             @NotNull StatementFilter statementFilter,
+            @NotNull ResolveArgumentsMode resolveArguments,
             boolean isAnnotationContext,
             boolean collectAllCandidates,
             boolean insideCallChain
@@ -88,6 +91,7 @@ public abstract class ResolutionContext<Context extends ResolutionContext<Contex
         this.symbolUsageValidator = symbolUsageValidator;
         this.statementFilter = statementFilter;
         this.additionalTypeChecker = additionalTypeChecker;
+        this.resolveArguments = resolveArguments;
         this.isAnnotationContext = isAnnotationContext;
         this.collectAllCandidates = collectAllCandidates;
         this.insideCallChain = insideCallChain;
@@ -101,6 +105,7 @@ public abstract class ResolutionContext<Context extends ResolutionContext<Contex
             @NotNull ContextDependency contextDependency,
             @NotNull ResolutionResultsCache resolutionResultsCache,
             @NotNull StatementFilter statementFilter,
+            @NotNull ResolveArgumentsMode resolveArgumentsMode,
             boolean collectAllCandidates,
             boolean insideSafeCallChain
     );
@@ -115,14 +120,14 @@ public abstract class ResolutionContext<Context extends ResolutionContext<Contex
     public Context replaceBindingTrace(@NotNull BindingTrace trace) {
         if (this.trace == trace) return self();
         return create(trace, scope, dataFlowInfo, expectedType, contextDependency, resolutionResultsCache, statementFilter,
-                      collectAllCandidates, insideCallChain);
+                      resolveArguments, collectAllCandidates, insideCallChain);
     }
 
     @NotNull
     public Context replaceDataFlowInfo(@NotNull DataFlowInfo newDataFlowInfo) {
         if (newDataFlowInfo == dataFlowInfo) return self();
         return create(trace, scope, newDataFlowInfo, expectedType, contextDependency, resolutionResultsCache, statementFilter,
-                      collectAllCandidates, insideCallChain);
+                      resolveArguments, collectAllCandidates, insideCallChain);
     }
 
     @NotNull
@@ -130,28 +135,44 @@ public abstract class ResolutionContext<Context extends ResolutionContext<Contex
         if (newExpectedType == null) return replaceExpectedType(TypeUtils.NO_EXPECTED_TYPE);
         if (expectedType == newExpectedType) return self();
         return create(trace, scope, dataFlowInfo, newExpectedType, contextDependency, resolutionResultsCache, statementFilter,
-                      collectAllCandidates, insideCallChain);
+                      resolveArguments, collectAllCandidates, insideCallChain);
     }
 
     @NotNull
     public Context replaceScope(@NotNull JetScope newScope) {
         if (newScope == scope) return self();
         return create(trace, newScope, dataFlowInfo, expectedType, contextDependency, resolutionResultsCache, statementFilter,
-                      collectAllCandidates, insideCallChain);
+                      resolveArguments, collectAllCandidates, insideCallChain);
     }
 
     @NotNull
     public Context replaceContextDependency(@NotNull ContextDependency newContextDependency) {
+        if (newContextDependency == ContextDependency.DEPENDENT) {
+            return replaceContextDependencyOnly(newContextDependency);
+        }
+        return replaceResolveArgumentsMode(ResolveArgumentsMode.RESOLVE_FUNCTION_ARGUMENTS).replaceContextDependencyOnly(newContextDependency);
+    }
+
+    @NotNull
+    private Context replaceContextDependencyOnly(@NotNull ContextDependency newContextDependency) {
         if (newContextDependency == contextDependency) return self();
         return create(trace, scope, dataFlowInfo, expectedType, newContextDependency, resolutionResultsCache, statementFilter,
-                      collectAllCandidates, insideCallChain);
+                      resolveArguments, collectAllCandidates, insideCallChain);
+    }
+
+    @NotNull
+    public Context replaceResolveArgumentsMode(@NotNull ResolveArgumentsMode newResolveArgumentsMode) {
+        ResolveArgumentsMode newSafeResolveArgumentsMode = resolveArguments.safeReplace(newResolveArgumentsMode);
+        if (newSafeResolveArgumentsMode == resolveArguments) return self();
+        return create(trace, scope, dataFlowInfo, expectedType, contextDependency, resolutionResultsCache, statementFilter,
+                      newSafeResolveArgumentsMode, collectAllCandidates, insideCallChain);
     }
 
     @NotNull
     public Context replaceResolutionResultsCache(@NotNull ResolutionResultsCache newResolutionResultsCache) {
         if (newResolutionResultsCache == resolutionResultsCache) return self();
         return create(trace, scope, dataFlowInfo, expectedType, contextDependency, newResolutionResultsCache, statementFilter,
-                      collectAllCandidates, insideCallChain);
+                      resolveArguments, collectAllCandidates, insideCallChain);
     }
 
     @NotNull
@@ -162,19 +183,19 @@ public abstract class ResolutionContext<Context extends ResolutionContext<Contex
     @NotNull
     public Context replaceCollectAllCandidates(boolean newCollectAllCandidates) {
         return create(trace, scope, dataFlowInfo, expectedType, contextDependency, resolutionResultsCache, statementFilter,
-                      newCollectAllCandidates, insideCallChain);
+                      resolveArguments, newCollectAllCandidates, insideCallChain);
     }
 
     @NotNull
     public Context replaceStatementFilter(@NotNull StatementFilter statementFilter) {
         return create(trace, scope, dataFlowInfo, expectedType, contextDependency, resolutionResultsCache, statementFilter,
-                      collectAllCandidates, insideCallChain);
+                      resolveArguments, collectAllCandidates, insideCallChain);
     }
 
     @NotNull
     public Context replaceInsideCallChain(boolean insideSafeCallChain) {
         return create(trace, scope, dataFlowInfo, expectedType, contextDependency, resolutionResultsCache, statementFilter,
-                      collectAllCandidates, insideSafeCallChain);
+                      resolveArguments, collectAllCandidates, insideSafeCallChain);
 
     }
 }

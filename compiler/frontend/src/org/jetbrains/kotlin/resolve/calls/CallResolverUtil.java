@@ -34,10 +34,6 @@ import static org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.Co
 import static org.jetbrains.kotlin.types.TypeUtils.DONT_CARE;
 
 public class CallResolverUtil {
-    public static enum ResolveArgumentsMode {
-        RESOLVE_FUNCTION_ARGUMENTS,
-        SHAPE_FUNCTION_ARGUMENTS
-    }
 
     private CallResolverUtil() {}
 

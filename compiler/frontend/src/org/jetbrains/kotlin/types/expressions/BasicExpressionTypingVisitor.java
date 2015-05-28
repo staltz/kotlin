@@ -39,7 +39,7 @@ import org.jetbrains.kotlin.psi.*;
 import org.jetbrains.kotlin.resolve.*;
 import org.jetbrains.kotlin.resolve.calls.CallExpressionResolver;
 import org.jetbrains.kotlin.resolve.calls.context.BasicCallResolutionContext;
-import org.jetbrains.kotlin.resolve.calls.context.CheckValueArgumentsMode;
+import org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode;
 import org.jetbrains.kotlin.resolve.calls.context.TemporaryTraceAndCache;
 import org.jetbrains.kotlin.resolve.calls.model.DataFlowInfoForArgumentsImpl;
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall;
@@ -499,7 +499,7 @@ public class BasicExpressionTypingVisitor extends ExpressionTypingVisitor {
         trace.record(RESOLVED_CALL, call, resolvedCall);
         trace.record(CALL, expression, call);
 
-        BasicCallResolutionContext resolutionContext = BasicCallResolutionContext.create(context, call, CheckValueArgumentsMode.DISABLED);
+        BasicCallResolutionContext resolutionContext = BasicCallResolutionContext.create(context, call);
         context.callChecker.check(resolvedCall, resolutionContext);
         context.symbolUsageValidator.validateCall(descriptor, trace, expression);
     }
@@ -832,7 +832,8 @@ public class BasicExpressionTypingVisitor extends ExpressionTypingVisitor {
                                                                               reference);
 
         BasicCallResolutionContext callResolutionContext = BasicCallResolutionContext.create(
-                context.replaceTraceAndCache(temporaryTrace).replaceExpectedType(NO_EXPECTED_TYPE), call, CheckValueArgumentsMode.DISABLED);
+                context.replaceTraceAndCache(temporaryTrace).replaceExpectedType(NO_EXPECTED_TYPE).replaceResolveArgumentsMode(
+                        ResolveArgumentsMode.DISABLED), call);
         OverloadResolutionResults<CallableDescriptor> results =
                 components.callResolver.resolveCallForMember(reference, callResolutionContext);
         if (!results.isNothing()) {

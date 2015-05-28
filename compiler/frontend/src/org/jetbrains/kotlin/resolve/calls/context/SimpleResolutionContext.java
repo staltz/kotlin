@@ -38,13 +38,13 @@ public class SimpleResolutionContext extends ResolutionContext<SimpleResolutionC
             @NotNull SymbolUsageValidator symbolUsageValidator,
             @NotNull AdditionalTypeChecker additionalTypeChecker,
             @NotNull StatementFilter statementFilter,
+            @NotNull ResolveArgumentsMode resolveArgumentsMode,
             boolean isAnnotationContext,
             boolean collectAllCandidates,
             boolean insideSafeCallChain
     ) {
         super(trace, scope, expectedType, dataFlowInfo, contextDependency, resolutionResultsCache, callChecker, symbolUsageValidator,
-              additionalTypeChecker,
-              statementFilter, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
+              additionalTypeChecker, statementFilter, resolveArgumentsMode, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
     }
 
     public SimpleResolutionContext(
@@ -59,7 +59,8 @@ public class SimpleResolutionContext extends ResolutionContext<SimpleResolutionC
             @NotNull StatementFilter statementFilter
     ) {
         this(trace, scope, expectedType, dataFlowInfo, contextDependency, new ResolutionResultsCacheImpl(),
-             callChecker, symbolUsageValidator, additionalTypeChecker, statementFilter, false, false, false);
+             callChecker, symbolUsageValidator, additionalTypeChecker, statementFilter, ResolveArgumentsMode.RESOLVE_FUNCTION_ARGUMENTS,
+             false, false, false);
     }
 
     @Override
@@ -71,12 +72,13 @@ public class SimpleResolutionContext extends ResolutionContext<SimpleResolutionC
             @NotNull ContextDependency contextDependency,
             @NotNull ResolutionResultsCache resolutionResultsCache,
             @NotNull StatementFilter statementFilter,
+            @NotNull ResolveArgumentsMode resolveArgumentsMode,
             boolean collectAllCandidates,
             boolean insideSafeCallChain
     ) {
         return new SimpleResolutionContext(
                 trace, scope, expectedType, dataFlowInfo, contextDependency, resolutionResultsCache,
                 callChecker, symbolUsageValidator, additionalTypeChecker,
-                statementFilter, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
+                statementFilter, resolveArgumentsMode, isAnnotationContext, collectAllCandidates, insideSafeCallChain);
     }
 }

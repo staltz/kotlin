@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.resolve.DescriptorUtils;
 import org.jetbrains.kotlin.resolve.calls.callUtil.CallUtilPackage;
 import org.jetbrains.kotlin.resolve.calls.context.BasicCallResolutionContext;
-import org.jetbrains.kotlin.resolve.calls.context.CheckValueArgumentsMode;
 import org.jetbrains.kotlin.resolve.calls.context.ResolutionContext;
 import org.jetbrains.kotlin.resolve.calls.context.TemporaryTraceAndCache;
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall;
@@ -78,11 +77,11 @@ public class CallExpressionResolver {
     @Nullable
     public ResolvedCall<FunctionDescriptor> getResolvedCallForFunction(
             @NotNull Call call, @NotNull JetExpression callExpression,
-            @NotNull ResolutionContext context, @NotNull CheckValueArgumentsMode checkArguments,
+            @NotNull ResolutionContext context,
             @NotNull boolean[] result
     ) {
         OverloadResolutionResults<FunctionDescriptor> results = callResolver.resolveFunctionCall(
-                BasicCallResolutionContext.create(context, call, checkArguments));
+                BasicCallResolutionContext.create(context, call));
         if (!results.isNothing()) {
             result[0] = true;
             return OverloadResolutionResultsUtil.getResultingCall(results, context.contextDependency);
@@ -100,8 +99,7 @@ public class CallExpressionResolver {
                 context, "trace to resolve as local variable or property", nameExpression);
         Call call = CallMaker.makePropertyCall(receiver, callOperationNode, nameExpression);
         BasicCallResolutionContext contextForVariable = BasicCallResolutionContext.create(
-                context.replaceTraceAndCache(temporaryForVariable),
-                call, CheckValueArgumentsMode.ENABLED);
+                context.replaceTraceAndCache(temporaryForVariable), call);
         OverloadResolutionResults<VariableDescriptor> resolutionResult = callResolver.resolveSimpleProperty(contextForVariable);
 
         // if the expression is a receiver in a qualified expression, it should be resolved after the selector is resolved
@@ -153,8 +151,7 @@ public class CallExpressionResolver {
         TemporaryTraceAndCache temporaryForFunction = TemporaryTraceAndCache.create(
                 context, "trace to resolve as function", nameExpression);
         ResolutionContext newContext = context.replaceTraceAndCache(temporaryForFunction);
-        ResolvedCall<FunctionDescriptor> resolvedCall = getResolvedCallForFunction(
-                call, nameExpression, newContext, CheckValueArgumentsMode.ENABLED, result);
+        ResolvedCall<FunctionDescriptor> resolvedCall = getResolvedCallForFunction(call, nameExpression, newContext, result);
         if (result[0]) {
             FunctionDescriptor functionDescriptor = resolvedCall != null ? resolvedCall.getResultingDescriptor() : null;
             temporaryForFunction.commit();
@@ -197,8 +194,7 @@ public class CallExpressionResolver {
         ResolvedCall<FunctionDescriptor> resolvedCall = getResolvedCallForFunction(
                 call, callExpression,
                 // It's possible start of a call so we should reset safe call chain
-                context.replaceTraceAndCache(temporaryForFunction).replaceInsideCallChain(false),
-                CheckValueArgumentsMode.ENABLED, result);
+                context.replaceTraceAndCache(temporaryForFunction).replaceInsideCallChain(false), result);
         if (result[0]) {
             FunctionDescriptor functionDescriptor = resolvedCall != null ? resolvedCall.getResultingDescriptor() : null;
             temporaryForFunction.commit();

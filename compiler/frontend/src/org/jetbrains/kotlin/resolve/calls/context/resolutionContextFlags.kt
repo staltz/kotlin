@@ -14,9 +14,18 @@
  * limitations under the License.
  */
 
-package org.jetbrains.kotlin.resolve.calls.context;
+package org.jetbrains.kotlin.resolve.calls.context
 
-public enum ContextDependency {
-    INDEPENDENT,
-    DEPENDENT
+public enum class ContextDependency {
+    INDEPENDENT, DEPENDENT
 }
+
+public enum class ResolveArgumentsMode {
+    DISABLED, RESOLVE_FUNCTION_ARGUMENTS, SHAPE_FUNCTION_ARGUMENTS;
+
+    fun safeReplace(newArgumentsMode: ResolveArgumentsMode) = when (this) {
+        DISABLED -> DISABLED
+        else -> newArgumentsMode
+    }
+}
+

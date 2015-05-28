@@ -165,7 +165,7 @@ public class CandidateResolver {
             candidateCall.addStatus(inferTypeArguments(context));
         }
         else {
-            candidateCall.addStatus(checkAllValueArguments(context, SHAPE_FUNCTION_ARGUMENTS).status);
+            candidateCall.addStatus(checkAllValueArguments(context.replaceResolveArgumentsMode(SHAPE_FUNCTION_ARGUMENTS)).status);
         }
 
         checkAbstractAndSuper(context);
@@ -328,7 +328,7 @@ public class CandidateResolver {
                 // and throw the results away
                 // We'll type check the arguments later, with the inferred types expected
                 addConstraintForValueArgument(valueArgument, valueParameterDescriptor, substituteDontCare, constraintSystem,
-                                              context, SHAPE_FUNCTION_ARGUMENTS);
+                                              context.replaceResolveArgumentsMode(SHAPE_FUNCTION_ARGUMENTS));
             }
         }
 
@@ -373,9 +373,8 @@ public class CandidateResolver {
             @NotNull ValueParameterDescriptor valueParameterDescriptor,
             @NotNull TypeSubstitutor substitutor,
             @NotNull ConstraintSystem constraintSystem,
-            @NotNull CallCandidateResolutionContext<?> context,
-            @NotNull ResolveArgumentsMode resolveFunctionArgumentBodies) {
-
+            @NotNull CallCandidateResolutionContext<?> context
+    ) {
         JetType effectiveExpectedType = getEffectiveExpectedType(valueParameterDescriptor, valueArgument);
         JetExpression argumentExpression = valueArgument.getArgumentExpression();
 
@@ -384,7 +383,7 @@ public class CandidateResolver {
         CallResolutionContext<?> newContext = context.replaceExpectedType(expectedType).replaceDataFlowInfo(dataFlowInfoForArgument);
 
         JetTypeInfo typeInfoForCall = argumentTypeResolver.getArgumentTypeInfo(
-                argumentExpression, newContext, resolveFunctionArgumentBodies);
+                argumentExpression, newContext);
         context.candidateCall.getDataFlowInfoForArguments().updateInfo(valueArgument, typeInfoForCall.getDataFlowInfo());
 
         JetType type = updateResultTypeForSmartCasts(
@@ -413,19 +412,18 @@ public class CandidateResolver {
 
     @NotNull
     private <D extends CallableDescriptor> ValueArgumentsCheckingResult checkAllValueArguments(
-            @NotNull CallCandidateResolutionContext<D> context,
-            @NotNull ResolveArgumentsMode resolveFunctionArgumentBodies) {
-        return checkAllValueArguments(context, context.candidateCall.getTrace(), resolveFunctionArgumentBodies);
+            @NotNull CallCandidateResolutionContext<D> context
+    ) {
+        return checkAllValueArguments(context, context.candidateCall.getTrace());
     }
 
     @NotNull
     public <D extends CallableDescriptor> ValueArgumentsCheckingResult checkAllValueArguments(
             @NotNull CallCandidateResolutionContext<D> context,
-            @NotNull BindingTrace trace,
-            @NotNull ResolveArgumentsMode resolveFunctionArgumentBodies
+            @NotNull BindingTrace trace
     ) {
         ValueArgumentsCheckingResult checkingResult = checkValueArgumentTypes(
-                context, context.candidateCall, trace, resolveFunctionArgumentBodies);
+                context, context.candidateCall, trace);
         ResolutionStatus resultStatus = checkingResult.status;
         resultStatus = resultStatus.combine(checkReceivers(context, trace));
 
@@ -464,8 +462,8 @@ public class CandidateResolver {
     private <D extends CallableDescriptor, C extends CallResolutionContext<C>> ValueArgumentsCheckingResult checkValueArgumentTypes(
             @NotNull CallResolutionContext<C> context,
             @NotNull MutableResolvedCall<D> candidateCall,
-            @NotNull BindingTrace trace,
-            @NotNull ResolveArgumentsMode resolveFunctionArgumentBodies) {
+            @NotNull BindingTrace trace
+    ) {
         ResolutionStatus resultStatus = SUCCESS;
         List<JetType> argumentTypes = Lists.newArrayList();
         MutableDataFlowInfoForArguments infoForArguments = candidateCall.getDataFlowInfoForArguments();
@@ -482,8 +480,7 @@ public class CandidateResolver {
 
                 CallResolutionContext<?> newContext = context.replaceDataFlowInfo(infoForArguments.getInfo(argument))
                         .replaceBindingTrace(trace).replaceExpectedType(expectedType);
-                JetTypeInfo typeInfoForCall = argumentTypeResolver.getArgumentTypeInfo(
-                        expression, newContext, resolveFunctionArgumentBodies);
+                JetTypeInfo typeInfoForCall = argumentTypeResolver.getArgumentTypeInfo(expression, newContext);
                 JetType type = typeInfoForCall.getType();
                 infoForArguments.updateInfo(argument, typeInfoForCall.getDataFlowInfo());
 

@@ -91,13 +91,6 @@ public class ArgumentTypeResolver {
     }
 
     public void checkTypesWithNoCallee(@NotNull CallResolutionContext<?> context) {
-        checkTypesWithNoCallee(context, SHAPE_FUNCTION_ARGUMENTS);
-    }
-
-    public void checkTypesWithNoCallee(
-            @NotNull CallResolutionContext<?> context,
-            @NotNull ResolveArgumentsMode resolveFunctionArgumentBodies
-    ) {
         if (context.resolveArguments == ResolveArgumentsMode.DISABLED) return;
 
         for (ValueArgument valueArgument : context.call.getValueArguments()) {
@@ -107,7 +100,7 @@ public class ArgumentTypeResolver {
             }
         }
 
-        if (resolveFunctionArgumentBodies == RESOLVE_FUNCTION_ARGUMENTS) {
+        if (context.resolveArguments == RESOLVE_FUNCTION_ARGUMENTS) {
             checkTypesForFunctionArgumentsWithNoCallee(context);
         }
 
@@ -190,14 +183,13 @@ public class ArgumentTypeResolver {
     @NotNull
     public JetTypeInfo getArgumentTypeInfo(
             @Nullable JetExpression expression,
-            @NotNull CallResolutionContext<?> context,
-            @NotNull ResolveArgumentsMode resolveArgumentsMode
+            @NotNull CallResolutionContext<?> context
     ) {
         if (expression == null) {
             return TypeInfoFactoryPackage.noTypeInfo(context);
         }
         if (isFunctionLiteralArgument(expression, context)) {
-            return getFunctionLiteralTypeInfo(expression, getFunctionLiteralArgument(expression, context), context, resolveArgumentsMode);
+            return getFunctionLiteralTypeInfo(expression, getFunctionLiteralArgument(expression, context), context);
         }
         JetTypeInfo recordedTypeInfo = getRecordedTypeInfo(expression, context.trace.getBindingContext());
         if (recordedTypeInfo != null) {
@@ -212,10 +204,9 @@ public class ArgumentTypeResolver {
     public JetTypeInfo getFunctionLiteralTypeInfo(
             @NotNull JetExpression expression,
             @NotNull JetFunction functionLiteral,
-            @NotNull CallResolutionContext<?> context,
-            @NotNull ResolveArgumentsMode resolveArgumentsMode
+            @NotNull CallResolutionContext<?> context
     ) {
-        if (resolveArgumentsMode == SHAPE_FUNCTION_ARGUMENTS) {
+        if (context.resolveArguments == SHAPE_FUNCTION_ARGUMENTS) {
             JetType type = getShapeTypeOfFunctionLiteral(functionLiteral, context.scope, context.trace);
             return TypeInfoFactoryPackage.createTypeInfo(type, context);
         }
@@ -291,7 +282,7 @@ public class ArgumentTypeResolver {
 
             CallResolutionContext<?> newContext = context.replaceDataFlowInfo(infoForArguments.getInfo(argument));
             // Here we go inside arguments and determine additional data flow information for them
-            JetTypeInfo typeInfoForCall = getArgumentTypeInfo(expression, newContext, SHAPE_FUNCTION_ARGUMENTS);
+            JetTypeInfo typeInfoForCall = getArgumentTypeInfo(expression, newContext.replaceResolveArgumentsMode(SHAPE_FUNCTION_ARGUMENTS));
             infoForArguments.updateInfo(argument, typeInfoForCall.getDataFlowInfo());
         }
     }

@@ -83,7 +83,8 @@ class FunctionLiteralArgumentResolver(
         val expectedTypeWithNoOrUnitReturnType = if (hasUnitReturnType) expectedType else CallResolverUtil.replaceReturnTypeBy(expectedType, DONT_CARE)
         val newContext = context.replaceExpectedType(expectedTypeWithNoOrUnitReturnType)
                 .replaceDataFlowInfo(dataFlowInfoForArgument).replaceContextDependency(DEPENDENT)
-        val type = argumentTypeResolver.getFunctionLiteralTypeInfo(argumentExpression, functionLiteral, newContext, RESOLVE_FUNCTION_ARGUMENTS).type
+        val type = argumentTypeResolver.getFunctionLiteralTypeInfo(
+                argumentExpression, functionLiteral, newContext.replaceResolveArgumentsMode(RESOLVE_FUNCTION_ARGUMENTS)).type
         constraintSystem.addSubtypeConstraint(type, effectiveExpectedType, VALUE_PARAMETER_POSITION.position(valueParameterDescriptor.getIndex()))
     }
 }

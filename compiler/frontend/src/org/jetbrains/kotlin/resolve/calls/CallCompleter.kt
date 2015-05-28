@@ -167,7 +167,7 @@ public class CallCompleter(
     ) {
         val contextWithResolvedCall = CallCandidateResolutionContext.createForCallBeingAnalyzed(this, context, tracing)
         val valueArgumentsCheckingResult = candidateResolver.checkAllValueArguments(
-                contextWithResolvedCall, context.trace, RESOLVE_FUNCTION_ARGUMENTS)
+                contextWithResolvedCall.replaceResolveArgumentsMode(RESOLVE_FUNCTION_ARGUMENTS), context.trace)
 
         val status = getStatus()
         if (getConstraintSystem()!!.getStatus().isSuccessful()) {
@@ -273,7 +273,7 @@ public class CallCompleter(
         if (ArgumentTypeResolver.isFunctionLiteralArgument(expression, context)) {
             argumentTypeResolver.getFunctionLiteralTypeInfo(
                     expression, ArgumentTypeResolver.getFunctionLiteralArgument(expression, context),
-                    context, RESOLVE_FUNCTION_ARGUMENTS)
+                    context.replaceResolveArgumentsMode(RESOLVE_FUNCTION_ARGUMENTS))
         }
 
         DataFlowUtils.checkType(updatedType, deparenthesized, context)

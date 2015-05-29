@@ -301,7 +301,12 @@ public class TypeUtils {
             processAllTypeParameters(withParameters, Variance.INVARIANT, processor);
             processAllTypeParameters(expected, Variance.INVARIANT, processor);
             ConstraintSystemImpl constraintSystem = new ConstraintSystemImpl();
-            constraintSystem.registerTypeVariables(parameters);
+            constraintSystem.registerTypeVariables(parameters.keySet(), new Function1<TypeParameterDescriptor, Variance>() {
+                @Override
+                public Variance invoke(TypeParameterDescriptor descriptor) {
+                    return parameters.get(descriptor);
+                }
+            }, /* local = */ true);
             constraintSystem.addSubtypeConstraint(withParameters, expected, SPECIAL.position());
 
             return constraintSystem.getStatus().isSuccessful();

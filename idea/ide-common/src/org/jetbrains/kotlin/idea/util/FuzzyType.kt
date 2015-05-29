@@ -103,11 +103,7 @@ class FuzzyType(
         }
 
         val constraintSystem = ConstraintSystemImpl()
-        val typeVariables = LinkedHashMap<TypeParameterDescriptor, Variance>()
-        for (typeParameter in freeParameters) {
-            typeVariables[typeParameter] = Variance.INVARIANT
-        }
-        constraintSystem.registerTypeVariables(typeVariables)
+        constraintSystem.registerTypeVariables(freeParameters, { Variance.INVARIANT })
 
         when (matchKind) {
             MatchKind.IS_SUBTYPE -> constraintSystem.addSubtypeConstraint(type, otherType, ConstraintPositionKind.SPECIAL.position())

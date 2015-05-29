@@ -30,28 +30,15 @@ import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.Constrain
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.TYPE_BOUND_POSITION
 import org.jetbrains.kotlin.resolve.scopes.JetScope
 import org.jetbrains.kotlin.types.*
-import org.jetbrains.kotlin.types.TypeUtils.DONT_CARE
-import org.jetbrains.kotlin.types.TypeProjectionImpl
-import org.jetbrains.kotlin.types.TypeSubstitutor
-import org.jetbrains.kotlin.types.ErrorUtils
 import org.jetbrains.kotlin.types.ErrorUtils.FunctionPlaceholderTypeConstructor
-import org.jetbrains.kotlin.types.Variance
-import org.jetbrains.kotlin.builtins.KotlinBuiltIns
-import org.jetbrains.kotlin.descriptors.annotations.Annotations
-import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl.ConstraintKind
+import org.jetbrains.kotlin.types.TypeUtils.DONT_CARE
 import org.jetbrains.kotlin.types.checker.TypeCheckingProcedure
 import org.jetbrains.kotlin.types.checker.TypeCheckingProcedureCallbacks
 import java.util.ArrayList
 import java.util.HashMap
+import java.util.HashSet
 import java.util.LinkedHashMap
-import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPosition
-import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.*
-import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.CompoundConstraintPosition
-import org.jetbrains.kotlin.types.getCustomTypeVariable
-import org.jetbrains.kotlin.types.isFlexible
-import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.Bound
-import org.jetbrains.kotlin.types.TypeSubstitution
-import org.jetbrains.kotlin.types.checker.JetTypeChecker
+import kotlin.reflect.jvm.internal.impl.resolve.calls.inference
 
 public class ConstraintSystemImpl : ConstraintSystem {
 
@@ -63,6 +50,9 @@ public class ConstraintSystemImpl : ConstraintSystem {
     fun ConstraintKind.toBound() = if (this == SUB_TYPE) UPPER_BOUND else EXACT_BOUND
 
     private val typeParameterBounds = LinkedHashMap<TypeParameterDescriptor, TypeBoundsImpl>()
+    private val localTypeParameters = HashSet<TypeParameterDescriptor>()
+    private val localTypeParameterBounds: Map<TypeParameterDescriptor, TypeBoundsImpl>
+        get() = typeParameterBounds.filter { localTypeParameters.contains(it.key) }
 
     private val errors = ArrayList<ConstraintError>()
     public val constraintErrors: List<ConstraintError>
@@ -77,9 +67,9 @@ public class ConstraintSystemImpl : ConstraintSystem {
 
         override fun hasViolatedUpperBound() = !isSuccessful() && getSystemWithoutWeakConstraints().getStatus().isSuccessful()
 
-        override fun hasConflictingConstraints() = typeParameterBounds.values().any { it.values.size() > 1 }
+        override fun hasConflictingConstraints() = localTypeParameterBounds.values().any { it.values.size() > 1 }
 
-        override fun hasUnknownParameters() = typeParameterBounds.values().any { it.values.isEmpty() }
+        override fun hasUnknownParameters() = localTypeParameterBounds.values().any { it.values.isEmpty() }
 
         override fun hasTypeConstructorMismatch() = errors.any { it is TypeConstructorMismatch }
 
@@ -127,9 +117,16 @@ public class ConstraintSystemImpl : ConstraintSystem {
 
     override fun getStatus(): ConstraintSystemStatus = constraintSystemStatus
 
-    override fun registerTypeVariables(typeVariables: Map<TypeParameterDescriptor, Variance>) {
-        for ((typeVariable, positionVariance) in typeVariables) {
-            typeParameterBounds.put(typeVariable, TypeBoundsImpl(typeVariable, positionVariance))
+    override fun registerTypeVariables(
+            typeVariables: Collection<TypeParameterDescriptor>,
+            typeVariableVariance: (TypeParameterDescriptor) -> Variance,
+            local: Boolean
+    ) {
+        if (local) {
+            localTypeParameters.addAll(typeVariables)
+        }
+        for (typeVariable in typeVariables) {
+            typeParameterBounds.put(typeVariable, TypeBoundsImpl(typeVariable, typeVariableVariance(typeVariable)))
         }
         for ((typeVariable, typeBounds) in typeParameterBounds) {
             for (declaredUpperBound in typeVariable.getUpperBounds()) {
@@ -183,9 +180,10 @@ public class ConstraintSystemImpl : ConstraintSystem {
     ): ConstraintSystem {
         val newSystem = ConstraintSystemImpl()
         for ((typeParameter, typeBounds) in typeParameterBounds) {
-            val newTypeParameter = substituteTypeVariable(typeParameter)
+            val newTypeParameter = substituteTypeVariable(typeParameter) ?: typeParameter
             newSystem.typeParameterBounds.put(newTypeParameter, replaceTypeBounds(typeBounds))
         }
+        newSystem.localTypeParameters.addAll(localTypeParameters.map { substituteTypeVariable(it) ?: it })
         newSystem.errors.addAll(errors.filter { filterConstraintPosition(it.constraintPosition) }.map { it.substituteTypeVariable(substituteTypeVariable) })
         return newSystem
     }
@@ -309,6 +307,13 @@ public class ConstraintSystemImpl : ConstraintSystem {
         }
         simplifyConstraint(newSubType, superType)
 
+    }
+
+    override fun addTypeBounds(typeVariable: TypeParameterDescriptor, typeBounds: TypeBounds) {
+        val type = JetTypeImpl(Annotations.EMPTY, typeVariable.getTypeConstructor(), false, emptyList(), JetScope.Empty)
+        for (bound in typeBounds.bounds) {
+            addBound(type, bound)
+        }
     }
 
     fun addBound(variable: JetType, bound: Bound) {

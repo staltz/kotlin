@@ -16,6 +16,7 @@
 
 package org.jetbrains.kotlin.resolve.calls
 
+import com.google.common.collect.Lists
 import com.google.common.collect.Maps
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
@@ -25,13 +26,17 @@ import org.jetbrains.kotlin.psi.JetExpression
 import org.jetbrains.kotlin.psi.ValueArgument
 import org.jetbrains.kotlin.resolve.FunctionDescriptorUtil
 import org.jetbrains.kotlin.resolve.calls.CallResolverUtil.getEffectiveExpectedType
+import org.jetbrains.kotlin.resolve.calls.callUtil.getCall
+import org.jetbrains.kotlin.resolve.calls.context.BasicCallResolutionContext
 import org.jetbrains.kotlin.resolve.calls.context.CallCandidateResolutionContext
 import org.jetbrains.kotlin.resolve.calls.context.ContextDependency.INDEPENDENT
 import org.jetbrains.kotlin.resolve.calls.context.ContextDependency.PARTLY_DEPENDENT
 import org.jetbrains.kotlin.resolve.calls.context.ResolutionContext
+import org.jetbrains.kotlin.resolve.calls.context.ResolutionResultsCache
 import org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.SHAPE_FUNCTION_ARGUMENTS
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystem
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl
+import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPosition
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.RECEIVER_POSITION
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.VALUE_PARAMETER_POSITION
 import org.jetbrains.kotlin.resolve.calls.inference.createTypeForFunctionPlaceholder
@@ -48,6 +53,7 @@ import org.jetbrains.kotlin.types.TypeUtils.DONT_CARE
 import org.jetbrains.kotlin.types.TypeUtils.makeConstantSubstitutor
 import org.jetbrains.kotlin.types.Variance
 import org.jetbrains.kotlin.types.checker.JetTypeChecker
+import org.jetbrains.kotlin.types.expressions.ExpressionTypingUtils
 
 class GenericCandidateResolver(
         val argumentTypeResolver: ArgumentTypeResolver
@@ -66,14 +72,14 @@ class GenericCandidateResolver(
         // Thus, we replace the parameters of our descriptor with fresh objects (perform alpha-conversion)
         val candidateWithFreshVariables = FunctionDescriptorUtil.alphaConvertTypeParameters(candidate)
 
-        val typeVariables = Maps.newLinkedHashMap<TypeParameterDescriptor, Variance>()
+        val typeVariables = Lists.newArrayList<TypeParameterDescriptor>()
         val backConversion = Maps.newHashMap<TypeParameterDescriptor, TypeParameterDescriptor>()
         for (typeParameterDescriptor in candidateWithFreshVariables.getTypeParameters()) {
-            typeVariables.put(typeParameterDescriptor, Variance.INVARIANT) // TODO: variance of the occurrences
+            typeVariables.add(typeParameterDescriptor)
             backConversion.put(typeParameterDescriptor, candidate.getTypeParameters().get(typeParameterDescriptor.getIndex()))
         }
 
-        constraintSystem.registerTypeVariables(typeVariables)
+        constraintSystem.registerTypeVariables(typeVariables, { Variance.INVARIANT })
 
         val substituteDontCare = makeConstantSubstitutor(candidateWithFreshVariables.getTypeParameters(), DONT_CARE)
 
@@ -121,6 +127,13 @@ class GenericCandidateResolver(
         return OTHER_ERROR
     }
 
+    fun getResolutionResultsCachedData(expression: JetExpression?, context: ResolutionContext<*>): ResolutionResultsCache.CachedData? {
+        if (!ExpressionTypingUtils.dependsOnExpectedType(expression)) return null
+        val argumentCall = expression?.getCall(context.trace.getBindingContext()) ?: return null
+
+        return context.resolutionResultsCache[argumentCall]
+    }
+
     private fun addConstraintForValueArgument(
             valueArgument: ValueArgument,
             valueParameterDescriptor: ValueParameterDescriptor,
@@ -138,8 +151,40 @@ class GenericCandidateResolver(
         val typeInfoForCall = argumentTypeResolver.getArgumentTypeInfo(argumentExpression, newContext)
         context.candidateCall.getDataFlowInfoForArguments().updateInfo(valueArgument, typeInfoForCall.dataFlowInfo)
 
+        val constraintPosition = VALUE_PARAMETER_POSITION.position(valueParameterDescriptor.getIndex())
+
+        if (addConstraintForNestedCall(argumentExpression, constraintPosition, constraintSystem, newContext, effectiveExpectedType)) return
+
         val type = updateResultTypeForSmartCasts(typeInfoForCall.type, argumentExpression, context.replaceDataFlowInfo(dataFlowInfoForArgument))
-        constraintSystem.addSubtypeConstraint(type, effectiveExpectedType, VALUE_PARAMETER_POSITION.position(valueParameterDescriptor.getIndex()))
+        constraintSystem.addSubtypeConstraint(type, effectiveExpectedType, constraintPosition)
+    }
+
+    private fun addConstraintForNestedCall(
+            argumentExpression: JetExpression?,
+            constraintPosition: ConstraintPosition,
+            constraintSystem: ConstraintSystem,
+            context: CallCandidateResolutionContext<*>,
+            effectiveExpectedType: JetType
+    ): Boolean {
+        val resolutionResults = getResolutionResultsCachedData(argumentExpression, context)?.resolutionResults
+        if (resolutionResults == null || !resolutionResults.isSingleResult()) return false
+
+        val resultingCall = resolutionResults.getResultingCall()
+        if (resultingCall.isCompleted()) return false
+
+        val argumentConstraintSystem = resultingCall.getConstraintSystem()
+        if (argumentConstraintSystem == null || argumentConstraintSystem.getStatus().hasContradiction()) return false
+
+        val variables = argumentConstraintSystem.getTypeVariables()
+        constraintSystem.registerTypeVariables(variables, { Variance.INVARIANT }, local = false)
+
+        for (variable in variables) {
+            constraintSystem.addTypeBounds(variable, argumentConstraintSystem.getTypeBounds(variable))
+        }
+
+        val type = resultingCall.getCandidateDescriptor().getReturnType()
+        constraintSystem.addSubtypeConstraint(type, effectiveExpectedType, constraintPosition)
+        return true
     }
 
     private fun updateResultTypeForSmartCasts(

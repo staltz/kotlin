@@ -84,12 +84,9 @@ abstract public class AbstractConstraintSystemTest() : JetLiteFixture() {
 
         val constraintSystem = ConstraintSystemImpl()
 
-        val typeParameterDescriptors = LinkedHashMap<TypeParameterDescriptor, Variance>()
         val variables = parseVariables(fileText)
-        for (variable in variables) {
-            typeParameterDescriptors.put(testDeclarations.getParameterDescriptor(variable), Variance.INVARIANT)
-        }
-        constraintSystem.registerTypeVariables(typeParameterDescriptors)
+        val typeParameterDescriptors = variables.map { testDeclarations.getParameterDescriptor(it) }
+        constraintSystem.registerTypeVariables(typeParameterDescriptors, { Variance.INVARIANT })
 
         val constraints = parseConstraints(fileText)
         for (constraint in constraints) {
@@ -106,9 +103,9 @@ abstract public class AbstractConstraintSystemTest() : JetLiteFixture() {
 
         val resultingSubstitutor = constraintSystem.getResultingSubstitutor()
         val result = StringBuilder() append "result:\n"
-        for ((typeParameter, variance) in typeParameterDescriptors) {
+        for (typeParameter in typeParameterDescriptors) {
             val parameterType = testDeclarations.getType(typeParameter.getName().asString())
-            val resultType = resultingSubstitutor.substitute(parameterType, variance)
+            val resultType = resultingSubstitutor.substitute(parameterType, Variance.INVARIANT)
             result append "${typeParameter.getName()}=${resultType?.let{ DescriptorRenderer.SHORT_NAMES_IN_TYPES.renderType(it) }}\n"
         }
 

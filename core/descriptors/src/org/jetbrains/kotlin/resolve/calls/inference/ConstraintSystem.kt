@@ -26,8 +26,13 @@ public trait ConstraintSystem {
 
     /**
      * Registers variables in a constraint system.
+     * The type variables for the corresponding function are local, the type variables of inner arguments calls are non-local.
      */
-    public fun registerTypeVariables(typeVariables: Map<TypeParameterDescriptor, Variance>)
+    public fun registerTypeVariables(
+            typeVariables: Collection<TypeParameterDescriptor>,
+            typeVariableVariance: (TypeParameterDescriptor) -> Variance,
+            local: Boolean = true
+    )
 
     /**
      * Returns a set of all registered type variables.
@@ -51,6 +56,11 @@ public trait ConstraintSystem {
      * should be generated a constraint <tt>"Int is a supertype of T"</tt> where T is a subject type, and Int is a constraining type.
      */
     public fun addSupertypeConstraint(constrainingType: JetType?, subjectType: JetType, constraintPosition: ConstraintPosition)
+
+    /**
+     * Adds type bounds for non-local type variable
+     * */
+    public fun addTypeBounds(typeVariable: TypeParameterDescriptor, typeBounds: TypeBounds)
 
     public fun getStatus(): ConstraintSystemStatus
 

@@ -907,8 +907,12 @@ public class KotlinBuiltIns {
         return isAnyOrNullableAny(type) && type.isMarkedNullable();
     }
 
+    public static boolean isUnitOrNullableUnit(@NotNull JetType type) {
+        return isConstructedFromGivenClass(type, FQ_NAMES.unit);
+    }
+
     public static boolean isUnit(@NotNull JetType type) {
-        return isNotNullConstructedFromGivenClass(type, FQ_NAMES.unit);
+        return isUnitOrNullableUnit(type) && !type.isMarkedNullable();
     }
 
     public boolean isBooleanOrSubtype(@NotNull JetType type) {

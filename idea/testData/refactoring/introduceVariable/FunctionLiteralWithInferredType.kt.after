@@ -1,0 +1,6 @@
+fun <T> foo(f: () -> Collection<T>, p: (T) -> Boolean): Collection<T> = throw Exception()
+
+fun test() {
+    val value = { emptyList() }
+    val r: Collection<Int> = foo(value, { x -> x > 0 })
+}

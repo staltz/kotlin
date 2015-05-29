@@ -270,7 +270,7 @@ public class ExpressionTypingServices {
         if (context.expectedType != NO_EXPECTED_TYPE) {
             JetType expectedType;
             if (context.expectedType == UNIT_EXPECTED_TYPE ||//the first check is necessary to avoid invocation 'isUnit(UNIT_EXPECTED_TYPE)'
-                (coercionStrategyForLastExpression == COERCION_TO_UNIT && KotlinBuiltIns.isUnit(context.expectedType))) {
+                (coercionStrategyForLastExpression == COERCION_TO_UNIT && KotlinBuiltIns.isUnitOrNullableUnit(context.expectedType))) {
                 expectedType = UNIT_EXPECTED_TYPE;
             }
             else {

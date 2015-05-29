@@ -982,7 +982,7 @@ public class BasicExpressionTypingVisitor extends ExpressionTypingVisitor {
             baseTypeInfo = baseTypeInfo.replaceDataFlowInfo(dataFlowInfo.disequate(value, DataFlowValue.NULL));
         }
         JetType resultingType = TypeUtils.makeNotNullable(baseType);
-        if (context.contextDependency == DEPENDENT) {
+        if (context.contextDependency != INDEPENDENT) {
             return baseTypeInfo.replaceType(resultingType);
         }
 
@@ -1311,7 +1311,7 @@ public class BasicExpressionTypingVisitor extends ExpressionTypingVisitor {
         if (!TypeUtils.isNullableType(rightType) && TypeUtils.isNullableType(type)) {
             type = TypeUtils.makeNotNullable(type);
         }
-        if (context.contextDependency == DEPENDENT) {
+        if (context.contextDependency != INDEPENDENT) {
             return TypeInfoFactoryPackage.createTypeInfo(type, dataFlowInfo);
         }
 

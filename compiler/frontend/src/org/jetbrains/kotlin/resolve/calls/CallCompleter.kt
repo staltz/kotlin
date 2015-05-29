@@ -229,30 +229,30 @@ public class CallCompleter(
         completeOneArgument(expression, context)
     }
 
-    private fun completeFunctionLiteral(context: BasicCallResolutionContext, expression: JetExpression) {
+    private fun completeFunctionLiteral(context: BasicCallResolutionContext, expression: JetExpression, functionType: JetType?): JetType? {
         val functionLiteral = ArgumentTypeResolver.getFunctionLiteralArgument(expression, context)
-        val lastExpression = ArgumentTypeResolver.getLastElementDeparenthesized(functionLiteral.getBodyExpression(), context) ?: return
+        val lastExpression = ArgumentTypeResolver.getLastElementDeparenthesized(functionLiteral.getBodyExpression(), context) ?: return null
 
         val expectedType = context.expectedType
         val expectedReturnType = when {
             !TypeUtils.noExpectedType(expectedType) && KotlinBuiltIns.isFunctionOrExtensionFunctionType(expectedType) ->
                 KotlinBuiltIns.getReturnTypeFromFunctionType(expectedType).let {
-                    if (KotlinBuiltIns.isUnit(it)) TypeUtils.UNIT_EXPECTED_TYPE else it
+                    if (KotlinBuiltIns.isUnitOrNullableUnit(it)) TypeUtils.UNIT_EXPECTED_TYPE else it
                 }
             else -> TypeUtils.NO_EXPECTED_TYPE
         }
-        completeOneArgument(lastExpression, context.replaceExpectedType(expectedReturnType))
+        val returnType = completeOneArgument(lastExpression, context.replaceExpectedType(expectedReturnType))
+        if (functionType == null || returnType == null) return null
+        if (expectedReturnType === TypeUtils.UNIT_EXPECTED_TYPE) return functionType
+
+        return CallResolverUtil.replaceReturnTypeBy(functionType, returnType)
     }
 
     private fun completeOneArgument(
             expression: JetExpression,
             context: BasicCallResolutionContext
-    ) {
-        if (ArgumentTypeResolver.isFunctionLiteralArgument(expression, context)) {
-            completeFunctionLiteral(context, expression)
-        }
-
-        val deparenthesized = ArgumentTypeResolver.getLastElementDeparenthesized(expression, context) ?: return
+    ): JetType? {
+        val deparenthesized = ArgumentTypeResolver.getLastElementDeparenthesized(expression, context) ?: return null
 
         val recordedType = context.trace.getType(expression)
         var updatedType: JetType? = recordedType
@@ -269,6 +269,10 @@ public class CallCompleter(
             updatedType = ArgumentTypeResolver.updateResultArgumentTypeIfNotDenotable(context, expression)
         }
 
+        if (ArgumentTypeResolver.isFunctionLiteralArgument(expression, context)) {
+            updatedType = completeFunctionLiteral(context, expression, recordedType)
+        }
+
         updatedType = updateRecordedTypeForArgument(updatedType, recordedType, expression, context.trace)
 
         // While the expected type is not known, the function literal arguments are not analyzed (to analyze function literal bodies once),
@@ -278,7 +282,7 @@ public class CallCompleter(
                     expression, ArgumentTypeResolver.getFunctionLiteralArgument(expression, context), context)
         }
 
-        DataFlowUtils.checkType(updatedType, deparenthesized, context)
+        return DataFlowUtils.checkType(updatedType, deparenthesized, context)
     }
 
     private fun completeCallForArgument(

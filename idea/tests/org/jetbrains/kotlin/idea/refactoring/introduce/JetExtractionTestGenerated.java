@@ -103,6 +103,12 @@ public class JetExtractionTestGenerated extends AbstractJetExtractionTest {
             doIntroduceVariableTest(fileName);
         }
 
+        @TestMetadata("FunctionLiteralWithInferredType.kt")
+        public void testFunctionLiteralWithInferredType() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/refactoring/introduceVariable/FunctionLiteralWithInferredType.kt");
+            doIntroduceVariableTest(fileName);
+        }
+
         @TestMetadata("IfCondition.kt")
         public void testIfCondition() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("idea/testData/refactoring/introduceVariable/IfCondition.kt");

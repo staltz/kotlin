@@ -19,23 +19,17 @@ package org.jetbrains.kotlin.resolve.calls
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
-import org.jetbrains.kotlin.psi.JetFunction
 import org.jetbrains.kotlin.psi.ValueArgument
-import org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.RESOLVE_FUNCTION_ARGUMENTS
 import org.jetbrains.kotlin.resolve.calls.CallResolverUtil.getEffectiveExpectedType
 import org.jetbrains.kotlin.resolve.calls.context.CallCandidateResolutionContext
-import org.jetbrains.kotlin.resolve.calls.context.ContextDependency.DEPENDENT
 import org.jetbrains.kotlin.resolve.calls.context.ContextDependency.INDEPENDENT
-import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystem
+import org.jetbrains.kotlin.resolve.calls.context.ContextDependency.PARTLY_DEPENDENT
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.VALUE_PARAMETER_POSITION
 import org.jetbrains.kotlin.resolve.calls.inference.createTypeForFunctionPlaceholder
-import org.jetbrains.kotlin.resolve.calls.model.ResolvedValueArgument
-import org.jetbrains.kotlin.types.ErrorUtils
-import org.jetbrains.kotlin.types.ErrorUtils.*
+import org.jetbrains.kotlin.types.ErrorUtils.isFunctionPlaceholder
 import org.jetbrains.kotlin.types.TypeUtils
 import org.jetbrains.kotlin.types.TypeUtils.DONT_CARE
 import org.jetbrains.kotlin.types.Variance
-import java.util.*
 
 class FunctionLiteralArgumentResolver(
         val argumentTypeResolver: ArgumentTypeResolver
@@ -93,7 +87,7 @@ class FunctionLiteralArgumentResolver(
         // Unit is not replaced by DONT_CARE to be able to do COERCION_TO_UNIT
         val expectedTypeWithNoOrUnitReturnType = if (hasUnitReturnType) expectedType else CallResolverUtil.replaceReturnTypeBy(expectedType, DONT_CARE)
         val newContext = context.replaceExpectedType(expectedTypeWithNoOrUnitReturnType)
-                .replaceDataFlowInfo(dataFlowInfoForArgument).replaceContextDependency(if (inCompleter) INDEPENDENT else DEPENDENT)
+                .replaceDataFlowInfo(dataFlowInfoForArgument).replaceContextDependency(if (inCompleter) INDEPENDENT else PARTLY_DEPENDENT)
         val type = argumentTypeResolver.getFunctionLiteralTypeInfo(argumentExpression, functionLiteral, newContext).type
         constraintSystem.addSubtypeConstraint(type, effectiveExpectedType, VALUE_PARAMETER_POSITION.position(valueParameterDescriptor.getIndex()))
         context.candidateCall.markAsProcessed(valueArgument);

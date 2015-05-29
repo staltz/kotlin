@@ -53,14 +53,14 @@ public class CallResolverUtil {
         return false;
     }
 
-    public static JetType replaceReturnTypeBy(@NotNull JetType type, @NotNull JetType replacement) {
-        assert KotlinBuiltIns.isFunctionOrExtensionFunctionType(type) :
-                "Function or extension function type expected, not " + Renderers.RENDER_TYPE.render(type);
-        List<TypeProjection> arguments = type.getArguments();
+    public static JetType replaceReturnTypeBy(@NotNull JetType functionType, @NotNull JetType replacement) {
+        assert KotlinBuiltIns.isFunctionOrExtensionFunctionType(functionType) :
+                "Function or extension function type expected, not " + Renderers.RENDER_TYPE.render(functionType);
+        List<TypeProjection> arguments = functionType.getArguments();
         List<TypeProjection> newArguments = Lists.newArrayList();
         newArguments.addAll(arguments.subList(0, arguments.size() - 1));
         newArguments.add(new TypeProjectionImpl(Variance.INVARIANT, replacement));
-        return new JetTypeImpl(type.getAnnotations(), type.getConstructor(), type.isMarkedNullable(), newArguments, type.getMemberScope());
+        return new JetTypeImpl(functionType.getAnnotations(), functionType.getConstructor(), functionType.isMarkedNullable(), newArguments, functionType.getMemberScope());
     }
 
     private static boolean hasReturnTypeDependentOnUninferredParams(

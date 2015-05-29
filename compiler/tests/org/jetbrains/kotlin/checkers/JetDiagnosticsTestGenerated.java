@@ -10929,6 +10929,18 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                 doTest(fileName);
             }
 
+            @TestMetadata("inferenceInLinkedLambdasDependentOnExpectedType.kt")
+            public void testInferenceInLinkedLambdasDependentOnExpectedType() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/inferenceInLinkedLambdasDependentOnExpectedType.kt");
+                doTest(fileName);
+            }
+
+            @TestMetadata("inferenceInLinkedLambdasPartlyDependent.kt")
+            public void testInferenceInLinkedLambdasPartlyDependent() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/inferenceInLinkedLambdasPartlyDependent.kt");
+                doTest(fileName);
+            }
+
             @TestMetadata("objectLiteralAsArgument.kt")
             public void testObjectLiteralAsArgument() throws Exception {
                 String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/objectLiteralAsArgument.kt");

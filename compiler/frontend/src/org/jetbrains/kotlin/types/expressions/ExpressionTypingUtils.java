@@ -47,7 +47,7 @@ import java.util.List;
 import static org.jetbrains.kotlin.diagnostics.Errors.*;
 import static org.jetbrains.kotlin.psi.PsiPackage.JetPsiFactory;
 import static org.jetbrains.kotlin.resolve.BindingContext.PROCESSED;
-import static org.jetbrains.kotlin.resolve.calls.context.ContextDependency.INDEPENDENT;
+import static org.jetbrains.kotlin.resolve.calls.context.ContextDependency.DEPENDENT;
 
 public class ExpressionTypingUtils {
 
@@ -250,7 +250,7 @@ public class ExpressionTypingUtils {
             @NotNull KotlinBuiltIns kotlinBuiltIns
     ) {
         JetType expressionType = value.getType(kotlinBuiltIns);
-        if (value instanceof IntegerValueTypeConstant && context.contextDependency == INDEPENDENT) {
+        if (value instanceof IntegerValueTypeConstant && context.contextDependency != DEPENDENT) {
             expressionType = ((IntegerValueTypeConstant) value).getType(context.expectedType);
             ArgumentTypeResolver.updateNumberType(expressionType, expression, context);
         }

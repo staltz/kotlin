@@ -35,7 +35,7 @@ import org.jetbrains.kotlin.resolve.calls.CallResolver;
 import org.jetbrains.kotlin.resolve.calls.ArgumentTypeResolver;
 import org.jetbrains.kotlin.resolve.calls.CallCompleter;
 import org.jetbrains.kotlin.resolve.calls.CandidateResolver;
-import org.jetbrains.kotlin.resolve.calls.FunctionLiteralArgumentResolver;
+import org.jetbrains.kotlin.resolve.calls.GenericCandidateResolver;
 import org.jetbrains.kotlin.resolve.calls.tasks.TaskPrioritizer;
 import org.jetbrains.kotlin.resolve.DelegatedPropertyResolver;
 import org.jetbrains.kotlin.resolve.TypeResolver.FlexibleTypeCapabilitiesProvider;
@@ -76,7 +76,7 @@ public class InjectorForTests {
     private final ArgumentTypeResolver argumentTypeResolver;
     private final CallCompleter callCompleter;
     private final CandidateResolver candidateResolver;
-    private final FunctionLiteralArgumentResolver functionLiteralArgumentResolver;
+    private final GenericCandidateResolver genericCandidateResolver;
     private final TaskPrioritizer taskPrioritizer;
     private final DelegatedPropertyResolver delegatedPropertyResolver;
     private final FlexibleTypeCapabilitiesProvider flexibleTypeCapabilitiesProvider;
@@ -118,8 +118,8 @@ public class InjectorForTests {
         this.symbolUsageValidator = additionalCheckerProvider.getSymbolUsageValidator();
         this.argumentTypeResolver = new ArgumentTypeResolver();
         this.candidateResolver = new CandidateResolver();
-        this.functionLiteralArgumentResolver = new FunctionLiteralArgumentResolver(argumentTypeResolver);
-        this.callCompleter = new CallCompleter(argumentTypeResolver, candidateResolver, functionLiteralArgumentResolver);
+        this.genericCandidateResolver = new GenericCandidateResolver(argumentTypeResolver);
+        this.callCompleter = new CallCompleter(argumentTypeResolver, candidateResolver, genericCandidateResolver);
         this.taskPrioritizer = new TaskPrioritizer(storageManager);
         this.delegatedPropertyResolver = new DelegatedPropertyResolver();
         this.callExpressionResolver = new CallExpressionResolver(callResolver, kotlinBuiltIns);
@@ -151,7 +151,7 @@ public class InjectorForTests {
         callResolver.setCallCompleter(callCompleter);
         callResolver.setCandidateResolver(candidateResolver);
         callResolver.setExpressionTypingServices(expressionTypingServices);
-        callResolver.setFunctionLiteralArgumentResolver(functionLiteralArgumentResolver);
+        callResolver.setGenericCandidateResolver(genericCandidateResolver);
         callResolver.setTaskPrioritizer(taskPrioritizer);
         callResolver.setTypeResolver(typeResolver);
 
@@ -160,6 +160,7 @@ public class InjectorForTests {
         argumentTypeResolver.setTypeResolver(typeResolver);
 
         candidateResolver.setArgumentTypeResolver(argumentTypeResolver);
+        candidateResolver.setGenericCandidateResolver(genericCandidateResolver);
 
         delegatedPropertyResolver.setAdditionalCheckerProvider(additionalCheckerProvider);
         delegatedPropertyResolver.setBuiltIns(kotlinBuiltIns);

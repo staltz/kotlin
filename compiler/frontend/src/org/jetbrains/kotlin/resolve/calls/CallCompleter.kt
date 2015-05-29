@@ -49,7 +49,7 @@ import java.util.ArrayList
 public class CallCompleter(
         val argumentTypeResolver: ArgumentTypeResolver,
         val candidateResolver: CandidateResolver,
-        val functionLiteralArgumentResolver: FunctionLiteralArgumentResolver
+        val genericCandidateResolver: GenericCandidateResolver
 ) {
     fun <D : CallableDescriptor> completeCall(
             context: BasicCallResolutionContext,
@@ -162,7 +162,7 @@ public class CallCompleter(
             }
         }
 
-        functionLiteralArgumentResolver.completeTypeInferenceDependentOnFunctionLiteralsForCall(context, inCompleter = true)
+        genericCandidateResolver.completeTypeInferenceDependentOnFunctionLiteralsForCall(context, inCompleter = true)
         setResultingSubstitutor(getConstraintSystem()!!.getResultingSubstitutor())
     }
 

@@ -50,7 +50,7 @@ import org.jetbrains.kotlin.builtins.ReflectionTypes;
 import org.jetbrains.kotlin.types.expressions.ValueParameterResolver;
 import org.jetbrains.kotlin.resolve.calls.CallCompleter;
 import org.jetbrains.kotlin.resolve.calls.CandidateResolver;
-import org.jetbrains.kotlin.resolve.calls.FunctionLiteralArgumentResolver;
+import org.jetbrains.kotlin.resolve.calls.GenericCandidateResolver;
 import org.jetbrains.kotlin.resolve.calls.tasks.TaskPrioritizer;
 import org.jetbrains.kotlin.resolve.ControlFlowAnalyzer;
 import org.jetbrains.kotlin.resolve.DeclarationsChecker;
@@ -98,7 +98,7 @@ public class InjectorForBodyResolve {
     private final ValueParameterResolver valueParameterResolver;
     private final CallCompleter callCompleter;
     private final CandidateResolver candidateResolver;
-    private final FunctionLiteralArgumentResolver functionLiteralArgumentResolver;
+    private final GenericCandidateResolver genericCandidateResolver;
     private final TaskPrioritizer taskPrioritizer;
     private final ControlFlowAnalyzer controlFlowAnalyzer;
     private final DeclarationsChecker declarationsChecker;
@@ -145,8 +145,8 @@ public class InjectorForBodyResolve {
         this.reflectionTypes = new ReflectionTypes(moduleDescriptor);
         this.valueParameterResolver = new ValueParameterResolver(additionalCheckerProvider, expressionTypingServices);
         this.candidateResolver = new CandidateResolver();
-        this.functionLiteralArgumentResolver = new FunctionLiteralArgumentResolver(argumentTypeResolver);
-        this.callCompleter = new CallCompleter(argumentTypeResolver, candidateResolver, functionLiteralArgumentResolver);
+        this.genericCandidateResolver = new GenericCandidateResolver(argumentTypeResolver);
+        this.callCompleter = new CallCompleter(argumentTypeResolver, candidateResolver, genericCandidateResolver);
         this.taskPrioritizer = new TaskPrioritizer(storageManager);
         this.controlFlowAnalyzer = new ControlFlowAnalyzer();
         this.declarationsChecker = new DeclarationsChecker();
@@ -175,7 +175,7 @@ public class InjectorForBodyResolve {
         callResolver.setCallCompleter(callCompleter);
         callResolver.setCandidateResolver(candidateResolver);
         callResolver.setExpressionTypingServices(expressionTypingServices);
-        callResolver.setFunctionLiteralArgumentResolver(functionLiteralArgumentResolver);
+        callResolver.setGenericCandidateResolver(genericCandidateResolver);
         callResolver.setTaskPrioritizer(taskPrioritizer);
         callResolver.setTypeResolver(typeResolver);
 
@@ -226,6 +226,7 @@ public class InjectorForBodyResolve {
         forLoopConventionsChecker.setSymbolUsageValidator(symbolUsageValidator);
 
         candidateResolver.setArgumentTypeResolver(argumentTypeResolver);
+        candidateResolver.setGenericCandidateResolver(genericCandidateResolver);
 
         controlFlowAnalyzer.setTrace(bindingTrace);
 

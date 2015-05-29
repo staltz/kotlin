@@ -68,10 +68,17 @@ import static org.jetbrains.kotlin.types.TypeUtils.*;
 public class CandidateResolver {
     @NotNull
     private ArgumentTypeResolver argumentTypeResolver;
+    @NotNull
+    private GenericCandidateResolver genericCandidateResolver;
 
     @Inject
     public void setArgumentTypeResolver(@NotNull ArgumentTypeResolver argumentTypeResolver) {
         this.argumentTypeResolver = argumentTypeResolver;
+    }
+
+    @Inject
+    public void setGenericCandidateResolver(@NotNull GenericCandidateResolver genericCandidateResolver) {
+        this.genericCandidateResolver = genericCandidateResolver;
     }
 
     public <D extends CallableDescriptor, F extends D> void performResolutionForCandidateCall(

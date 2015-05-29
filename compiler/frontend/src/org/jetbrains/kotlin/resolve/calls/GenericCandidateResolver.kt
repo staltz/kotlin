@@ -31,7 +31,7 @@ import org.jetbrains.kotlin.types.TypeUtils
 import org.jetbrains.kotlin.types.TypeUtils.DONT_CARE
 import org.jetbrains.kotlin.types.Variance
 
-class FunctionLiteralArgumentResolver(
+class GenericCandidateResolver(
         val argumentTypeResolver: ArgumentTypeResolver
 ) {
 

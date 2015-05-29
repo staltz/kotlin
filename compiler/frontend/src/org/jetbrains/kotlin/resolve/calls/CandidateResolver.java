@@ -17,10 +17,8 @@
 package org.jetbrains.kotlin.resolve.calls;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns;
@@ -36,7 +34,6 @@ import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystem;
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl;
 import org.jetbrains.kotlin.resolve.calls.model.*;
 import org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus;
-import org.jetbrains.kotlin.resolve.calls.smartcasts.DataFlowInfo;
 import org.jetbrains.kotlin.resolve.calls.smartcasts.DataFlowValue;
 import org.jetbrains.kotlin.resolve.calls.smartcasts.DataFlowValueFactory;
 import org.jetbrains.kotlin.resolve.calls.smartcasts.SmartCastUtils;
@@ -56,14 +53,11 @@ import java.util.*;
 
 import static org.jetbrains.kotlin.diagnostics.Errors.PROJECTION_ON_NON_CLASS_TYPE_ARGUMENT;
 import static org.jetbrains.kotlin.diagnostics.Errors.SUPER_CANT_BE_EXTENSION_RECEIVER;
-import static org.jetbrains.kotlin.resolve.calls.ArgumentTypeResolver.getLastElementDeparenthesized;
-import static org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.SHAPE_FUNCTION_ARGUMENTS;
 import static org.jetbrains.kotlin.resolve.calls.CallResolverUtil.getEffectiveExpectedType;
 import static org.jetbrains.kotlin.resolve.calls.CallTransformer.CallForImplicitInvoke;
-import static org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.RECEIVER_POSITION;
-import static org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.VALUE_PARAMETER_POSITION;
+import static org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.SHAPE_FUNCTION_ARGUMENTS;
 import static org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus.*;
-import static org.jetbrains.kotlin.types.TypeUtils.*;
+import static org.jetbrains.kotlin.types.TypeUtils.noExpectedType;
 
 public class CandidateResolver {
     @NotNull
@@ -169,7 +163,7 @@ public class CandidateResolver {
         if (jetTypeArguments.isEmpty() &&
             !candidate.getTypeParameters().isEmpty() &&
             candidateCall.getKnownTypeParametersSubstitutor() == null) {
-            candidateCall.addStatus(inferTypeArguments(context));
+            candidateCall.addStatus(genericCandidateResolver.inferTypeArguments(context));
         }
         else {
             candidateCall.addStatus(checkAllValueArguments(context.replaceResolveArgumentsMode(SHAPE_FUNCTION_ARGUMENTS)).status);
@@ -294,127 +288,6 @@ public class CandidateResolver {
         if (expectedThis == null) return null;
         DeclarationDescriptor descriptor = expectedThis.getContainingDeclaration();
         return descriptor instanceof ClassDescriptor ? (ClassDescriptor) descriptor : null;
-    }
-
-    private <D extends CallableDescriptor> ResolutionStatus inferTypeArguments(CallCandidateResolutionContext<D> context) {
-        MutableResolvedCall<D> candidateCall = context.candidateCall;
-        final D candidate = candidateCall.getCandidateDescriptor();
-
-        ConstraintSystemImpl constraintSystem = new ConstraintSystemImpl();
-
-        // If the call is recursive, e.g.
-        //   fun foo<T>(t : T) : T = foo(t)
-        // we can't use same descriptor objects for T's as actual type values and same T's as unknowns,
-        // because constraints become trivial (T :< T), and inference fails
-        //
-        // Thus, we replace the parameters of our descriptor with fresh objects (perform alpha-conversion)
-        CallableDescriptor candidateWithFreshVariables = FunctionDescriptorUtil.alphaConvertTypeParameters(candidate);
-
-        Map<TypeParameterDescriptor, Variance> typeVariables = Maps.newLinkedHashMap();
-        final Map<TypeParameterDescriptor, TypeParameterDescriptor> backConversion = Maps.newHashMap();
-        for (TypeParameterDescriptor typeParameterDescriptor : candidateWithFreshVariables.getTypeParameters()) {
-            typeVariables.put(typeParameterDescriptor, Variance.INVARIANT); // TODO: variance of the occurrences
-            backConversion.put(typeParameterDescriptor, candidate.getTypeParameters().get(typeParameterDescriptor.getIndex()));
-        }
-
-        constraintSystem.registerTypeVariables(typeVariables);
-
-        TypeSubstitutor substituteDontCare =
-                makeConstantSubstitutor(candidateWithFreshVariables.getTypeParameters(), DONT_CARE);
-
-        // Value parameters
-        for (Map.Entry<ValueParameterDescriptor, ResolvedValueArgument> entry : candidateCall.getValueArguments().entrySet()) {
-            ResolvedValueArgument resolvedValueArgument = entry.getValue();
-            ValueParameterDescriptor valueParameterDescriptor = candidateWithFreshVariables.getValueParameters().get(entry.getKey().getIndex());
-
-
-            for (ValueArgument valueArgument : resolvedValueArgument.getArguments()) {
-                // TODO : more attempts, with different expected types
-
-                // Here we type check expecting an error type (DONT_CARE, substitution with substituteDontCare)
-                // and throw the results away
-                // We'll type check the arguments later, with the inferred types expected
-                addConstraintForValueArgument(valueArgument, valueParameterDescriptor, substituteDontCare, constraintSystem,
-                                              context.replaceResolveArgumentsMode(SHAPE_FUNCTION_ARGUMENTS));
-            }
-        }
-
-        // Receiver
-        // Error is already reported if something is missing
-        ReceiverValue receiverArgument = candidateCall.getExtensionReceiver();
-        ReceiverParameterDescriptor receiverParameter = candidateWithFreshVariables.getExtensionReceiverParameter();
-        if (receiverArgument.exists() && receiverParameter != null) {
-            JetType receiverType =
-                    context.candidateCall.isSafeCall()
-                    ? TypeUtils.makeNotNullable(receiverArgument.getType())
-                    : receiverArgument.getType();
-            if (receiverArgument instanceof ExpressionReceiver) {
-                receiverType = updateResultTypeForSmartCasts(
-                        receiverType, ((ExpressionReceiver) receiverArgument).getExpression(), context);
-            }
-            constraintSystem.addSubtypeConstraint(receiverType, receiverParameter.getType(), RECEIVER_POSITION.position());
-        }
-
-        // Restore type variables before alpha-conversion
-        ConstraintSystem constraintSystemWithRightTypeParameters = constraintSystem.substituteTypeVariables(
-                new Function1<TypeParameterDescriptor, TypeParameterDescriptor>() {
-                    @Override
-                    public TypeParameterDescriptor invoke(@NotNull TypeParameterDescriptor typeParameterDescriptor) {
-                        return backConversion.get(typeParameterDescriptor);
-                    }
-                }
-        );
-        candidateCall.setConstraintSystem(constraintSystemWithRightTypeParameters);
-
-
-        // Solution
-        boolean hasContradiction = constraintSystem.getStatus().hasContradiction();
-        if (!hasContradiction) {
-            return INCOMPLETE_TYPE_INFERENCE;
-        }
-        return OTHER_ERROR;
-    }
-
-    private void addConstraintForValueArgument(
-            @NotNull ValueArgument valueArgument,
-            @NotNull ValueParameterDescriptor valueParameterDescriptor,
-            @NotNull TypeSubstitutor substitutor,
-            @NotNull ConstraintSystem constraintSystem,
-            @NotNull CallCandidateResolutionContext<?> context
-    ) {
-        JetType effectiveExpectedType = getEffectiveExpectedType(valueParameterDescriptor, valueArgument);
-        JetExpression argumentExpression = valueArgument.getArgumentExpression();
-
-        JetType expectedType = substitutor.substitute(effectiveExpectedType, Variance.INVARIANT);
-        DataFlowInfo dataFlowInfoForArgument = context.candidateCall.getDataFlowInfoForArguments().getInfo(valueArgument);
-        CallResolutionContext<?> newContext = context.replaceExpectedType(expectedType).replaceDataFlowInfo(dataFlowInfoForArgument);
-
-        JetTypeInfo typeInfoForCall = argumentTypeResolver.getArgumentTypeInfo(
-                argumentExpression, newContext);
-        context.candidateCall.getDataFlowInfoForArguments().updateInfo(valueArgument, typeInfoForCall.getDataFlowInfo());
-
-        JetType type = updateResultTypeForSmartCasts(
-                typeInfoForCall.getType(), argumentExpression, context.replaceDataFlowInfo(dataFlowInfoForArgument));
-        constraintSystem.addSubtypeConstraint(
-                type, effectiveExpectedType, VALUE_PARAMETER_POSITION.position(valueParameterDescriptor.getIndex()));
-    }
-
-    @Nullable
-    private static JetType updateResultTypeForSmartCasts(
-            @Nullable JetType type,
-            @Nullable JetExpression argumentExpression,
-            @NotNull ResolutionContext context
-    ) {
-        JetExpression deparenthesizedArgument = getLastElementDeparenthesized(argumentExpression, context);
-        if (deparenthesizedArgument == null || type == null) return type;
-
-        DataFlowValue dataFlowValue = DataFlowValueFactory.createDataFlowValue(deparenthesizedArgument, type, context);
-        if (!dataFlowValue.isPredictable()) return type;
-
-        Set<JetType> possibleTypes = context.dataFlowInfo.getPossibleTypes(dataFlowValue);
-        if (possibleTypes.isEmpty()) return type;
-
-        return TypeUtils.intersect(JetTypeChecker.DEFAULT, possibleTypes);
     }
 
     @NotNull

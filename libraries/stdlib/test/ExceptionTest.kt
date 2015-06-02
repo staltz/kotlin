@@ -30,12 +30,12 @@ class ExceptionTest {
     fun assertPrintStackTraceStream(t: Throwable) {
         val byteBuffer = ByteArrayOutputStream()
 
-        PrintStream(byteBuffer).use {
+        using(PrintStream(byteBuffer)) {
             t.printStackTrace(it)
         }
 
         val stream = PrintStream(byteBuffer)
-        stream.use {
+        using(stream) {
             t.printStackTrace(stream)
         }
 

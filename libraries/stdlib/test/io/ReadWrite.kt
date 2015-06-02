@@ -152,7 +152,7 @@ class ReadWriteTest {
         val list = ArrayList<String>()
         val reader = sample().buffered()
 
-        reader.use {
+        using(reader) {
             while (true) {
                 val line = it.readLine()
                 if (line != null)

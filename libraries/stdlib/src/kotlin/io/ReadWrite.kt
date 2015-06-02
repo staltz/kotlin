@@ -42,7 +42,7 @@ public fun File.printWriter(): PrintWriter = PrintWriter(bufferedWriter())
  *
  * @return the entire content of this file as a byte array.
  */
-public fun File.readBytes(): ByteArray = FileInputStream(this).use { it.readBytes(length().toInt()) }
+public fun File.readBytes(): ByteArray = using(FileInputStream(this)) { it.readBytes(length().toInt()) }
 
 /**
  * Sets the content of this file as an [array] of bytes.
@@ -50,14 +50,14 @@ public fun File.readBytes(): ByteArray = FileInputStream(this).use { it.readByte
  *
  * @param array byte array to write into this file.
  */
-public fun File.writeBytes(array: ByteArray): Unit = FileOutputStream(this).use { it.write(array) }
+public fun File.writeBytes(array: ByteArray): Unit = using(FileOutputStream(this)) { it.write(array) }
 
 /**
  * Appends an [array] of bytes to the content of this file.
  *
  * @param array byte array to append to this file.
  */
-public fun File.appendBytes(array: ByteArray): Unit = FileOutputStream(this, true).use { it.write(array) }
+public fun File.appendBytes(array: ByteArray): Unit = using(FileOutputStream(this, true)) { it.write(array) }
 
 /**
  * Gets the entire content of this file as a String using specified [charset].
@@ -235,7 +235,7 @@ public fun Reader.forEachLine(block: (String) -> Unit): Unit = useLines { it.for
  * @return the value returned by [block].
  */
 public inline fun <T> Reader.useLines(block: (Sequence<String>) -> T): T =
-        buffered().use { block(it.lines()) }
+        using(buffered()) { block(it.lines()) }
 
 /**
  * Returns a sequence of corresponding file lines.
@@ -340,7 +340,7 @@ public fun URL.readText(charset: Charset = Charsets.UTF_8): String = readBytes()
  *
  * @return a byte array with this URL entire content.
  */
-public fun URL.readBytes(): ByteArray = openStream().use { it.readBytes() }
+public fun URL.readBytes(): ByteArray = using(openStream()) { it.readBytes() }
 
 /**
  * Executes the given [block] function on this resource and then closes it down correctly whether an exception
@@ -349,6 +349,7 @@ public fun URL.readBytes(): ByteArray = openStream().use { it.readBytes() }
  * @param block a function to process this closable resource.
  * @return the result of [block] function on this closable resource.
  */
+deprecated("Use using(Closeable) instead.", ReplaceWith("using(this, block)"))
 public inline fun <T : Closeable, R> T.use(block: (T) -> R): R {
     var closed = false
     try {
@@ -373,3 +374,5 @@ public inline fun <T : Closeable, R> T.use(block: (T) -> R): R {
         }
     }
 }
+
+public inline fun <T : Closeable, R> using(value: T, block: (T) -> R): R = value.use(block)

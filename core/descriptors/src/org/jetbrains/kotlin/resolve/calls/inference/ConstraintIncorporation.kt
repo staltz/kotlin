@@ -16,6 +16,8 @@
 
 package org.jetbrains.kotlin.resolve.calls.inference
 
+import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
+import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl.ConstraintKind.EQUAL
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl.ConstraintKind.SUB_TYPE
 import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.Bound
@@ -24,16 +26,26 @@ import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.EXACT_B
 import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.LOWER_BOUND
 import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.UPPER_BOUND
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.CompoundConstraintPosition
+import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind
+import org.jetbrains.kotlin.resolve.scopes.JetScope
 import org.jetbrains.kotlin.types.*
 import org.jetbrains.kotlin.types.Variance.INVARIANT
-import org.jetbrains.kotlin.types.Variance.OUT_VARIANCE
+import org.jetbrains.kotlin.types.Variance.IN_VARIANCE
+import org.jetbrains.kotlin.types.typeUtil.getNestedTypeArguments
 import java.util.ArrayList
 
 fun ConstraintSystemImpl.incorporateConstraint(variable: JetType, constrainingBound: Bound) {
     val typeBounds = getTypeBounds(variable)
+    val typeVariable = getMyTypeVariable(variable)!!
+
     val bounds = ArrayList(typeBounds.bounds)
     for (variableBound in bounds) {
         addConstraintFromBounds(variableBound, constrainingBound)
+    }
+    val dependentBounds = ArrayList(getDependentBounds(typeVariable))
+    for (dependentBound in dependentBounds) {
+        val type = JetTypeImpl(Annotations.EMPTY, dependentBound.typeVariable.getTypeConstructor(), false, listOf(), JetScope.Empty)
+        generateNewConstraint(type, dependentBound, constrainingBound)
     }
 
     val constrainingType = constrainingBound.constrainingType
@@ -42,28 +54,17 @@ fun ConstraintSystemImpl.incorporateConstraint(variable: JetType, constrainingBo
         addBound(constrainingType, bound)
         return
     }
-    constrainingType.forEachTypeArgument {
-        typeProjection ->
-        val argument = typeProjection.getType()
-        val variance = typeProjection.getProjectionKind()
-        val typeVariable = getMyTypeVariable(argument)
-        if (typeVariable != null) {
-            for (variableBound in getTypeBounds(typeVariable).bounds) {
-                val newKind = computeNewKind(variance, variableBound.kind, constrainingBound.kind)
-                if (newKind != null && variableBound != constrainingBound) {
-                    val newTypeProjection = TypeProjectionImpl(variance, variableBound.constrainingType)
-                    val substitutor = TypeSubstitutor.create(mapOf(typeVariable.getTypeConstructor() to newTypeProjection))
-                    val newConstrainingType = substitutor.substitute(constrainingType, Variance.INVARIANT)!!
-                    val pure = with (this) { newConstrainingType.isPure() }
-                    val position = CompoundConstraintPosition(variableBound.position, constrainingBound.position)
-                    addBound(variable, Bound(newConstrainingType, newKind, position, pure))
-                }
+    constrainingType.getNestedTypeArguments().forEach {
+        val argument = it.getType()
+        if (isMyTypeVariable(argument)) {
+            for (variableBound in getTypeBounds(argument).bounds) {
+                generateNewConstraint(variable, constrainingBound, variableBound)
             }
         }
     }
 }
 
-fun ConstraintSystemImpl.addConstraintFromBounds(first: Bound, second: Bound) {
+private fun ConstraintSystemImpl.addConstraintFromBounds(first: Bound, second: Bound) {
     if (first == second) return
     if (first.pure && second.pure) return
 
@@ -83,35 +84,64 @@ fun ConstraintSystemImpl.addConstraintFromBounds(first: Bound, second: Bound) {
     }
 }
 
-fun computeNewKind(variance: Variance, variableKind: BoundKind, constrainingKind: BoundKind): BoundKind? {
-    if (variableKind == EXACT_BOUND) return constrainingKind
-    if (variance == INVARIANT) return null
+private fun ConstraintSystemImpl.generateNewConstraint(
+        variable: JetType,
+        bound: Bound,
+        substitution: Bound
+) {
+    // Let's have a variable T, a bound 'T <=> My<R>', and a substitution 'R <=> Type'.
+    // Here <=> means lower_bound, upper_bound or exact_bound constraint.
+    // Then a new bound 'T <=> My<Type>' can be generated.
 
-    fun BoundKind.reverse(variance: Variance) = if (variance == OUT_VARIANCE) this else this.reverse()
+    // A variance of R in 'My<R>' (with respect to both use-site and declaration-site variance).
+    val substitutionVariance: Variance = bound.constrainingType.getNestedTypeArguments().firstOrNull {
+        getMyTypeVariable(it.getType()) === substitution.typeVariable
+    }?.getProjectionKind() ?: return
 
-    if (constrainingKind == EXACT_BOUND) return variableKind.reverse(variance)
-    if (constrainingKind.reverse(variance) == variableKind) return constrainingKind
+    val newKind = computeKindOfNewBound(bound.kind, substitutionVariance, substitution.kind)
+    if (newKind == null || substitution == bound) return
+
+    val newTypeProjection = TypeProjectionImpl(substitutionVariance, substitution.constrainingType)
+    val substitutor = TypeSubstitutor.create(mapOf(substitution.typeVariable.getTypeConstructor() to newTypeProjection))
+    val newConstrainingType = substitutor.substitute(bound.constrainingType, INVARIANT)!!
+
+    val pure = with (this) { newConstrainingType.isPure() }
+    val position = CompoundConstraintPosition(bound.position, substitution.position)
+    addBound(variable, Bound(newConstrainingType, newKind, position, pure))
+}
+
+private fun computeKindOfNewBound(constrainingKind: BoundKind, substitutionVariance: Variance, substitutionKind: BoundKind): BoundKind? {
+    // In examples below: List<out T>, MutableList<T>, Comparator<in T>, the variance of My<T> may be any.
+
+    // T <=> My<R>, R <=> Type -> T <=> My<Type>
+
+    // T < My<R>, R = Int -> T < My<Int>
+    if (substitutionKind == EXACT_BOUND) return constrainingKind
+
+    // T < MutableList<R>, R < Number - nothing can be inferred (R might become 'Int' later)
+    if (substitutionVariance == INVARIANT) return null
+
+    val kind = if (substitutionVariance == IN_VARIANCE) substitutionKind.reverse() else substitutionKind
+
+    // T = List<R>, R < Int -> T < List<Int>; T = Consumer<R>, R < Int -> T > Consumer<Int>
+    if (constrainingKind == EXACT_BOUND) return kind
+
+    // T < List<R>, R < Int -> T < List<Int>; T < Consumer<R>, R > Int -> T < Consumer<Int>
+    if (constrainingKind == kind) return kind
+
+    // otherwise we can generate no new constraints
     return null
 }
 
-fun JetType.forEachTypeArgument(f: (TypeProjection) -> Unit) = TypeProjectionImpl(this).forEachTypeArgument(f)
+fun ConstraintSystemImpl.fixVariables() {
+    fun fixVariable(typeVariable: TypeParameterDescriptor) {
+        val typeBounds = getTypeBounds(typeVariable)
+        val value = typeBounds.value ?: return
 
-fun TypeProjection.forEachTypeArgument(f: (TypeProjection) -> Unit) {
-    if (isStarProjection()) return
-    val type = getType()
-    val arguments = type.getArguments()
-    if (arguments.isEmpty()) {
-        f(this)
-        return
+        val type = JetTypeImpl(Annotations.EMPTY, typeVariable.getTypeConstructor(), false, emptyList(), JetScope.Empty)
+        addBound(type, TypeBounds.Bound(value, BoundKind.EXACT_BOUND, ConstraintPositionKind.FROM_COMPLETER.position()))
     }
-    type.getConstructor().getParameters().zip(arguments).forEach {
-        val (parameter, argument) = it
-        val typeProjection = if (argument.getProjectionKind() == INVARIANT && parameter.getVariance() != INVARIANT) {
-            TypeProjectionImpl(parameter.getVariance(), argument.getType())
-        }
-        else {
-            argument
-        }
-        typeProjection.forEachTypeArgument(f)
-    }
+    val (local, nonlocal) = getTypeVariables().partition { isLocalVariable(it) }
+    nonlocal.forEach { fixVariable(it) }
+    local.forEach { fixVariable(it) }
 }

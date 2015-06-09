@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.UPPER_B
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPosition
 import org.jetbrains.kotlin.types.JetType
 import org.jetbrains.kotlin.types.Variance
+import kotlin.properties.Delegates
 
 public trait TypeBounds {
     public val varianceOfPosition: Variance
@@ -48,6 +49,8 @@ public trait TypeBounds {
             public val position: ConstraintPosition,
             public val pure: Boolean = true
     ) {
+        public var typeVariable: TypeParameterDescriptor by Delegates.notNull()
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || javaClass != other.javaClass) return false
@@ -68,6 +71,8 @@ public trait TypeBounds {
             result = 31 * result + if (position.isStrong()) 1 else 0
             return result
         }
+
+        override fun toString() = "Bound($constrainingType, $kind, $position, pure = $pure)"
     }
 }
 

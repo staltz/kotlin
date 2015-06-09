@@ -164,6 +164,33 @@ public class ConstraintSystemTestGenerated extends AbstractConstraintSystemTest 
         }
     }
 
+    @TestMetadata("compiler/testData/constraintSystem/interdependency")
+    @TestDataPath("$PROJECT_ROOT")
+    @RunWith(JUnit3RunnerWithInners.class)
+    public static class Interdependency extends AbstractConstraintSystemTest {
+        public void testAllFilesPresentInInterdependency() throws Exception {
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/interdependency"), Pattern.compile("^(.+)\\.bounds$"), true);
+        }
+
+        @TestMetadata("interdependency1.bounds")
+        public void testInterdependency1() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/interdependency/interdependency1.bounds");
+            doTest(fileName);
+        }
+
+        @TestMetadata("interdependency2.bounds")
+        public void testInterdependency2() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/interdependency/interdependency2.bounds");
+            doTest(fileName);
+        }
+
+        @TestMetadata("interdependency3.bounds")
+        public void testInterdependency3() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/interdependency/interdependency3.bounds");
+            doTest(fileName);
+        }
+    }
+
     @TestMetadata("compiler/testData/constraintSystem/severalVariables")
     @TestDataPath("$PROJECT_ROOT")
     @RunWith(JUnit3RunnerWithInners.class)
@@ -202,192 +229,399 @@ public class ConstraintSystemTestGenerated extends AbstractConstraintSystemTest 
             doTest(fileName);
         }
 
-        @TestMetadata("compiler/testData/constraintSystem/severalVariables/contravariant")
+        @TestMetadata("compiler/testData/constraintSystem/severalVariables/direct")
         @TestDataPath("$PROJECT_ROOT")
         @RunWith(JUnit3RunnerWithInners.class)
-        public static class Contravariant extends AbstractConstraintSystemTest {
-            public void testAllFilesPresentInContravariant() throws Exception {
-                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/contravariant"), Pattern.compile("^(.+)\\.bounds$"), true);
+        public static class Direct extends AbstractConstraintSystemTest {
+            public void testAllFilesPresentInDirect() throws Exception {
+                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/direct"), Pattern.compile("^(.+)\\.bounds$"), true);
             }
 
-            @TestMetadata("varEqDepEq.bounds")
-            public void testVarEqDepEq() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/contravariant/varEqDepEq.bounds");
-                doTest(fileName);
+            @TestMetadata("compiler/testData/constraintSystem/severalVariables/direct/contravariant")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class Contravariant extends AbstractConstraintSystemTest {
+                public void testAllFilesPresentInContravariant() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/direct/contravariant"), Pattern.compile("^(.+)\\.bounds$"), true);
+                }
+
+                @TestMetadata("varEqDepEq.bounds")
+                public void testVarEqDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/contravariant/varEqDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varEqDepSub.bounds")
+                public void testVarEqDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/contravariant/varEqDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varEqDepSuper.bounds")
+                public void testVarEqDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/contravariant/varEqDepSuper.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepEq.bounds")
+                public void testVarSubDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/contravariant/varSubDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepSub.bounds")
+                public void testVarSubDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/contravariant/varSubDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepSuper.bounds")
+                public void testVarSubDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/contravariant/varSubDepSuper.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepEq.bounds")
+                public void testVarSuperDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/contravariant/varSuperDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepSub.bounds")
+                public void testVarSuperDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/contravariant/varSuperDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepSuper.bounds")
+                public void testVarSuperDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/contravariant/varSuperDepSuper.bounds");
+                    doTest(fileName);
+                }
             }
 
-            @TestMetadata("varEqDepSub.bounds")
-            public void testVarEqDepSub() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/contravariant/varEqDepSub.bounds");
-                doTest(fileName);
+            @TestMetadata("compiler/testData/constraintSystem/severalVariables/direct/covariant")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class Covariant extends AbstractConstraintSystemTest {
+                public void testAllFilesPresentInCovariant() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/direct/covariant"), Pattern.compile("^(.+)\\.bounds$"), true);
+                }
+
+                @TestMetadata("varEqDepEq.bounds")
+                public void testVarEqDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/covariant/varEqDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varEqDepSub.bounds")
+                public void testVarEqDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/covariant/varEqDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varEqDepSuper.bounds")
+                public void testVarEqDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/covariant/varEqDepSuper.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepEq.bounds")
+                public void testVarSubDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/covariant/varSubDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepSub.bounds")
+                public void testVarSubDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/covariant/varSubDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepSuper.bounds")
+                public void testVarSubDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/covariant/varSubDepSuper.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepEq.bounds")
+                public void testVarSuperDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/covariant/varSuperDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepSub.bounds")
+                public void testVarSuperDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/covariant/varSuperDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepSuper.bounds")
+                public void testVarSuperDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/covariant/varSuperDepSuper.bounds");
+                    doTest(fileName);
+                }
             }
 
-            @TestMetadata("varEqDepSuper.bounds")
-            public void testVarEqDepSuper() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/contravariant/varEqDepSuper.bounds");
-                doTest(fileName);
-            }
+            @TestMetadata("compiler/testData/constraintSystem/severalVariables/direct/invariant")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class Invariant extends AbstractConstraintSystemTest {
+                public void testAllFilesPresentInInvariant() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/direct/invariant"), Pattern.compile("^(.+)\\.bounds$"), true);
+                }
 
-            @TestMetadata("varSubDepEq.bounds")
-            public void testVarSubDepEq() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/contravariant/varSubDepEq.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varEqDepEq.bounds")
+                public void testVarEqDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/invariant/varEqDepEq.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varSubDepSub.bounds")
-            public void testVarSubDepSub() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/contravariant/varSubDepSub.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varEqDepSub.bounds")
+                public void testVarEqDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/invariant/varEqDepSub.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varSubDepSuper.bounds")
-            public void testVarSubDepSuper() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/contravariant/varSubDepSuper.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varEqDepSuper.bounds")
+                public void testVarEqDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/invariant/varEqDepSuper.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varSuperDepEq.bounds")
-            public void testVarSuperDepEq() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/contravariant/varSuperDepEq.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varSubDepEq.bounds")
+                public void testVarSubDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/invariant/varSubDepEq.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varSuperDepSub.bounds")
-            public void testVarSuperDepSub() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/contravariant/varSuperDepSub.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varSubDepSub.bounds")
+                public void testVarSubDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/invariant/varSubDepSub.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varSuperDepSuper.bounds")
-            public void testVarSuperDepSuper() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/contravariant/varSuperDepSuper.bounds");
-                doTest(fileName);
+                @TestMetadata("varSubDepSuper.bounds")
+                public void testVarSubDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/invariant/varSubDepSuper.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepEq.bounds")
+                public void testVarSuperDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/invariant/varSuperDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepSub.bounds")
+                public void testVarSuperDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/invariant/varSuperDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepSuper.bounds")
+                public void testVarSuperDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/direct/invariant/varSuperDepSuper.bounds");
+                    doTest(fileName);
+                }
             }
         }
 
-        @TestMetadata("compiler/testData/constraintSystem/severalVariables/covariant")
+        @TestMetadata("compiler/testData/constraintSystem/severalVariables/reversed")
         @TestDataPath("$PROJECT_ROOT")
         @RunWith(JUnit3RunnerWithInners.class)
-        public static class Covariant extends AbstractConstraintSystemTest {
-            public void testAllFilesPresentInCovariant() throws Exception {
-                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/covariant"), Pattern.compile("^(.+)\\.bounds$"), true);
+        public static class Reversed extends AbstractConstraintSystemTest {
+            public void testAllFilesPresentInReversed() throws Exception {
+                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/reversed"), Pattern.compile("^(.+)\\.bounds$"), true);
             }
 
-            @TestMetadata("varEqDepEq.bounds")
-            public void testVarEqDepEq() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/covariant/varEqDepEq.bounds");
-                doTest(fileName);
+            @TestMetadata("compiler/testData/constraintSystem/severalVariables/reversed/contravariant")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class Contravariant extends AbstractConstraintSystemTest {
+                public void testAllFilesPresentInContravariant() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/reversed/contravariant"), Pattern.compile("^(.+)\\.bounds$"), true);
+                }
+
+                @TestMetadata("varEqDepEq.bounds")
+                public void testVarEqDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/contravariant/varEqDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varEqDepSub.bounds")
+                public void testVarEqDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/contravariant/varEqDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varEqDepSuper.bounds")
+                public void testVarEqDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/contravariant/varEqDepSuper.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepEq.bounds")
+                public void testVarSubDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/contravariant/varSubDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepSub.bounds")
+                public void testVarSubDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/contravariant/varSubDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepSuper.bounds")
+                public void testVarSubDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/contravariant/varSubDepSuper.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepEq.bounds")
+                public void testVarSuperDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/contravariant/varSuperDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepSub.bounds")
+                public void testVarSuperDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/contravariant/varSuperDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepSuper.bounds")
+                public void testVarSuperDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/contravariant/varSuperDepSuper.bounds");
+                    doTest(fileName);
+                }
             }
 
-            @TestMetadata("varEqDepSub.bounds")
-            public void testVarEqDepSub() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/covariant/varEqDepSub.bounds");
-                doTest(fileName);
+            @TestMetadata("compiler/testData/constraintSystem/severalVariables/reversed/covariant")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class Covariant extends AbstractConstraintSystemTest {
+                public void testAllFilesPresentInCovariant() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/reversed/covariant"), Pattern.compile("^(.+)\\.bounds$"), true);
+                }
+
+                @TestMetadata("varEqDepEq.bounds")
+                public void testVarEqDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/covariant/varEqDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varEqDepSub.bounds")
+                public void testVarEqDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/covariant/varEqDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varEqDepSuper.bounds")
+                public void testVarEqDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/covariant/varEqDepSuper.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepEq.bounds")
+                public void testVarSubDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/covariant/varSubDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepSub.bounds")
+                public void testVarSubDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/covariant/varSubDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSubDepSuper.bounds")
+                public void testVarSubDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/covariant/varSubDepSuper.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepEq.bounds")
+                public void testVarSuperDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/covariant/varSuperDepEq.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepSub.bounds")
+                public void testVarSuperDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/covariant/varSuperDepSub.bounds");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("varSuperDepSuper.bounds")
+                public void testVarSuperDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/covariant/varSuperDepSuper.bounds");
+                    doTest(fileName);
+                }
             }
 
-            @TestMetadata("varEqDepSuper.bounds")
-            public void testVarEqDepSuper() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/covariant/varEqDepSuper.bounds");
-                doTest(fileName);
-            }
+            @TestMetadata("compiler/testData/constraintSystem/severalVariables/reversed/invariant")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class Invariant extends AbstractConstraintSystemTest {
+                public void testAllFilesPresentInInvariant() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/reversed/invariant"), Pattern.compile("^(.+)\\.bounds$"), true);
+                }
 
-            @TestMetadata("varSubDepEq.bounds")
-            public void testVarSubDepEq() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/covariant/varSubDepEq.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varEqDepEq.bounds")
+                public void testVarEqDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/invariant/varEqDepEq.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varSubDepSub.bounds")
-            public void testVarSubDepSub() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/covariant/varSubDepSub.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varEqDepSub.bounds")
+                public void testVarEqDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/invariant/varEqDepSub.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varSubDepSuper.bounds")
-            public void testVarSubDepSuper() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/covariant/varSubDepSuper.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varEqDepSuper.bounds")
+                public void testVarEqDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/invariant/varEqDepSuper.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varSuperDepEq.bounds")
-            public void testVarSuperDepEq() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/covariant/varSuperDepEq.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varSubDepEq.bounds")
+                public void testVarSubDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/invariant/varSubDepEq.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varSuperDepSub.bounds")
-            public void testVarSuperDepSub() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/covariant/varSuperDepSub.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varSubDepSub.bounds")
+                public void testVarSubDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/invariant/varSubDepSub.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varSuperDepSuper.bounds")
-            public void testVarSuperDepSuper() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/covariant/varSuperDepSuper.bounds");
-                doTest(fileName);
-            }
-        }
+                @TestMetadata("varSubDepSuper.bounds")
+                public void testVarSubDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/invariant/varSubDepSuper.bounds");
+                    doTest(fileName);
+                }
 
-        @TestMetadata("compiler/testData/constraintSystem/severalVariables/invariant")
-        @TestDataPath("$PROJECT_ROOT")
-        @RunWith(JUnit3RunnerWithInners.class)
-        public static class Invariant extends AbstractConstraintSystemTest {
-            public void testAllFilesPresentInInvariant() throws Exception {
-                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/invariant"), Pattern.compile("^(.+)\\.bounds$"), true);
-            }
+                @TestMetadata("varSuperDepEq.bounds")
+                public void testVarSuperDepEq() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/invariant/varSuperDepEq.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varEqDepEq.bounds")
-            public void testVarEqDepEq() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/invariant/varEqDepEq.bounds");
-                doTest(fileName);
-            }
+                @TestMetadata("varSuperDepSub.bounds")
+                public void testVarSuperDepSub() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/invariant/varSuperDepSub.bounds");
+                    doTest(fileName);
+                }
 
-            @TestMetadata("varEqDepSub.bounds")
-            public void testVarEqDepSub() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/invariant/varEqDepSub.bounds");
-                doTest(fileName);
-            }
-
-            @TestMetadata("varEqDepSuper.bounds")
-            public void testVarEqDepSuper() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/invariant/varEqDepSuper.bounds");
-                doTest(fileName);
-            }
-
-            @TestMetadata("varSubDepEq.bounds")
-            public void testVarSubDepEq() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/invariant/varSubDepEq.bounds");
-                doTest(fileName);
-            }
-
-            @TestMetadata("varSubDepSub.bounds")
-            public void testVarSubDepSub() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/invariant/varSubDepSub.bounds");
-                doTest(fileName);
-            }
-
-            @TestMetadata("varSubDepSuper.bounds")
-            public void testVarSubDepSuper() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/invariant/varSubDepSuper.bounds");
-                doTest(fileName);
-            }
-
-            @TestMetadata("varSuperDepEq.bounds")
-            public void testVarSuperDepEq() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/invariant/varSuperDepEq.bounds");
-                doTest(fileName);
-            }
-
-            @TestMetadata("varSuperDepSub.bounds")
-            public void testVarSuperDepSub() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/invariant/varSuperDepSub.bounds");
-                doTest(fileName);
-            }
-
-            @TestMetadata("varSuperDepSuper.bounds")
-            public void testVarSuperDepSuper() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/invariant/varSuperDepSuper.bounds");
-                doTest(fileName);
+                @TestMetadata("varSuperDepSuper.bounds")
+                public void testVarSuperDepSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/reversed/invariant/varSuperDepSuper.bounds");
+                    doTest(fileName);
+                }
             }
         }
     }

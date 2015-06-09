@@ -8,3 +8,4 @@ interface Consumer<in T>
 interface Producer<out T>
 
 interface My<T>
+interface Successor<T> : My<T>

@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.resolve.TypeResolver
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.SPECIAL
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.TYPE_BOUND_POSITION
+import org.jetbrains.kotlin.resolve.calls.inference.fixVariables
 import org.jetbrains.kotlin.resolve.lazy.JvmResolveUtil
 import org.jetbrains.kotlin.test.ConfigurationKind
 import org.jetbrains.kotlin.test.JetLiteFixture
@@ -39,6 +40,7 @@ abstract public class AbstractConstraintSystemTest() : JetLiteFixture() {
     private val typePattern = """([\w|<|>|\(|\)]+)"""
     val constraintPattern = Pattern.compile("""(SUBTYPE|SUPERTYPE|EQUAL)\s+${typePattern}\s+${typePattern}\s+(weak)?""", Pattern.MULTILINE)
     val variablesPattern = Pattern.compile("VARIABLES\\s+(.*)")
+    val fixVariablesPattern = "FIX_VARIABLES"
 
     private var _typeResolver: TypeResolver? = null
     private val typeResolver: TypeResolver
@@ -85,6 +87,7 @@ abstract public class AbstractConstraintSystemTest() : JetLiteFixture() {
         val constraintSystem = ConstraintSystemImpl()
 
         val variables = parseVariables(fileText)
+        val fixVariables = fileText.contains(fixVariablesPattern)
         val typeParameterDescriptors = variables.map { testDeclarations.getParameterDescriptor(it) }
         constraintSystem.registerTypeVariables(typeParameterDescriptors, { Variance.INVARIANT })
 
@@ -99,6 +102,8 @@ abstract public class AbstractConstraintSystemTest() : JetLiteFixture() {
                 MyConstraintKind.EQUAL -> constraintSystem.addConstraint(ConstraintSystemImpl.ConstraintKind.EQUAL, firstType, secondType, position)
             }
         }
+        if (fixVariables) constraintSystem.fixVariables()
+
         val resultingStatus = Renderers.RENDER_CONSTRAINT_SYSTEM_SHORT.render(constraintSystem)
 
         val resultingSubstitutor = constraintSystem.getResultingSubstitutor()

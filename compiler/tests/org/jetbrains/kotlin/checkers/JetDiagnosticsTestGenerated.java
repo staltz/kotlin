@@ -6684,6 +6684,27 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                 }
             }
 
+            @TestMetadata("compiler/testData/diagnostics/tests/inference/commonSystem")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class CommonSystem extends AbstractJetDiagnosticsTest {
+                public void testAllFilesPresentInCommonSystem() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/diagnostics/tests/inference/commonSystem"), Pattern.compile("^(.+)\\.kt$"), true);
+                }
+
+                @TestMetadata("kt3372ToCollection.kt")
+                public void testKt3372ToCollection() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/inference/commonSystem/kt3372ToCollection.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("nestedLambdas.kt")
+                public void testNestedLambdas() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/inference/commonSystem/nestedLambdas.kt");
+                    doTest(fileName);
+                }
+            }
+
             @TestMetadata("compiler/testData/diagnostics/tests/inference/constraints")
             @TestDataPath("$PROJECT_ROOT")
             @RunWith(JUnit3RunnerWithInners.class)

@@ -25,8 +25,6 @@ import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createClass.CreateClas
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createVariable.CreateLocalVariableActionFactory;
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createVariable.CreateParameterActionFactory;
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createVariable.CreateParameterByNamedArgumentActionFactory;
-import org.jetbrains.kotlin.idea.quickfix.replaceJavaClass.ReplaceJavaClassAsAnnotationArgumentFix;
-import org.jetbrains.kotlin.idea.quickfix.replaceJavaClass.ReplaceJavaClassAsAnnotationParameterFix;
 import org.jetbrains.kotlin.psi.JetClass;
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.ErrorsJvm;
 
@@ -316,14 +314,8 @@ public class QuickFixRegistrar {
         QuickFixes.factories.put(EXPLICIT_DELEGATION_CALL_REQUIRED, InsertDelegationCallQuickfix.InsertThisDelegationCallFactory.INSTANCE$);
         QuickFixes.factories.put(EXPLICIT_DELEGATION_CALL_REQUIRED, InsertDelegationCallQuickfix.InsertSuperDelegationCallFactory.INSTANCE$);
 
-        QuickFixes.factories.put(ErrorsJvm.JAVA_LANG_CLASS_ARGUMENT_IN_ANNOTATION, ReplaceJavaClassAsAnnotationArgumentFix.Companion);
-        QuickFixes.factories.put(ErrorsJvm.JAVA_LANG_CLASS_ARGUMENT_IN_ANNOTATION, ReplaceJavaClassAsAnnotationArgumentFix.Companion.createWholeProjectFixFactory());
-
         QuickFixes.factories.put(ErrorsJvm.DEPRECATED_ANNOTATION_METHOD_CALL, MigrateAnnotationMethodCallFix.Companion);
         QuickFixes.factories.put(ErrorsJvm.DEPRECATED_ANNOTATION_METHOD_CALL, MigrateAnnotationMethodCallInWholeFile.Companion);
-
-        QuickFixes.factories.put(JAVA_LANG_CLASS_PARAMETER_IN_ANNOTATION, ReplaceJavaClassAsAnnotationParameterFix.Companion);
-        QuickFixes.factories.put(JAVA_LANG_CLASS_PARAMETER_IN_ANNOTATION, ReplaceJavaClassAsAnnotationParameterFix.Companion.createWholeProjectFixFactory());
 
         QuickFixes.factories.put(DEPRECATED_ANNOTATION_SYNTAX, DeprecatedAnnotationSyntaxFix.Companion);
         QuickFixes.factories.put(DEPRECATED_ANNOTATION_SYNTAX, DeprecatedAnnotationSyntaxFix.Companion.createWholeProjectFixFactory());

@@ -427,6 +427,27 @@ public class ConstraintSystemTestGenerated extends AbstractConstraintSystemTest 
             }
         }
 
+        @TestMetadata("compiler/testData/constraintSystem/severalVariables/recursive")
+        @TestDataPath("$PROJECT_ROOT")
+        @RunWith(JUnit3RunnerWithInners.class)
+        public static class Recursive extends AbstractConstraintSystemTest {
+            public void testAllFilesPresentInRecursive() throws Exception {
+                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/constraintSystem/severalVariables/recursive"), Pattern.compile("^(.+)\\.bounds$"), true);
+            }
+
+            @TestMetadata("mutuallyRecursive.bounds")
+            public void testMutuallyRecursive() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/recursive/mutuallyRecursive.bounds");
+                doTest(fileName);
+            }
+
+            @TestMetadata("simpleRecursive.bounds")
+            public void testSimpleRecursive() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/constraintSystem/severalVariables/recursive/simpleRecursive.bounds");
+                doTest(fileName);
+            }
+        }
+
         @TestMetadata("compiler/testData/constraintSystem/severalVariables/reversed")
         @TestDataPath("$PROJECT_ROOT")
         @RunWith(JUnit3RunnerWithInners.class)

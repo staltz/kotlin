@@ -99,11 +99,15 @@ private fun ConstraintSystemImpl.generateNewConstraint(
     }?.getProjectionKind() ?: return
 
     val newKind = computeKindOfNewBound(bound.kind, substitutionVariance, substitution.kind)
-    if (newKind == null || substitution == bound) return
+    // We don't substitute anything into recursive constraints
+    if (newKind == null || substitution.typeVariable == bound.typeVariable) return
 
     val newTypeProjection = TypeProjectionImpl(substitutionVariance, substitution.constrainingType)
     val substitutor = TypeSubstitutor.create(mapOf(substitution.typeVariable.getTypeConstructor() to newTypeProjection))
     val newConstrainingType = substitutor.substitute(bound.constrainingType, INVARIANT)!!
+
+    // We don't generate new recursive constraints
+    if (newConstrainingType.getNestedTypeVariables().contains(bound.typeVariable)) return
 
     val pure = with (this) { newConstrainingType.isPure() }
     val position = CompoundConstraintPosition(bound.position, substitution.position)

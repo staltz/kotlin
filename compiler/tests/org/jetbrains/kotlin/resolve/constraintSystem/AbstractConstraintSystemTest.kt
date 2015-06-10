@@ -37,7 +37,7 @@ import java.util.LinkedHashMap
 import java.util.regex.Pattern
 
 abstract public class AbstractConstraintSystemTest() : JetLiteFixture() {
-    private val typePattern = """([\w|<|>|\(|\)]+)"""
+    private val typePattern = """([\w|<|\,|>|\(|\)]+)"""
     val constraintPattern = Pattern.compile("""(SUBTYPE|SUPERTYPE|EQUAL)\s+${typePattern}\s+${typePattern}\s+(weak)?""", Pattern.MULTILINE)
     val variablesPattern = Pattern.compile("VARIABLES\\s+(.*)")
     val fixVariablesPattern = "FIX_VARIABLES"

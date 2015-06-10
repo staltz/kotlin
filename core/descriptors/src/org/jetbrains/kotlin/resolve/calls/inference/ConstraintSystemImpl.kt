@@ -312,12 +312,13 @@ public class ConstraintSystemImpl : ConstraintSystem {
             // but constraint system should be solved anyway
             val subTypeNotNullable = TypeUtils.makeNotNullable(subType)
             val superTypeNotNullable = TypeUtils.makeNotNullable(superType)
-            if (constraintKind == EQUAL) {
+            val result = if (constraintKind == EQUAL) {
                 typeCheckingProcedure.equalTypes(subTypeNotNullable, superTypeNotNullable)
             }
             else {
                 typeCheckingProcedure.isSubtypeOf(subTypeNotNullable, superTypeNotNullable)
             }
+            if (!result) errors.add(TypeConstructorMismatch(constraintPosition))
         }
         simplifyConstraint(newSubType, superType)
 

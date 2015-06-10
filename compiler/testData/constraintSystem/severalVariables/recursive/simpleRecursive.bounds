@@ -1,0 +1,21 @@
+VARIABLES T
+
+EQUAL T Int
+EQUAL T My<T>
+
+type parameter bounds:
+T := Int, := My<T>*
+
+status:
+-hasCannotCaptureTypesError: false
+-hasConflictingConstraints: false
+-hasContradiction: true
+-hasErrorInConstrainingTypes: false
+-hasTypeConstructorMismatch: true
+-hasUnknownParameters: false
+-hasViolatedUpperBound: false
+-isSuccessful: false
+
+result:
+T=Int
+

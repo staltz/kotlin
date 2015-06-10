@@ -9,3 +9,5 @@ interface Producer<out T>
 
 interface My<T>
 interface Successor<T> : My<T>
+
+interface Two<T, P>

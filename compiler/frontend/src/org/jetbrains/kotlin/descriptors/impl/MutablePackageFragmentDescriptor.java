@@ -17,26 +17,36 @@
 package org.jetbrains.kotlin.descriptors.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor;
 import org.jetbrains.kotlin.name.FqName;
+import org.jetbrains.kotlin.resolve.scopes.AbstractScopeAdapter;
 import org.jetbrains.kotlin.resolve.scopes.JetScope;
-import org.jetbrains.kotlin.resolve.scopes.RedeclarationHandler;
-import org.jetbrains.kotlin.resolve.scopes.WritableScope;
-import org.jetbrains.kotlin.resolve.scopes.WritableScopeImpl;
 
 public class MutablePackageFragmentDescriptor extends PackageFragmentDescriptorImpl {
-    private final WritableScope scope;
+    private final JetScope scope;
 
     public MutablePackageFragmentDescriptor(@NotNull ModuleDescriptor module, @NotNull FqName fqName) {
         super(module, fqName);
 
-        scope = new WritableScopeImpl(JetScope.Empty.INSTANCE$, this, RedeclarationHandler.DO_NOTHING, "Members of " + fqName + " in " + module);
-        scope.changeLockLevel(WritableScope.LockLevel.BOTH);
+        scope = new AbstractScopeAdapter() {
+            @NotNull
+            @Override
+            protected JetScope getWorkerScope() {
+                return Empty.INSTANCE$;
+            }
+
+            @NotNull
+            @Override
+            public DeclarationDescriptor getContainingDeclaration() {
+                return MutablePackageFragmentDescriptor.this;
+            }
+        };
     }
 
     @NotNull
     @Override
-    public WritableScope getMemberScope() {
+    public JetScope getMemberScope() {
         return scope;
     }
 }

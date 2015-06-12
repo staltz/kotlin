@@ -54,12 +54,12 @@ public class JvmRuntimeTypes {
     @NotNull
     private static ClassDescriptor createClass(@NotNull PackageFragmentDescriptor packageFragment, @NotNull String name) {
         MutableClassDescriptor descriptor = new MutableClassDescriptor(
-                packageFragment, packageFragment.getMemberScope(), ClassKind.CLASS, false, Name.identifier(name), SourceElement.NO_SOURCE
+                packageFragment, packageFragment.getMemberScope(), ClassKind.CLASS, false, Name.identifier(name), SourceElement.NO_SOURCE,
+                Collections.<TypeParameterDescriptor>emptyList()
         );
 
         descriptor.setModality(Modality.FINAL);
         descriptor.setVisibility(Visibilities.PUBLIC);
-        descriptor.setTypeParameterDescriptors(Collections.<TypeParameterDescriptor>emptyList());
         descriptor.createTypeConstructor();
 
         return descriptor;

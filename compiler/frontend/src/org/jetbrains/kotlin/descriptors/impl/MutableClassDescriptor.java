@@ -49,7 +49,7 @@ public class MutableClassDescriptor extends ClassDescriptorBase implements Class
     private final MutableScopeForMemberResolution mutableScopeForMemberResolution;
     private final JetScope scopeForMemberResolution;
     // This scope contains type parameters but does not contain inner classes
-    private final WritableScope scopeForSupertypeResolution;
+    private final JetScope scopeForSupertypeResolution;
     private JetScope scopeForInitializers; //contains members + primary constructor value parameters + map for backing fields
     private final JetScope scopeForMemberLookup;
     private final JetScope staticScope = new StaticScopeForKotlinClass(this);
@@ -60,7 +60,8 @@ public class MutableClassDescriptor extends ClassDescriptorBase implements Class
             @NotNull ClassKind kind,
             boolean isInner,
             @NotNull Name name,
-            @NotNull SourceElement source
+            @NotNull SourceElement source,
+            @NotNull List<TypeParameterDescriptor> typeParameters
     ) {
         super(LockBasedStorageManager.NO_LOCKS, containingDeclaration, name, source);
         assert kind != ClassKind.OBJECT : "Fix isCompanionObject()";
@@ -70,10 +71,19 @@ public class MutableClassDescriptor extends ClassDescriptorBase implements Class
 
         RedeclarationHandler redeclarationHandler = RedeclarationHandler.DO_NOTHING;
 
+        this.typeParameters = typeParameters;
+
         this.scopeForMemberLookup = new WritableScopeImpl(JetScope.Empty.INSTANCE$, this, redeclarationHandler, "MemberLookup", null, this)
                                         .changeLockLevel(WritableScope.LockLevel.BOTH);
-        this.scopeForSupertypeResolution = new WritableScopeImpl(outerScope, this, redeclarationHandler, "SupertypeResolution")
+
+        WritableScope scopeForSupertypeResolution = new WritableScopeImpl(outerScope, this, redeclarationHandler, "SupertypeResolution")
                 .changeLockLevel(WritableScope.LockLevel.BOTH);
+        for (TypeParameterDescriptor typeParameterDescriptor : typeParameters) {
+            scopeForSupertypeResolution.addClassifierDescriptor(typeParameterDescriptor);
+        }
+        scopeForSupertypeResolution.changeLockLevel(WritableScope.LockLevel.READING);
+        this.scopeForSupertypeResolution = scopeForSupertypeResolution.takeSnapshot();
+
         this.mutableScopeForMemberResolution = new MutableScopeForMemberResolution();
 
         if (kind == ClassKind.INTERFACE) {
@@ -198,17 +208,6 @@ public class MutableClassDescriptor extends ClassDescriptorBase implements Class
     @NotNull
     public Set<CallableMemberDescriptor> getDeclaredCallableMembers() {
         return declaredCallableMembers;
-    }
-
-    public void setTypeParameterDescriptors(@NotNull List<TypeParameterDescriptor> typeParameters) {
-        if (this.typeParameters != null) {
-            throw new IllegalStateException("Type parameters are already set for " + getName());
-        }
-        this.typeParameters = new ArrayList<TypeParameterDescriptor>(typeParameters);
-        for (TypeParameterDescriptor typeParameterDescriptor : typeParameters) {
-            scopeForSupertypeResolution.addClassifierDescriptor(typeParameterDescriptor);
-        }
-        scopeForSupertypeResolution.changeLockLevel(WritableScope.LockLevel.READING);
     }
 
     public void createTypeConstructor() {

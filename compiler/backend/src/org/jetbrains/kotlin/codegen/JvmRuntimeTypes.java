@@ -21,7 +21,7 @@ import org.jetbrains.kotlin.descriptors.*;
 import org.jetbrains.kotlin.descriptors.annotations.Annotations;
 import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl;
 import org.jetbrains.kotlin.descriptors.impl.MutableClassDescriptor;
-import org.jetbrains.kotlin.descriptors.impl.MutablePackageFragmentDescriptor;
+import org.jetbrains.kotlin.descriptors.impl.EmptyPackageFragmentDescriptor;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.jvm.TopDownAnalyzerFacadeForJVM;
@@ -45,7 +45,7 @@ public class JvmRuntimeTypes {
                 LockBasedStorageManager.NO_LOCKS,
                 TopDownAnalyzerFacadeForJVM.JVM_MODULE_PARAMETERS
         );
-        PackageFragmentDescriptor kotlinJvmInternal = new MutablePackageFragmentDescriptor(module, new FqName("kotlin.jvm.internal"));
+        PackageFragmentDescriptor kotlinJvmInternal = new EmptyPackageFragmentDescriptor(module, new FqName("kotlin.jvm.internal"));
 
         this.lambda = createClass(kotlinJvmInternal, "Lambda");
         this.functionReference = createClass(kotlinJvmInternal, "FunctionReference");

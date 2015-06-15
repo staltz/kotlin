@@ -39,7 +39,7 @@ import org.jetbrains.kotlin.cfg.pseudocode.Pseudocode
 import org.jetbrains.kotlin.cfg.pseudocode.getContainingPseudocode
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.annotations.Annotations
-import org.jetbrains.kotlin.descriptors.impl.MutablePackageFragmentDescriptor
+import org.jetbrains.kotlin.descriptors.impl.EmptyPackageFragmentDescriptor
 import org.jetbrains.kotlin.descriptors.impl.SimpleFunctionDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 import org.jetbrains.kotlin.idea.caches.resolve.analyzeFullyAndGetResult
@@ -386,7 +386,7 @@ class CallableBuilder(val config: CallableBuilderConfiguration) {
 
         private fun createFakeFunctionDescriptor(scope: JetScope, typeParameterCount: Int): FunctionDescriptor {
             val fakeFunction = SimpleFunctionDescriptorImpl.create(
-                    MutablePackageFragmentDescriptor(currentFileModule, FqName("fake")),
+                    EmptyPackageFragmentDescriptor(currentFileModule, FqName("fake")),
                     Annotations.EMPTY,
                     Name.identifier("fake"),
                     CallableMemberDescriptor.Kind.SYNTHESIZED,

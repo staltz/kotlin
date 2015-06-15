@@ -23,7 +23,7 @@ import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
 import org.jetbrains.kotlin.descriptors.PackageFragmentProvider
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
 import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl
-import org.jetbrains.kotlin.descriptors.impl.MutablePackageFragmentDescriptor
+import org.jetbrains.kotlin.descriptors.impl.EmptyPackageFragmentDescriptor
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -61,8 +61,8 @@ public abstract class DeserializerForDecompilerBase(
 
     override fun resolveTopLevelClass(classId: ClassId) = deserializationComponents.deserializeClass(classId)
 
-    protected fun createDummyPackageFragment(fqName: FqName): MutablePackageFragmentDescriptor =
-        MutablePackageFragmentDescriptor(moduleDescriptor, fqName)
+    protected fun createDummyPackageFragment(fqName: FqName): EmptyPackageFragmentDescriptor =
+            EmptyPackageFragmentDescriptor(moduleDescriptor, fqName)
 
     private fun createDummyModule(name: String) = ModuleDescriptorImpl(Name.special("<$name>"), storageManager, ModuleParameters.Empty)
 

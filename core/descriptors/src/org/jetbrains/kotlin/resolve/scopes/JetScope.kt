@@ -80,6 +80,18 @@ public trait JetScope {
 
     companion object {
         public val ALL_NAME_FILTER: (Name) -> Boolean = { true }
+
+        public fun createEmpty(containingDeclaration: DeclarationDescriptor): JetScope {
+            return object : JetScopeImpl() {
+                override fun getContainingDeclaration(): DeclarationDescriptor = containingDeclaration
+
+                override fun toString() = "Empty in $containingDeclaration"
+
+                override fun printScopeStructure(p: Printer) {
+                    p.println(toString())
+                }
+            }
+        }
     }
 }
 

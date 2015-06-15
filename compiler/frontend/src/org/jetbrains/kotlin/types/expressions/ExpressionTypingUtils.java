@@ -106,8 +106,8 @@ public class ExpressionTypingUtils {
     }
 
     @NotNull
-    public static WritableScopeImpl newWritableScopeImpl(ExpressionTypingContext context, @NotNull String scopeDebugName) {
-        WritableScopeImpl scope = new WritableScopeImpl(
+    public static WritableScope newWritableScopeImpl(ExpressionTypingContext context, @NotNull String scopeDebugName) {
+        WritableScope scope = new WritableScopeImpl(
                 context.scope, context.scope.getContainingDeclaration(), new TraceBasedRedeclarationHandler(context.trace), scopeDebugName);
         scope.changeLockLevel(WritableScope.LockLevel.BOTH);
         return scope;

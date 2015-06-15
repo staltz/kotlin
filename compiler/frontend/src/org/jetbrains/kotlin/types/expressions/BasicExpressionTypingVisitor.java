@@ -60,7 +60,7 @@ import org.jetbrains.kotlin.resolve.constants.CompileTimeConstantChecker;
 import org.jetbrains.kotlin.resolve.constants.IntegerValueTypeConstant;
 import org.jetbrains.kotlin.resolve.constants.evaluate.ConstantExpressionEvaluator;
 import org.jetbrains.kotlin.resolve.scopes.JetScope;
-import org.jetbrains.kotlin.resolve.scopes.WritableScopeImpl;
+import org.jetbrains.kotlin.resolve.scopes.WritableScope;
 import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver;
 import org.jetbrains.kotlin.resolve.scopes.receivers.ReceiverValue;
 import org.jetbrains.kotlin.resolve.scopes.receivers.TransientReceiver;
@@ -1241,11 +1241,11 @@ public class BasicExpressionTypingVisitor extends ExpressionTypingVisitor {
         JetTypeInfo leftTypeInfo = getTypeInfoOrNullType(left, context.replaceExpectedType(booleanType), facade);
         DataFlowInfo dataFlowInfo = leftTypeInfo.getDataFlowInfo();
 
-        WritableScopeImpl leftScope = newWritableScopeImpl(context, "Left scope of && or ||");
+        WritableScope leftScope = newWritableScopeImpl(context, "Left scope of && or ||");
         // TODO: This gets computed twice: here and in extractDataFlowInfoFromCondition() for the whole condition
         boolean isAnd = operationType == JetTokens.ANDAND;
         DataFlowInfo flowInfoLeft = DataFlowUtils.extractDataFlowInfoFromCondition(left, isAnd, context).and(dataFlowInfo);
-        WritableScopeImpl rightScope = isAnd ? leftScope : newWritableScopeImpl(context, "Right scope of && or ||");
+        WritableScope rightScope = isAnd ? leftScope : newWritableScopeImpl(context, "Right scope of && or ||");
 
         ExpressionTypingContext contextForRightExpr =
                 context.replaceDataFlowInfo(flowInfoLeft).replaceScope(rightScope).replaceExpectedType(booleanType);

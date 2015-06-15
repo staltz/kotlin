@@ -265,7 +265,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
 
     @NotNull
     private JetScope computeScopeForMemberDeclarationResolution() {
-        WritableScopeImpl thisScope = new WritableScopeImpl(JetScope.Empty.INSTANCE$, this, RedeclarationHandler.DO_NOTHING,
+        WritableScope thisScope = new WritableScopeImpl(JetScope.Empty.INSTANCE$, this, RedeclarationHandler.DO_NOTHING,
                                                             "Scope with 'this' for " + getName(), this.getThisAsReceiverParameter(), this);
         thisScope.changeLockLevel(WritableScope.LockLevel.READING);
 
@@ -312,7 +312,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
         ConstructorDescriptor primaryConstructor = getUnsubstitutedPrimaryConstructor();
         if (primaryConstructor == null) return getScopeForMemberDeclarationResolution();
 
-        WritableScopeImpl scope = new WritableScopeImpl(JetScope.Empty.INSTANCE$, primaryConstructor, RedeclarationHandler.DO_NOTHING, "Scope with constructor parameters in " + getName());
+        WritableScope scope = new WritableScopeImpl(JetScope.Empty.INSTANCE$, primaryConstructor, RedeclarationHandler.DO_NOTHING, "Scope with constructor parameters in " + getName());
         for (int i = 0; i < originalClassInfo.getPrimaryConstructorParameters().size(); i++) {
             JetParameter jetParameter = originalClassInfo.getPrimaryConstructorParameters().get(i);
             if (!jetParameter.hasValOrVar()) {

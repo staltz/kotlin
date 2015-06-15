@@ -36,7 +36,6 @@ import org.jetbrains.kotlin.resolve.calls.smartcasts.DataFlowInfo;
 import org.jetbrains.kotlin.resolve.inline.InlineUtil;
 import org.jetbrains.kotlin.resolve.scopes.JetScope;
 import org.jetbrains.kotlin.resolve.scopes.WritableScope;
-import org.jetbrains.kotlin.resolve.scopes.WritableScopeImpl;
 import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver;
 import org.jetbrains.kotlin.resolve.scopes.receivers.TransientReceiver;
 import org.jetbrains.kotlin.types.CommonSupertypes;
@@ -100,8 +99,8 @@ public class ControlStructureTypingVisitor extends ExpressionTypingVisitor {
         JetExpression elseBranch = ifExpression.getElse();
         JetExpression thenBranch = ifExpression.getThen();
 
-        WritableScopeImpl thenScope = newWritableScopeImpl(context, "Then scope");
-        WritableScopeImpl elseScope = newWritableScopeImpl(context, "Else scope");
+        WritableScope thenScope = newWritableScopeImpl(context, "Then scope");
+        WritableScope elseScope = newWritableScopeImpl(context, "Else scope");
         DataFlowInfo thenInfo = DataFlowUtils.extractDataFlowInfoFromCondition(condition, true, context).and(conditionDataFlowInfo);
         DataFlowInfo elseInfo = DataFlowUtils.extractDataFlowInfoFromCondition(condition, false, context).and(conditionDataFlowInfo);
 
@@ -175,7 +174,7 @@ public class ControlStructureTypingVisitor extends ExpressionTypingVisitor {
     @NotNull
     private JetTypeInfo getTypeInfoWhenOnlyOneBranchIsPresent(
             @NotNull JetExpression presentBranch,
-            @NotNull WritableScopeImpl presentScope,
+            @NotNull WritableScope presentScope,
             @NotNull DataFlowInfo presentInfo,
             @NotNull DataFlowInfo otherInfo,
             @NotNull ExpressionTypingContext context,
@@ -225,7 +224,7 @@ public class ControlStructureTypingVisitor extends ExpressionTypingVisitor {
         JetTypeInfo bodyTypeInfo;
         DataFlowInfo conditionInfo = DataFlowUtils.extractDataFlowInfoFromCondition(condition, true, context).and(dataFlowInfo);
         if (body != null) {
-            WritableScopeImpl scopeToExtend = newWritableScopeImpl(context, "Scope extended in while's condition");
+            WritableScope scopeToExtend = newWritableScopeImpl(context, "Scope extended in while's condition");
             bodyTypeInfo = components.expressionTypingServices.getBlockReturnedTypeWithWritableScope(
                     scopeToExtend, Collections.singletonList(body),
                     CoercionStrategy.NO_COERCION, context.replaceDataFlowInfo(conditionInfo));

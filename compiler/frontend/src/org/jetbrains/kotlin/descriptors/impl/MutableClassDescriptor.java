@@ -73,8 +73,7 @@ public class MutableClassDescriptor extends ClassDescriptorBase implements Class
 
         this.typeParameters = typeParameters;
 
-        this.scopeForMemberLookup = new WritableScopeImpl(JetScope.Empty.INSTANCE$, this, redeclarationHandler, "MemberLookup", null, this)
-                                        .changeLockLevel(WritableScope.LockLevel.BOTH);
+        this.scopeForMemberLookup = JetScope.Companion.createEmpty(this);
 
         WritableScope scopeForSupertypeResolution = new WritableScopeImpl(outerScope, this, redeclarationHandler, "SupertypeResolution")
                 .changeLockLevel(WritableScope.LockLevel.BOTH);
@@ -248,9 +247,7 @@ public class MutableClassDescriptor extends ClassDescriptorBase implements Class
     }
 
     private void setUpScopeForInitializers(@NotNull DeclarationDescriptor containingDeclaration) {
-        this.scopeForInitializers = new WritableScopeImpl(
-                scopeForMemberResolution, containingDeclaration, RedeclarationHandler.DO_NOTHING, "Initializers")
-                    .changeLockLevel(WritableScope.LockLevel.BOTH);
+        this.scopeForInitializers = new ChainedScope(containingDeclaration, "Initializers", scopeForMemberResolution);
     }
 
     @Override

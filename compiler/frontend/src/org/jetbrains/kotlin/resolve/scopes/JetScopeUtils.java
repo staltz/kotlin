@@ -62,11 +62,7 @@ public final class JetScopeUtils {
                 getPropertyDeclarationInnerScope(propertyDescriptor, parentScope,
                                                  propertyDescriptor.getTypeParameters(),
                                                  propertyDescriptor.getExtensionReceiverParameter(), trace);
-        WritableScope accessorScope = new WritableScopeImpl(propertyDeclarationInnerScope, parentScope.getContainingDeclaration(),
-                                                            new TraceBasedRedeclarationHandler(trace), "Accessor Scope");
-        accessorScope.changeLockLevel(WritableScope.LockLevel.READING);
-
-        return accessorScope;
+        return new ChainedScope(parentScope.getContainingDeclaration(), "Accessor Scope", propertyDeclarationInnerScope);
     }
 
     public static JetScope getPropertyDeclarationInnerScope(
@@ -124,7 +120,7 @@ public final class JetScopeUtils {
             @NotNull RedeclarationHandler redeclarationHandler,
             boolean addLabelForProperty
     ) {
-        WritableScopeImpl result = new WritableScopeImpl(
+        WritableScope result = new WritableScopeImpl(
                 outerScope, propertyDescriptor, redeclarationHandler,
                 "Property declaration inner scope",
                 receiver,

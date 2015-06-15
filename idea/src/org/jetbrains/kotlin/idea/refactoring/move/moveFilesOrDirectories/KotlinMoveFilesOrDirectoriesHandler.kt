@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.jetbrains.kotlin.idea.refactoring.move.moveFilesOrDirectories
+package org.jetbrains.kotlin.idea.refactoring.move
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory

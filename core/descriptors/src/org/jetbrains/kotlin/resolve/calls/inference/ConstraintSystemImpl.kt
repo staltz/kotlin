@@ -150,11 +150,11 @@ public class ConstraintSystemImpl : ConstraintSystem {
         }.filterNotNull().filter { it in getTypeVariables() }
     }
 
-    public fun copy(): ConstraintSystem = createNewConstraintSystemFromThis({ it }, { it.copy() }, { true })
+    public fun copy(): ConstraintSystem = createNewConstraintSystemFromThis({ it }, { true })
 
     public fun substituteTypeVariables(typeVariablesMap: (TypeParameterDescriptor) -> TypeParameterDescriptor?): ConstraintSystem {
         // type bounds are proper types and don't contain other variables
-        return createNewConstraintSystemFromThis(typeVariablesMap, { it.copy(typeVariablesMap) }, { true })
+        return createNewConstraintSystemFromThis(typeVariablesMap, { true })
     }
 
     public fun filterConstraintsOut(vararg excludePositions: ConstraintPosition): ConstraintSystem {
@@ -163,7 +163,7 @@ public class ConstraintSystemImpl : ConstraintSystem {
     }
 
     public fun filterConstraints(condition: (ConstraintPosition) -> Boolean): ConstraintSystem {
-        return createNewConstraintSystemFromThis({ it }, { it.filter(condition) }, condition)
+        return createNewConstraintSystemFromThis({ it }, condition)
     }
 
     public fun getSystemWithoutWeakConstraints(): ConstraintSystem {
@@ -183,13 +183,12 @@ public class ConstraintSystemImpl : ConstraintSystem {
 
     private fun createNewConstraintSystemFromThis(
             substituteTypeVariable: (TypeParameterDescriptor) -> TypeParameterDescriptor?,
-            replaceTypeBounds: (TypeBoundsImpl) -> TypeBoundsImpl,
             filterConstraintPosition: (ConstraintPosition) -> Boolean
     ): ConstraintSystem {
         val newSystem = ConstraintSystemImpl()
         for ((typeParameter, typeBounds) in typeParameterBounds) {
             val newTypeParameter = substituteTypeVariable(typeParameter) ?: typeParameter
-            newSystem.typeParameterBounds.put(newTypeParameter, replaceTypeBounds(typeBounds))
+            newSystem.typeParameterBounds.put(newTypeParameter, typeBounds.copy(substituteTypeVariable).filter(filterConstraintPosition))
         }
         for ((typeVariable, bounds) in dependentBounds) {
             if (bounds.isNotEmpty()) {

@@ -72,14 +72,9 @@ class GenericCandidateResolver(
         // Thus, we replace the parameters of our descriptor with fresh objects (perform alpha-conversion)
         val candidateWithFreshVariables = FunctionDescriptorUtil.alphaConvertTypeParameters(candidate)
 
-        val typeVariables = Lists.newArrayList<TypeParameterDescriptor>()
-        val backConversion = Maps.newHashMap<TypeParameterDescriptor, TypeParameterDescriptor>()
-        for (typeParameterDescriptor in candidateWithFreshVariables.getTypeParameters()) {
-            typeVariables.add(typeParameterDescriptor)
-            backConversion.put(typeParameterDescriptor, candidate.getTypeParameters().get(typeParameterDescriptor.getIndex()))
-        }
+        val backConversion = candidateWithFreshVariables.getTypeParameters().zip(candidate.getTypeParameters()).toMap()
 
-        constraintSystem.registerTypeVariables(typeVariables, { Variance.INVARIANT })
+        constraintSystem.registerTypeVariables(candidateWithFreshVariables.getTypeParameters(), { Variance.INVARIANT })
 
         val substituteDontCare = makeConstantSubstitutor(candidateWithFreshVariables.getTypeParameters(), DONT_CARE)
 
@@ -172,17 +167,25 @@ class GenericCandidateResolver(
         val resultingCall = resolutionResults.getResultingCall()
         if (resultingCall.isCompleted()) return false
 
-        val argumentConstraintSystem = resultingCall.getConstraintSystem()
+        val argumentConstraintSystem = resultingCall.getConstraintSystem() as ConstraintSystemImpl?
         if (argumentConstraintSystem == null || argumentConstraintSystem.getStatus().hasContradiction()) return false
 
-        val variables = argumentConstraintSystem.getTypeVariables()
+        val candidateDescriptor = resultingCall.getCandidateDescriptor()
+        val candidateWithFreshVariables = FunctionDescriptorUtil.alphaConvertTypeParameters(candidateDescriptor)
+        val freshTypeParameters = candidateWithFreshVariables.getTypeParameters()
+
+        val conversion = candidateDescriptor.getTypeParameters().zip(freshTypeParameters).toMap()
+
+        val constraintSystemWithFreshVariables = argumentConstraintSystem.substituteTypeVariables { conversion[it] }
+
+        val variables = constraintSystemWithFreshVariables.getTypeVariables()
         constraintSystem.registerTypeVariables(variables, { Variance.INVARIANT }, local = false)
 
         for (variable in variables) {
-            constraintSystem.addTypeBounds(variable, argumentConstraintSystem.getTypeBounds(variable))
+            constraintSystem.addTypeBounds(variable, constraintSystemWithFreshVariables.getTypeBounds(variable))
         }
 
-        val type = resultingCall.getCandidateDescriptor().getReturnType()
+        val type = candidateWithFreshVariables.getReturnType()
         constraintSystem.addSubtypeConstraint(type, effectiveExpectedType, constraintPosition)
         return true
     }

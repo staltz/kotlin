@@ -6703,6 +6703,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                     String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/inference/commonSystem/nestedLambdas.kt");
                     doTest(fileName);
                 }
+
+                @TestMetadata("theSameFunctionInArgs.kt")
+                public void testTheSameFunctionInArgs() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/inference/commonSystem/theSameFunctionInArgs.kt");
+                    doTest(fileName);
+                }
             }
 
             @TestMetadata("compiler/testData/diagnostics/tests/inference/constraints")

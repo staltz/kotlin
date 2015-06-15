@@ -28,6 +28,7 @@ import org.jetbrains.kotlin.resolve.calls.callUtil.CallUtilPackage;
 import org.jetbrains.kotlin.resolve.calls.context.CallResolutionContext;
 import org.jetbrains.kotlin.resolve.calls.context.ResolutionContext;
 import org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode;
+import org.jetbrains.kotlin.resolve.calls.inference.InferencePackage;
 import org.jetbrains.kotlin.resolve.calls.model.MutableDataFlowInfoForArguments;
 import org.jetbrains.kotlin.resolve.calls.smartcasts.DataFlowInfo;
 import org.jetbrains.kotlin.resolve.calls.smartcasts.DataFlowValue;
@@ -50,11 +51,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.jetbrains.kotlin.resolve.BindingContextUtils.getRecordedTypeInfo;
-
+import static org.jetbrains.kotlin.resolve.calls.context.ContextDependency.DEPENDENT;
 import static org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.RESOLVE_FUNCTION_ARGUMENTS;
 import static org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.SHAPE_FUNCTION_ARGUMENTS;
-import static org.jetbrains.kotlin.resolve.calls.context.ContextDependency.DEPENDENT;
-import static org.jetbrains.kotlin.resolve.calls.inference.InferencePackage.createTypeForFunctionPlaceholder;
 import static org.jetbrains.kotlin.types.TypeUtils.DONT_CARE;
 import static org.jetbrains.kotlin.types.TypeUtils.NO_EXPECTED_TYPE;
 
@@ -84,7 +83,7 @@ public class ArgumentTypeResolver {
             @NotNull JetType expectedType
     ) {
         if (ErrorUtils.isFunctionPlaceholder(actualType)) {
-            JetType functionType = createTypeForFunctionPlaceholder(actualType, expectedType);
+            JetType functionType = InferencePackage.createTypeForFunctionPlaceholder(actualType, expectedType);
             return JetTypeChecker.DEFAULT.isSubtypeOf(functionType, expectedType);
         }
         return JetTypeChecker.DEFAULT.isSubtypeOf(actualType, expectedType);

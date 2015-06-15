@@ -16,18 +16,17 @@
 
 package org.jetbrains.kotlin.idea.util
 
-import org.jetbrains.kotlin.types.JetType
-import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
+import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
+import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl
+import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind
+import org.jetbrains.kotlin.resolve.calls.inference.constraintUtil.checkBoundsAreSatisfied
+import org.jetbrains.kotlin.types.JetType
+import org.jetbrains.kotlin.types.TypeSubstitutor
+import org.jetbrains.kotlin.types.Variance
+import org.jetbrains.kotlin.types.typeUtil.isSubtypeOf
 import org.jetbrains.kotlin.utils.addIfNotNull
 import java.util.HashSet
-import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl
-import java.util.LinkedHashMap
-import org.jetbrains.kotlin.types.Variance
-import org.jetbrains.kotlin.resolve.calls.inference.ConstraintsUtil
-import org.jetbrains.kotlin.types.TypeSubstitutor
-import org.jetbrains.kotlin.types.typeUtil.isSubtypeOf
-import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind
 
 fun CallableDescriptor.fuzzyReturnType(): FuzzyType? {
     val returnType = getReturnType() ?: return null
@@ -109,9 +108,7 @@ class FuzzyType(
             MatchKind.IS_SUBTYPE -> constraintSystem.addSubtypeConstraint(type, otherType, ConstraintPositionKind.SPECIAL.position())
             MatchKind.IS_SUPERTYPE -> constraintSystem.addSubtypeConstraint(otherType, type, ConstraintPositionKind.SPECIAL.position())
         }
-
-        constraintSystem.processDeclaredBoundConstraints()
-
+        
         if (!constraintSystem.getStatus().hasContradiction()) {
             // currently ConstraintSystem return successful status in case there are problems with nullability
             // that's why we have to check subtyping manually

@@ -39,6 +39,10 @@ import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.UPPER_B
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPosition
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.RECEIVER_POSITION
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.VALUE_PARAMETER_POSITION
+import org.jetbrains.kotlin.resolve.calls.inference.constraintUtil.checkUpperBoundIsSatisfied
+import org.jetbrains.kotlin.resolve.calls.inference.constraintUtil.getDebugMessageForStatus
+import org.jetbrains.kotlin.resolve.calls.inference.constraintUtil.getFirstConflictingParameter
+import org.jetbrains.kotlin.resolve.calls.inference.constraintUtil.getSubstitutorsForConflictingParameters
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall
 import org.jetbrains.kotlin.types.JetType
 import org.jetbrains.kotlin.types.TypeUtils
@@ -146,13 +150,13 @@ public object Renderers {
                        renderDebugMessage("Conflicting substitutions inference error renderer is applied for incorrect status", inferenceErrorData))
 
         val substitutedDescriptors = Lists.newArrayList<CallableDescriptor>()
-        val substitutors = ConstraintsUtil.getSubstitutorsForConflictingParameters(inferenceErrorData.constraintSystem)
+        val substitutors = getSubstitutorsForConflictingParameters(inferenceErrorData.constraintSystem)
         for (substitutor in substitutors) {
             val substitutedDescriptor = inferenceErrorData.descriptor.substitute(substitutor)
             substitutedDescriptors.add(substitutedDescriptor)
         }
 
-        val firstConflictingParameter = ConstraintsUtil.getFirstConflictingParameter(inferenceErrorData.constraintSystem)
+        val firstConflictingParameter = getFirstConflictingParameter(inferenceErrorData.constraintSystem)
         if (firstConflictingParameter == null) {
             LOG.error(renderDebugMessage("There is no conflicting parameter for 'conflicting constraints' error.", inferenceErrorData))
             return result
@@ -228,7 +232,7 @@ public object Renderers {
 
         return result
                 .text(newText().normal("Not enough information to infer parameter ")
-                              .strong(firstUnknownParameter!!.getName())
+                              .strong(firstUnknownParameter.getName())
                               .normal(" in "))
                 .table(newTable()
                                .descriptor(inferenceErrorData.descriptor)
@@ -246,7 +250,7 @@ public object Renderers {
 
         val systemWithoutWeakConstraints = constraintSystem.getSystemWithoutWeakConstraints()
         val typeParameterDescriptor = inferenceErrorData.descriptor.getTypeParameters().firstOrNull { 
-            !ConstraintsUtil.checkUpperBoundIsSatisfied(systemWithoutWeakConstraints, it, true) 
+            !checkUpperBoundIsSatisfied(systemWithoutWeakConstraints, it, true)
         }
         if (typeParameterDescriptor == null && status.hasConflictingConstraints()) {
             return renderConflictingSubstitutionsInferenceError(inferenceErrorData, result)
@@ -359,7 +363,7 @@ public object Renderers {
         }
         return "type parameter bounds:\n" +
                StringUtil.join(typeBounds, { renderTypeBounds.render(it) }, "\n") + "\n\n" + "status:\n" +
-               ConstraintsUtil.getDebugMessageForStatus(constraintSystem.getStatus())
+               getDebugMessageForStatus(constraintSystem.getStatus())
     }
 
     public val RENDER_CONSTRAINT_SYSTEM: Renderer<ConstraintSystem> = Renderer { renderConstraintSystem(it, RENDER_TYPE_BOUNDS) }

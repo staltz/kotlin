@@ -37,8 +37,8 @@ import org.jetbrains.kotlin.resolve.BindingTrace;
 import org.jetbrains.kotlin.resolve.calls.CallResolver;
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystem;
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemStatus;
-import org.jetbrains.kotlin.resolve.calls.inference.ConstraintsUtil;
 import org.jetbrains.kotlin.resolve.calls.inference.InferenceErrorData;
+import org.jetbrains.kotlin.resolve.calls.inference.constraintUtil.ConstraintUtilPackage;
 import org.jetbrains.kotlin.resolve.calls.model.MutableDataFlowInfoForArguments;
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall;
 import org.jetbrains.kotlin.resolve.calls.results.OverloadResolutionResults;
@@ -48,7 +48,10 @@ import org.jetbrains.kotlin.resolve.calls.tasks.ResolutionCandidate;
 import org.jetbrains.kotlin.resolve.calls.tasks.TracingStrategy;
 import org.jetbrains.kotlin.resolve.calls.util.CallMaker;
 import org.jetbrains.kotlin.resolve.scopes.receivers.ReceiverValue;
-import org.jetbrains.kotlin.types.*;
+import org.jetbrains.kotlin.types.ErrorUtils;
+import org.jetbrains.kotlin.types.JetType;
+import org.jetbrains.kotlin.types.TypeUtils;
+import org.jetbrains.kotlin.types.Variance;
 
 import java.util.*;
 
@@ -381,7 +384,7 @@ public class ControlStructureTypingUtils {
                 }
                 JetDeclaration parentDeclaration = PsiTreeUtil.getParentOfType(expression, JetNamedDeclaration.class);
                 logError("Expression: " + (parentDeclaration != null ? parentDeclaration.getText() : expression.getText()) +
-                         "\nConstraint system status: \n" + ConstraintsUtil.getDebugMessageForStatus(status));
+                         "\nConstraint system status: \n" + ConstraintUtilPackage.getDebugMessageForStatus(status));
             }
         };
     }

@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.getReceiverExpression
 import org.jetbrains.kotlin.resolve.scopes.JetScope
+import org.jetbrains.kotlin.utils.singletonOrEmptyList
 import org.jetbrains.kotlin.utils.sure
 import kotlin.platform.platformStatic
 
@@ -43,8 +44,9 @@ public class ImportDirectiveProcessor(
         }
 
         val importedReference = importDirective.getImportedReference() ?: return JetScope.Empty
+        val importPath = importDirective.getImportPath() ?: return JetScope.Empty
         //TODO_R: not valid import
-        val (packageViewDescriptor, selectorsToLookUp) = tryResolvePackagesFromRightToLeft(moduleDescriptor, trace, importDirective.getImportPath()!!.fqnPart(), importedReference, emptyList())
+        val (packageViewDescriptor, selectorsToLookUp) = tryResolvePackagesFromRightToLeft(moduleDescriptor, trace, importPath.fqnPart(), importedReference, emptyList())
         val descriptors = lookUpMembersFromLeftToRight(moduleDescriptor, trace, listOf(packageViewDescriptor), selectorsToLookUp, lookupMode)
 
         val referenceExpression = JetPsiUtil.getLastReference(importedReference)
@@ -91,7 +93,8 @@ public class ImportDirectiveProcessor(
             else -> {
                 assert(!fqName.isRoot())
                 val (expressionRest, selector) = jetExpression.getReceiverAndSelector()
-                tryResolvePackagesFromRightToLeft(moduleDescriptor, trace, fqName.parent(), expressionRest, listOf(selector) + selectorsToLookUp)
+                val selectors = selector.singletonOrEmptyList() + selectorsToLookUp
+                tryResolvePackagesFromRightToLeft(moduleDescriptor, trace, fqName.parent(), expressionRest, selectors)
             }
         }
     }
@@ -176,10 +179,10 @@ public class ImportDirectiveProcessor(
         }
     }
 
-    private fun JetExpression.getReceiverAndSelector(): Pair<JetExpression?, JetSimpleNameExpression> {
+    private fun JetExpression.getReceiverAndSelector(): Pair<JetExpression?, JetSimpleNameExpression?> {
         when (this) {
             is JetDotQualifiedExpression -> {
-                return Pair(this.getReceiverExpression(), this.getSelectorExpression() as JetSimpleNameExpression)
+                return Pair(this.getReceiverExpression(), this.getSelectorExpression() as? JetSimpleNameExpression)
             }
             is JetSimpleNameExpression -> {
                 return Pair(null, this)

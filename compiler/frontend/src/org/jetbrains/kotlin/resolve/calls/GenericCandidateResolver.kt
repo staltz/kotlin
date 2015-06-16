@@ -16,30 +16,24 @@
 
 package org.jetbrains.kotlin.resolve.calls
 
-import com.google.common.collect.Lists
-import com.google.common.collect.Maps
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
-import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.psi.JetExpression
 import org.jetbrains.kotlin.psi.ValueArgument
 import org.jetbrains.kotlin.resolve.FunctionDescriptorUtil
 import org.jetbrains.kotlin.resolve.calls.CallResolverUtil.getEffectiveExpectedType
 import org.jetbrains.kotlin.resolve.calls.callUtil.getCall
-import org.jetbrains.kotlin.resolve.calls.context.BasicCallResolutionContext
 import org.jetbrains.kotlin.resolve.calls.context.CallCandidateResolutionContext
 import org.jetbrains.kotlin.resolve.calls.context.ContextDependency.INDEPENDENT
 import org.jetbrains.kotlin.resolve.calls.context.ContextDependency.PARTLY_DEPENDENT
 import org.jetbrains.kotlin.resolve.calls.context.ResolutionContext
 import org.jetbrains.kotlin.resolve.calls.context.ResolutionResultsCache
 import org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.SHAPE_FUNCTION_ARGUMENTS
-import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystem
-import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl
+import org.jetbrains.kotlin.resolve.calls.inference.*
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPosition
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.RECEIVER_POSITION
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.VALUE_PARAMETER_POSITION
-import org.jetbrains.kotlin.resolve.calls.inference.createTypeForFunctionPlaceholder
 import org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus
 import org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus.INCOMPLETE_TYPE_INFERENCE
 import org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus.OTHER_ERROR
@@ -54,6 +48,7 @@ import org.jetbrains.kotlin.types.TypeUtils.makeConstantSubstitutor
 import org.jetbrains.kotlin.types.Variance
 import org.jetbrains.kotlin.types.checker.JetTypeChecker
 import org.jetbrains.kotlin.types.expressions.ExpressionTypingUtils
+import org.jetbrains.kotlin.types.typeUtil.getNestedTypeArguments
 
 class GenericCandidateResolver(
         val argumentTypeResolver: ArgumentTypeResolver
@@ -239,6 +234,7 @@ class GenericCandidateResolver(
         val constraintSystem = context.candidateCall.getConstraintSystem()!!
 
         val effectiveExpectedType = getEffectiveExpectedType(valueParameterDescriptor, valueArgument)
+        constraintSystem.fixFunctionArguments(effectiveExpectedType)
         var expectedType = constraintSystem.getCurrentSubstitutor().substitute(effectiveExpectedType, Variance.INVARIANT)
         if (expectedType == null || TypeUtils.isDontCarePlaceholder(expectedType)
             || !KotlinBuiltIns.isFunctionOrExtensionFunctionType(expectedType)) {
@@ -263,5 +259,13 @@ class GenericCandidateResolver(
         val type = argumentTypeResolver.getFunctionLiteralTypeInfo(argumentExpression, functionLiteral, newContext).type
         constraintSystem.addSubtypeConstraint(type, effectiveExpectedType, VALUE_PARAMETER_POSITION.position(valueParameterDescriptor.getIndex()))
         context.candidateCall.markAsProcessed(valueArgument);
+    }
+
+    fun ConstraintSystem.fixFunctionArguments(type: JetType) {
+        if (!KotlinBuiltIns.isFunctionOrExtensionFunctionType(type)) return
+        if (this !is ConstraintSystemImpl) return
+
+        val functionType = CallResolverUtil.replaceReturnTypeBy(type, DONT_CARE)
+        fixVariablesInType(functionType)
     }
 }

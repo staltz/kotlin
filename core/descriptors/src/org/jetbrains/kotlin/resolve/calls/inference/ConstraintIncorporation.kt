@@ -16,6 +16,7 @@
 
 package org.jetbrains.kotlin.resolve.calls.inference
 
+import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
 import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl.ConstraintKind.EQUAL
@@ -137,14 +138,26 @@ private fun computeKindOfNewBound(constrainingKind: BoundKind, substitutionVaria
     return null
 }
 
-fun ConstraintSystemImpl.fixVariables() {
-    fun fixVariable(typeVariable: TypeParameterDescriptor) {
-        val typeBounds = getTypeBounds(typeVariable)
-        val value = typeBounds.value ?: return
+fun ConstraintSystemImpl.fixVariable(typeVariable: TypeParameterDescriptor) {
+    val typeBounds = getTypeBounds(typeVariable)
+    if (typeBounds.isFixed) return
+    typeBounds.setFixed()
 
-        val type = JetTypeImpl(Annotations.EMPTY, typeVariable.getTypeConstructor(), false, emptyList(), JetScope.Empty)
-        addBound(type, TypeBounds.Bound(value, BoundKind.EXACT_BOUND, ConstraintPositionKind.FROM_COMPLETER.position()))
-    }
+    val nestedTypeVariables = typeBounds.bounds.flatMap { it.constrainingType.getNestedTypeVariables() }
+    nestedTypeVariables.forEach { fixVariable(it) }
+
+    val value = typeBounds.value ?: return
+
+    val type = JetTypeImpl(Annotations.EMPTY, typeVariable.getTypeConstructor(), false, emptyList(), JetScope.Empty)
+    addBound(type, TypeBounds.Bound(value, BoundKind.EXACT_BOUND, ConstraintPositionKind.FROM_COMPLETER.position()))
+}
+
+fun ConstraintSystemImpl.fixVariablesInType(type: JetType) {
+    val nestedTypeVariables = type.getNestedTypeVariables()
+    nestedTypeVariables.forEach { fixVariable(it) }
+}
+
+fun ConstraintSystemImpl.fixVariables() {
     val (local, nonlocal) = getTypeVariables().partition { isLocalVariable(it) }
     nonlocal.forEach { fixVariable(it) }
     local.forEach { fixVariable(it) }

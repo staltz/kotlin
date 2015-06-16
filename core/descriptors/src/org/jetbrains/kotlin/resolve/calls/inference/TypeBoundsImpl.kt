@@ -40,6 +40,13 @@ public class TypeBoundsImpl(
 
     private var resultValues: Collection<JetType>? = null
 
+    var isFixed: Boolean = false
+        private set
+
+    public fun setFixed() {
+        isFixed = true
+    }
+
     public fun addBound(bound: Bound) {
         resultValues = null
         bound.typeVariable = typeVariable

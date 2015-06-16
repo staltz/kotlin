@@ -61,6 +61,10 @@ public interface ResolvedCall<D extends CallableDescriptor> {
 
     /** Values (arguments) for value parameters */
     @NotNull
+    Map<ValueParameterDescriptor, ResolvedValueArgument> getUnsubstitutedValueArguments();
+
+    /** Values (arguments) for value parameters */
+    @NotNull
     Map<ValueParameterDescriptor, ResolvedValueArgument> getValueArguments();
 
     /** Values (arguments) for value parameters indexed by parameter index */

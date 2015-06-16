@@ -79,7 +79,7 @@ class GenericCandidateResolver(
         val substituteDontCare = makeConstantSubstitutor(candidateWithFreshVariables.getTypeParameters(), DONT_CARE)
 
         // Value parameters
-        for (entry in candidateCall.getValueArguments().entrySet()) {
+        for (entry in candidateCall.getUnsubstitutedValueArguments().entrySet()) {
             val resolvedValueArgument = entry.getValue()
             val valueParameterDescriptor = candidateWithFreshVariables.getValueParameters().get(entry.getKey().getIndex())
 
@@ -215,7 +215,7 @@ class GenericCandidateResolver(
         val constraintSystem = resolvedCall.getConstraintSystem() ?: return
 
         // constraints for function literals
-        for ((valueParameterDescriptor, resolvedValueArgument) in resolvedCall.getValueArguments()) {
+        for ((valueParameterDescriptor, resolvedValueArgument) in resolvedCall.getUnsubstitutedValueArguments()) {
 
             for (valueArgument in resolvedValueArgument.getArguments()) {
                 val argumentExpression = valueArgument.getArgumentExpression()
@@ -238,7 +238,7 @@ class GenericCandidateResolver(
 
         val constraintSystem = context.candidateCall.getConstraintSystem()!!
 
-        val effectiveExpectedType = getEffectiveExpectedType(valueParameterDescriptor.getOriginal(), valueArgument)
+        val effectiveExpectedType = getEffectiveExpectedType(valueParameterDescriptor, valueArgument)
         var expectedType = constraintSystem.getCurrentSubstitutor().substitute(effectiveExpectedType, Variance.INVARIANT)
         if (expectedType == null || TypeUtils.isDontCarePlaceholder(expectedType)
             || !KotlinBuiltIns.isFunctionOrExtensionFunctionType(expectedType)) {

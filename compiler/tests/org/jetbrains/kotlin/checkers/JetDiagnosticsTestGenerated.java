@@ -6692,6 +6692,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                     JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/diagnostics/tests/inference/commonSystem"), Pattern.compile("^(.+)\\.kt$"), true);
                 }
 
+                @TestMetadata("genericCandidateInGenericClass.kt")
+                public void testGenericCandidateInGenericClass() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/inference/commonSystem/genericCandidateInGenericClass.kt");
+                    doTest(fileName);
+                }
+
                 @TestMetadata("kt3372ToCollection.kt")
                 public void testKt3372ToCollection() throws Exception {
                     String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/inference/commonSystem/kt3372ToCollection.kt");

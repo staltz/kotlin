@@ -82,6 +82,12 @@ public abstract class DelegatingResolvedCall<D extends CallableDescriptor> imple
 
     @NotNull
     @Override
+    public Map<ValueParameterDescriptor, ResolvedValueArgument> getUnsubstitutedValueArguments() {
+        return resolvedCall.getUnsubstitutedValueArguments();
+    }
+
+    @NotNull
+    @Override
     public Map<ValueParameterDescriptor, ResolvedValueArgument> getValueArguments() {
         return resolvedCall.getValueArguments();
     }

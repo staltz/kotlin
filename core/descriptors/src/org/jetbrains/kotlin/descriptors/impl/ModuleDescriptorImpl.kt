@@ -143,20 +143,17 @@ private class LazyPackageViewWrapper(
         fqName: FqName, module: ModuleDescriptor, storageManager: StorageManager
 )
 : AbstractPackageViewDescriptor(fqName, module) {
-    private val _delegate = storageManager.createNullableLazyValue {
+    private val delegate = storageManager.createNullableLazyValue {
         module.packageViewManager.getPackage(getFqName())
     }
 
-    private val delegate: PackageViewDescriptor?
-        get() = _delegate()
-
-    private val scope = LazyScopeAdapter(storageManager.createLazyValue { delegate?.getMemberScope() ?: JetScope.Empty })
+    private val scope = LazyScopeAdapter(storageManager.createLazyValue { delegate()?.getMemberScope() ?: JetScope.Empty })
 
     override fun getMemberScope(): JetScope {
         return scope
     }
 
     override fun getFragments(): MutableList<PackageFragmentDescriptor> {
-        return delegate?.getFragments() ?: listOf()
+        return delegate()?.getFragments() ?: listOf()
     }
 }

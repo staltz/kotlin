@@ -37,6 +37,7 @@ import org.jetbrains.kotlin.utils.KotlinJavascriptMetadataUtils
 import org.jetbrains.kotlin.utils.LibraryUtils
 import org.jetbrains.kotlin.utils.sure
 import java.io.File
+import java.util.*
 import kotlin.platform.platformStatic
 
 // TODO: add hash checksum to defineModule?
@@ -123,8 +124,8 @@ public class FunctionReader(private val context: TranslationContext) {
         val moduleNameLiteral = context.program().getStringLiteral(moduleName)
         val moduleReference =  context.namer().getModuleReference(moduleNameLiteral)
 
-        val replacements = hashMapOf(moduleRootVariable[moduleName] to moduleReference,
-                                     moduleKotlinVariable[moduleName] to Namer.KOTLIN_OBJECT_REF)
+        val replacements = hashMapOf(moduleRootVariable[moduleName]!! to moduleReference,
+                                     moduleKotlinVariable[moduleName]!! to Namer.KOTLIN_OBJECT_REF)
         replaceExternalNames(function, replacements)
         return function
     }

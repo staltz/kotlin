@@ -210,7 +210,7 @@ public class JetChangeInfo(
     public fun renderReturnType(inheritedFunction: JetFunctionDefinitionUsage<PsiElement>): String {
         val typeSubstitutor = inheritedFunction.getOrCreateTypeSubstitutor() ?: return newReturnTypeText
         val currentBaseFunction = inheritedFunction.getBaseFunction().getCurrentFunctionDescriptor() ?: return newReturnTypeText
-        return currentBaseFunction.getReturnType().renderTypeWithSubstitution(typeSubstitutor, newReturnTypeText, false)
+        return currentBaseFunction.getReturnType()!!.renderTypeWithSubstitution(typeSubstitutor, newReturnTypeText, false)
     }
 
     public fun primaryMethodUpdated() {

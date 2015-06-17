@@ -90,6 +90,7 @@ public class JetChangeSignatureData(
         descriptorsForSignatureChange.map {
             val declaration = DescriptorToSourceUtilsIde.getAnyDeclaration(baseDeclaration.getProject(), it)
             assert(declaration != null) { "No declaration found for " + baseDescriptor }
+            declaration!!
             JetFunctionDefinitionUsage<PsiElement>(declaration, it, null, null)
         }
     }
@@ -107,7 +108,7 @@ public class JetChangeSignatureData(
                 if (method is KotlinLightMethod) {
                     val overridingDeclaration = method.getOrigin()
                     val overridingDescriptor = overridingDeclaration?.resolveToDescriptor() as FunctionDescriptor
-                    JetFunctionDefinitionUsage<PsiElement>(overridingDeclaration, overridingDescriptor, primaryFunction, null)
+                    JetFunctionDefinitionUsage<PsiElement>(overridingDeclaration!!, overridingDescriptor, primaryFunction, null)
                 }
                 else OverriderUsageInfo(method, lightMethod, true, true, true)
             }.filterNotNullTo(HashSet<UsageInfo>())

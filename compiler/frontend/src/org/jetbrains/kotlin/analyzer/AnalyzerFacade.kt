@@ -188,7 +188,7 @@ public trait AnalyzerFacade<A : ResolverForModule, in P : PlatformAnalysisParame
                     )
                 }
 
-                descriptor.initialize(LazyPackageFragmentProvider { computeResolverForModule().packageFragmentProvider })
+                descriptor.initialize(DelegatingPackageFragmentProvider { computeResolverForModule().packageFragmentProvider })
                 resolverForProject.resolverByModuleDescriptor[descriptor] = computeResolverForModule
             }
         }
@@ -209,7 +209,7 @@ public trait AnalyzerFacade<A : ResolverForModule, in P : PlatformAnalysisParame
 }
 
 //NOTE: relies on delegate to be lazily computed and cached
-private class LazyPackageFragmentProvider(
+private class DelegatingPackageFragmentProvider(
         private val delegate: () -> PackageFragmentProvider
 ) : PackageFragmentProvider {
 

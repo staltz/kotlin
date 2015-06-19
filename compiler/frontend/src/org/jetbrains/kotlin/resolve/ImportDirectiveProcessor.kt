@@ -77,6 +77,7 @@ public class ImportDirectiveProcessor(
             trace: BindingTrace,
             fqName: FqName,
             jetExpression: JetExpression?,
+            //TODO_R: mutatble list?
             selectorsToLookUp: List<JetSimpleNameExpression>
     ): Pair<PackageViewDescriptor, List<JetSimpleNameExpression>> {
         //TODO_R: verify
@@ -100,8 +101,10 @@ public class ImportDirectiveProcessor(
     }
 
     private fun recordPackageViews(jetExpression: JetExpression, packageView: PackageViewDescriptor, trace: BindingTrace) {
+        //TODO_R: record resolution scope?
         trace.record(BindingContext.REFERENCE_TARGET, JetPsiUtil.getLastReference(jetExpression), packageView)
         val containingView = packageView.getContainingDeclaration()
+        //TODO_R: getReceiver()
         val (receiver, _) = jetExpression.getReceiverAndSelector()
         if (containingView != null && receiver != null) {
             recordPackageViews(receiver, containingView, trace)
@@ -118,6 +121,7 @@ public class ImportDirectiveProcessor(
         if (selectorsToLookUp.isEmpty()) {
             return descriptors
         }
+        //TODO: for
         val nameReference = selectorsToLookUp.first()
         val selectorsRest = selectorsToLookUp.subList(1, selectorsToLookUp.size())
         val descriptorsBySelector = qualifiedExpressionResolver.lookupSelectorDescriptors(
@@ -179,6 +183,7 @@ public class ImportDirectiveProcessor(
         }
     }
 
+    //TODO_R: drop
     private fun JetExpression.getReceiverAndSelector(): Pair<JetExpression?, JetSimpleNameExpression?> {
         when (this) {
             is JetDotQualifiedExpression -> {
@@ -188,7 +193,7 @@ public class ImportDirectiveProcessor(
                 return Pair(null, this)
             }
             else -> {
-                throw AssertionError("Invalid expession in import $this of class ${this.javaClass}")
+                throw AssertionError("Invalid expression in import $this of class ${this.javaClass}")
             }
         }
     }

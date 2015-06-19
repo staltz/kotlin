@@ -31,6 +31,7 @@ import org.jetbrains.kotlin.load.java.lazy.child
 import org.jetbrains.kotlin.load.java.lazy.resolveAnnotations
 import org.jetbrains.kotlin.load.java.lazy.types.toAttributes
 import org.jetbrains.kotlin.load.java.structure.*
+import org.jetbrains.kotlin.load.java.typeEnhacement.enhanceSignatures
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.DescriptorFactory
 import org.jetbrains.kotlin.resolve.DescriptorUtils
@@ -67,7 +68,7 @@ public class LazyJavaClassMemberScope(
             result.addIfNotNull(c.samConversionResolver.resolveSamAdapter(descriptor))
         }
         
-        c.externalSignatureResolver.enhanceSignatures(
+        enhanceSignatures(
                 result ifEmpty { emptyOrSingletonList(createDefaultConstructor()) }
         ).toReadOnlyList()
     }

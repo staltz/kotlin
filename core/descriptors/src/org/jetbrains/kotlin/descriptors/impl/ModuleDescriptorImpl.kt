@@ -119,7 +119,7 @@ class PackageViewManagerImpl(private val module: ModuleDescriptorImpl, private v
 
     override fun getParentView(packageView: PackageViewDescriptor): PackageViewDescriptor? {
         val fqName = packageView.getFqName()
-        return if (fqName.isRoot()) null else return LazyPackageViewWrapper(fqName.parent(), module, storageManager)
+        return if (fqName.isRoot()) null else getExistingPackage(fqName.parent())
     }
 }
 
@@ -141,9 +141,9 @@ public class LazyModuleDependencies(
 
 private class LazyPackageViewWrapper(
         fqName: FqName, module: ModuleDescriptor, storageManager: StorageManager
-)
-: AbstractPackageViewDescriptor(fqName, module) {
+) : AbstractPackageViewDescriptor(fqName, module) {
     private val delegate = storageManager.createNullableLazyValue {
+        //TODO_R: assert if null
         module.packageViewManager.getPackage(getFqName())
     }
 

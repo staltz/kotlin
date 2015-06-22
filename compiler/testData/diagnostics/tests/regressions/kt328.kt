@@ -24,5 +24,5 @@ val z = <!TYPECHECKER_HAS_RUN_INTO_RECURSIVE_PROBLEM, UNINITIALIZED_VARIABLE!>z<
 fun block(f : () -> Unit) = f()
 
 fun bar3() = block{ <!UNRESOLVED_REFERENCE!>foo3<!>() // <-- missing closing curly bracket
-fun foo3() = block{ <!TYPECHECKER_HAS_RUN_INTO_RECURSIVE_PROBLEM!>bar3()<!> }<!SYNTAX!><!>
+fun <!FUNCTION_EXPRESSION_WITH_NAME!>foo3<!>() = block{ <!TYPECHECKER_HAS_RUN_INTO_RECURSIVE_PROBLEM!>bar3()<!> }<!SYNTAX!><!>
 

@@ -4,8 +4,8 @@ fun foo<R> (f: ()->R, r: MutableList<R>) = r.add(f())
 fun bar<R> (r: MutableList<R>, f: ()->R) = r.add(f())
 
 fun test() {
-    val <!UNUSED_VARIABLE!>a<!> = <!TYPE_INFERENCE_CONFLICTING_SUBSTITUTIONS!>foo<!>({1}, arrayListOf("")) //no type inference error on 'arrayListOf'
-    val <!UNUSED_VARIABLE!>b<!> = <!TYPE_INFERENCE_CONFLICTING_SUBSTITUTIONS!>bar<!>(arrayListOf(""), {1})
+    val <!UNUSED_VARIABLE!>a<!> = foo({1}, arrayListOf("")) //no type inference error on 'arrayListOf'
+    val <!UNUSED_VARIABLE!>b<!> = bar(arrayListOf(""), {1})
 }
 
 // from standard library

@@ -38,7 +38,7 @@ fun test1(int: Int, any: Any) {
 
     useMyList(getMyList(int), int)
     useMyList(getMyList(any), int)
-    <!TYPE_INFERENCE_CONFLICTING_SUBSTITUTIONS!>useMyList<!>(getMyList(int), any)
+    useMyList(getMyList(int), any)
 
     readFromMyList(getMyList(int), any)
     readFromMyList(getMyList(any), int)
@@ -53,10 +53,10 @@ fun test1(int: Int, any: Any) {
     writeToMyList(getMyList(any), int)
     writeToMyList<Any>(getMyList(int), any)
     writeToMyList(getMyList<Any>(int), any)
-    <!TYPE_INFERENCE_CONFLICTING_SUBSTITUTIONS!>writeToMyList<!>(getMyList(int), any)
+    writeToMyList(getMyList(int), any)
 
     writeToMyList(getMyListToWriteTo(any), int)
-    <!TYPE_INFERENCE_CONFLICTING_SUBSTITUTIONS!>writeToMyList<!>(getMyListToWriteTo(int), any)
+    writeToMyList(getMyListToWriteTo(int), any)
 
     readFromMyList(getMyListToWriteTo(any), any)
 

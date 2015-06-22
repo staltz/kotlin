@@ -233,7 +233,9 @@ public class ConstraintSystemImpl : ConstraintSystem {
             }
 
             override fun capture(typeVariable: JetType, typeProjection: TypeProjection): Boolean {
+                if (isMyTypeVariable(typeProjection.getType())) return false
                 val myTypeVariable = getMyTypeVariable(typeVariable)
+
                 if (myTypeVariable != null && constraintPosition.isCaptureAllowed()) {
                     if (depth > 0) {
                         errors.add(CannotCapture(constraintPosition, myTypeVariable))

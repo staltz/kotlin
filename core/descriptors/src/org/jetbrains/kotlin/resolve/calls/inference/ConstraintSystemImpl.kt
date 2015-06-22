@@ -28,6 +28,7 @@ import org.jetbrains.kotlin.resolve.calls.inference.TypeBounds.BoundKind.UPPER_B
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.CompoundConstraintPosition
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPosition
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.TYPE_BOUND_POSITION
+import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.equalsOrContains
 import org.jetbrains.kotlin.resolve.scopes.JetScope
 import org.jetbrains.kotlin.types.*
 import org.jetbrains.kotlin.types.ErrorUtils.FunctionPlaceholderTypeConstructor
@@ -78,7 +79,7 @@ public class ConstraintSystemImpl : ConstraintSystem {
         override fun hasOnlyErrorsFromPosition(constraintPosition: ConstraintPosition): Boolean {
             if (isSuccessful()) return false
             if (filterConstraintsOut(constraintPosition).getStatus().isSuccessful()) return true
-            return errors.isNotEmpty() && errors.all { it.constraintPosition == constraintPosition }
+            return errors.isNotEmpty() && errors.all { it.constraintPosition.equalsOrContains(constraintPosition) }
         }
 
         override fun hasErrorInConstrainingTypes() = errors.any { it is ErrorInConstrainingType }
@@ -160,9 +161,8 @@ public class ConstraintSystemImpl : ConstraintSystem {
         return createNewConstraintSystemFromThis(typeVariablesMap, { true })
     }
 
-    public fun filterConstraintsOut(vararg excludePositions: ConstraintPosition): ConstraintSystem {
-        val positions = excludePositions.toSet()
-        return filterConstraints { !positions.contains(it) }
+    public fun filterConstraintsOut(excludePosition: ConstraintPosition): ConstraintSystem {
+        return filterConstraints { !it.equalsOrContains(excludePosition) }
     }
 
     public fun filterConstraints(condition: (ConstraintPosition) -> Boolean): ConstraintSystem {
@@ -170,18 +170,13 @@ public class ConstraintSystemImpl : ConstraintSystem {
     }
 
     public fun getSystemWithoutWeakConstraints(): ConstraintSystem {
-        fun ConstraintPosition.hasOnlyStrongConstraints(): Boolean {
+        return filterConstraints(fun (constraintPosition): Boolean {
+            if (constraintPosition !is CompoundConstraintPosition) return constraintPosition.isStrong()
+
             // 'isStrong' for compound means 'has some strong constraints'
             // but for testing absence of weak constraints we need 'has only strong constraints' here
-            return if (this is CompoundConstraintPosition) {
-                this.positions.all { it.hasOnlyStrongConstraints() }
-            }
-            else {
-                this.isStrong()
-            }
-        }
-
-        return filterConstraints { it.hasOnlyStrongConstraints() }
+            return constraintPosition.positions.all { it.isStrong() }
+        })
     }
 
     private fun createNewConstraintSystemFromThis(

@@ -16,7 +16,6 @@
 
 package org.jetbrains.kotlin.resolve.calls.inference
 
-import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
 import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl.ConstraintKind.EQUAL
@@ -67,7 +66,6 @@ fun ConstraintSystemImpl.incorporateConstraint(variable: JetType, constrainingBo
 
 private fun ConstraintSystemImpl.addConstraintFromBounds(first: Bound, second: Bound) {
     if (first == second) return
-    if (first.pure && second.pure) return
 
     val firstType = first.constrainingType
     val secondType = second.constrainingType

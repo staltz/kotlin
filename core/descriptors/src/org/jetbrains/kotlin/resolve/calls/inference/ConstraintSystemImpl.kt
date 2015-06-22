@@ -64,7 +64,8 @@ public class ConstraintSystemImpl : ConstraintSystem {
 
         override fun isSuccessful() = !hasContradiction() && !hasUnknownParameters()
 
-        override fun hasContradiction() = hasTypeConstructorMismatch() || hasConflictingConstraints() || hasCannotCaptureTypesError()
+        override fun hasContradiction() = hasTypeConstructorMismatch() || hasTypeInferenceIncorporationError()
+                                          || hasConflictingConstraints() || hasCannotCaptureTypesError()
 
         override fun hasViolatedUpperBound() = !isSuccessful() && getSystemWithoutWeakConstraints().getStatus().isSuccessful()
 
@@ -83,6 +84,8 @@ public class ConstraintSystemImpl : ConstraintSystem {
         override fun hasErrorInConstrainingTypes() = errors.any { it is ErrorInConstrainingType }
 
         override fun hasCannotCaptureTypesError() = errors.any { it is CannotCapture }
+
+        override fun hasTypeInferenceIncorporationError() = errors.any { it is TypeInferenceError }
     }
 
     private fun getParameterToInferredValueMap(
@@ -247,7 +250,7 @@ public class ConstraintSystemImpl : ConstraintSystem {
             }
 
             override fun noCorrespondingSupertype(subtype: JetType, supertype: JetType): Boolean {
-                errors.add(TypeConstructorMismatch(constraintPosition))
+                errors.add(newTypeInferenceOrConstructorMismatchError(constraintPosition))
                 return true
             }
         })
@@ -315,9 +318,9 @@ public class ConstraintSystemImpl : ConstraintSystem {
                 typeCheckingProcedure.equalTypes(subTypeNotNullable, superTypeNotNullable)
             }
             else {
-                typeCheckingProcedure.isSubtypeOf(subTypeNotNullable, superTypeNotNullable)
+                typeCheckingProcedure.isSubtypeOf(subTypeNotNullable, superType)
             }
-            if (!result) errors.add(TypeConstructorMismatch(constraintPosition))
+            if (!result) errors.add(newTypeInferenceOrConstructorMismatchError(constraintPosition))
         }
         simplifyConstraint(newSubType, superType)
 

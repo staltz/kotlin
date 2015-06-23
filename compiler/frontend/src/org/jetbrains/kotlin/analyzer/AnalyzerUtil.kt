@@ -17,7 +17,7 @@
 package org.jetbrains.kotlin.analyzer
 
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.di.get
+import org.jetbrains.kotlin.container.get
 import org.jetbrains.kotlin.frontend.di.createContainerForMacros
 import org.jetbrains.kotlin.psi.JetExpression
 import org.jetbrains.kotlin.resolve.BindingContext

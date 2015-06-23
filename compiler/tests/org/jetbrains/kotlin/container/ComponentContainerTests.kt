@@ -1,5 +1,6 @@
 package org.jetbrains.container
 
+import org.jetbrains.kotlin.container.*
 import org.junit.Test
 import java.io.Closeable
 import kotlin.test.*

@@ -17,10 +17,10 @@
 package org.jetbrains.kotlin.frontend.js.di
 
 import org.jetbrains.kotlin.context.ModuleContext
-import org.jetbrains.kotlin.di.createContainer
-import org.jetbrains.kotlin.di.get
-import org.jetbrains.kotlin.di.useImpl
-import org.jetbrains.kotlin.di.useInstance
+import org.jetbrains.kotlin.container.createContainer
+import org.jetbrains.kotlin.container.get
+import org.jetbrains.kotlin.container.useImpl
+import org.jetbrains.kotlin.container.useInstance
 import org.jetbrains.kotlin.frontend.di.configureModule
 import org.jetbrains.kotlin.js.resolve.KotlinJsCheckerProvider
 import org.jetbrains.kotlin.resolve.BindingTrace

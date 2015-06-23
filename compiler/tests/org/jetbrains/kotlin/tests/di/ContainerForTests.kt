@@ -17,12 +17,12 @@
 package org.jetbrains.kotlin.tests.di
 
 import com.intellij.openapi.project.Project
-import org.jetbrains.container.StorageComponentContainer
+import org.jetbrains.kotlin.container.StorageComponentContainer
 import org.jetbrains.kotlin.context.ModuleContext
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.di.createContainer
-import org.jetbrains.kotlin.di.injected
-import org.jetbrains.kotlin.di.useImpl
+import org.jetbrains.kotlin.container.createContainer
+import org.jetbrains.kotlin.container.injected
+import org.jetbrains.kotlin.container.useImpl
 import org.jetbrains.kotlin.frontend.di.configureModule
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmCheckerProvider
 import org.jetbrains.kotlin.resolve.*

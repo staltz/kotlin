@@ -18,7 +18,7 @@ package org.jetbrains.kotlin.idea.util
 
 import com.intellij.openapi.project.Project
 import org.jetbrains.kotlin.descriptors.*
-import org.jetbrains.kotlin.di.get
+import org.jetbrains.kotlin.container.get
 import org.jetbrains.kotlin.frontend.di.createContainerForMacros
 import org.jetbrains.kotlin.idea.imports.importableFqName
 import org.jetbrains.kotlin.psi.*

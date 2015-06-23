@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.context.withProject
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.di.get
+import org.jetbrains.kotlin.container.get
 import org.jetbrains.kotlin.frontend.di.createContainerForLazyLocalClassifierAnalyzer
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.JetClassOrObject

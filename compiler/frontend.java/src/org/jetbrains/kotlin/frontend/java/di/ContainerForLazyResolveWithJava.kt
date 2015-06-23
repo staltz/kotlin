@@ -19,10 +19,10 @@ package org.jetbrains.kotlin.frontend.java.di
 import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.kotlin.context.LazyResolveToken
 import org.jetbrains.kotlin.context.ModuleContext
-import org.jetbrains.kotlin.di.createContainer
-import org.jetbrains.kotlin.di.get
-import org.jetbrains.kotlin.di.useImpl
-import org.jetbrains.kotlin.di.useInstance
+import org.jetbrains.kotlin.container.createContainer
+import org.jetbrains.kotlin.container.get
+import org.jetbrains.kotlin.container.useImpl
+import org.jetbrains.kotlin.container.useInstance
 import org.jetbrains.kotlin.frontend.di.configureModule
 import org.jetbrains.kotlin.load.java.JavaClassFinderImpl
 import org.jetbrains.kotlin.load.java.lazy.ModuleClassResolver

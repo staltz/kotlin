@@ -18,7 +18,7 @@ package org.jetbrains.kotlin.idea.core
 
 import com.intellij.openapi.project.Project
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.di.get
+import org.jetbrains.kotlin.container.get
 import org.jetbrains.kotlin.frontend.di.createContainerForMacros
 import org.jetbrains.kotlin.idea.util.FuzzyType
 import org.jetbrains.kotlin.name.Name

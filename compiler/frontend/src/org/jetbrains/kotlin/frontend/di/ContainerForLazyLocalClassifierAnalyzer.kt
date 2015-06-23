@@ -16,11 +16,11 @@
 
 package org.jetbrains.kotlin.frontend.di
 
-import org.jetbrains.container.StorageComponentContainer
+import org.jetbrains.kotlin.container.StorageComponentContainer
 import org.jetbrains.kotlin.context.ModuleContext
-import org.jetbrains.kotlin.di.createContainer
-import org.jetbrains.kotlin.di.useImpl
-import org.jetbrains.kotlin.di.useInstance
+import org.jetbrains.kotlin.container.createContainer
+import org.jetbrains.kotlin.container.useImpl
+import org.jetbrains.kotlin.container.useInstance
 import org.jetbrains.kotlin.resolve.AdditionalCheckerProvider
 import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.LazyTopDownAnalyzer

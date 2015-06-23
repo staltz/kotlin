@@ -18,29 +18,14 @@ package org.jetbrains.kotlin.frontend.di
 
 import com.intellij.openapi.project.Project
 import org.jetbrains.container.StorageComponentContainer
-import org.jetbrains.kotlin.context.GlobalContext
+import org.jetbrains.kotlin.context.ModuleContext
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.di.createContainer
 import org.jetbrains.kotlin.di.useImpl
-import org.jetbrains.kotlin.di.useInstance
 import org.jetbrains.kotlin.resolve.AdditionalCheckerProvider
 import org.jetbrains.kotlin.types.expressions.ExpressionTypingServices
 
 public fun createContainerForMacros(project: Project, module: ModuleDescriptor): StorageComponentContainer = createContainer("Macros") {
-
-    //TODO_R: extract this logic
-
-    useInstance(project)
-    useInstance(module)
-
-    val globalContext = GlobalContext()
-    useInstance(globalContext)
-    useInstance(globalContext.storageManager)
-    useInstance(module.builtIns)
-    useInstance(module.platformToKotlinClassMap)
-
-    useInstance(AdditionalCheckerProvider.DefaultProvider)
-    useInstance(AdditionalCheckerProvider.DefaultProvider.symbolUsageValidator)
-
+    configureModule(ModuleContext(module, project), AdditionalCheckerProvider.DefaultProvider)
     useImpl<ExpressionTypingServices>()
 }

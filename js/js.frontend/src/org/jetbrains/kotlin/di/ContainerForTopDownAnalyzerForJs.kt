@@ -39,7 +39,7 @@ public fun createTopDownAnalyzerForJs(
         declarationProviderFactory: DeclarationProviderFactory
 ): LazyTopDownAnalyzerForTopLevel {
     val storageComponentContainer = createContainer("REPL") { //TODO: name
-        configureModule(moduleContext, bindingTrace, KotlinJsCheckerProvider)
+        configureModule(moduleContext, KotlinJsCheckerProvider, bindingTrace)
 
         useInstance(declarationProviderFactory)
         useImpl<ScopeProvider>()

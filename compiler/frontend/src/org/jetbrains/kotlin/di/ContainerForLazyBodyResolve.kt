@@ -36,7 +36,7 @@ public fun createContainerForLazyBodyResolve(
         bindingTrace: BindingTrace, additionalCheckerProvider: AdditionalCheckerProvider,
         dynamicTypesSettings: DynamicTypesSettings
 ): StorageComponentContainer = createContainer("BodyResolve") { //TODO: name
-    configureModule(moduleContext, bindingTrace, additionalCheckerProvider)
+    configureModule(moduleContext, additionalCheckerProvider, bindingTrace)
 
     useInstance(kotlinCodeAnalyzer)
     useInstance(kotlinCodeAnalyzer.getScopeProvider())

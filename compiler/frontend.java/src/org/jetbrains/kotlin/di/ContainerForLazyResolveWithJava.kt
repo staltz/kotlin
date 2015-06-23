@@ -38,7 +38,7 @@ public fun createContainerForLazyResolveWithJava(
         moduleContext: ModuleContext, bindingTrace: BindingTrace, declarationProviderFactory: DeclarationProviderFactory,
         moduleContentScope: GlobalSearchScope, moduleClassResolver: ModuleClassResolver
 ): Pair<ResolveSession, JavaDescriptorResolver> = createContainer("REPL") { //TODO: name
-    configureModule(moduleContext, bindingTrace, KotlinJvmCheckerProvider)
+    configureModule(moduleContext, KotlinJvmCheckerProvider, bindingTrace)
     configureJavaTopDownAnalysis(moduleContentScope, moduleContext.project)
 
     useInstance(moduleClassResolver)

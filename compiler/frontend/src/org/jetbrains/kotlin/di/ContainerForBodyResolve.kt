@@ -33,14 +33,14 @@ public fun createContainerForBodyResolve(
         moduleContext: ModuleContext, bindingTrace: BindingTrace,
         additionalCheckerProvider: AdditionalCheckerProvider, statementFilter: StatementFilter
 ): StorageComponentContainer = createContainer("BodyResolve") {
-    configureModule(moduleContext, bindingTrace, additionalCheckerProvider)
+    configureModule(moduleContext, additionalCheckerProvider, bindingTrace)
 
     useInstance(statementFilter)
     useImpl<BodyResolver>()
 }
 
 public fun StorageComponentContainer.configureModule(
-        moduleContext: ModuleContext, trace: BindingTrace, additionalCheckerProvider: AdditionalCheckerProvider
+        moduleContext: ModuleContext, additionalCheckerProvider: AdditionalCheckerProvider
 ) {
     useInstance(moduleContext)
     useInstance(moduleContext.module)
@@ -48,7 +48,14 @@ public fun StorageComponentContainer.configureModule(
     useInstance(moduleContext.storageManager)
     useInstance(moduleContext.builtIns)
     useInstance(moduleContext.platformToKotlinClassMap)
-    useInstance(trace)
     useInstance(additionalCheckerProvider)
     useInstance(additionalCheckerProvider.symbolUsageValidator)
+}
+
+public fun StorageComponentContainer.configureModule(
+        moduleContext: ModuleContext, additionalCheckerProvider: AdditionalCheckerProvider, trace: BindingTrace
+) {
+    configureModule(moduleContext, additionalCheckerProvider)
+    useInstance(trace)
+
 }

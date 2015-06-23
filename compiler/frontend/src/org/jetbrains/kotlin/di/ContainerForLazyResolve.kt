@@ -36,7 +36,7 @@ public fun createContainerForLazyResolve(
         moduleContext: ModuleContext, declarationProviderFactory: DeclarationProviderFactory, bindingTrace: BindingTrace,
         additionalCheckerProvider: AdditionalCheckerProvider, dynamicTypesSettings: DynamicTypesSettings
 ): StorageComponentContainer = createContainer("Macros") {
-    configureModule(moduleContext, bindingTrace, additionalCheckerProvider)
+    configureModule(moduleContext, additionalCheckerProvider, bindingTrace)
 
     useInstance(dynamicTypesSettings)
     useInstance(declarationProviderFactory)

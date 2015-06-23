@@ -378,13 +378,14 @@ public class ConstraintSystemImpl : ConstraintSystem {
         // constraint T? = Int! should transform to T >: Int and T <: Int!
 
         // constraints T? >: Int?; T? >: Int! should transform to T >: Int
+        val notNullParameterType = TypeUtils.makeNotNullable(parameterType)
         val notNullConstrainingType = TypeUtils.makeNotNullable(newConstrainingType)
         if (boundKind == EXACT_BOUND || boundKind == LOWER_BOUND) {
-            addBound(parameterType, Bound(notNullConstrainingType, LOWER_BOUND, constraintPosition, notNullConstrainingType.isPure()))
+            addBound(notNullParameterType, Bound(notNullConstrainingType, LOWER_BOUND, constraintPosition, notNullConstrainingType.isPure()))
         }
         // constraints T? <: Int?; T? <: Int! should transform to T <: Int?; T <: Int! correspondingly
         if (boundKind == EXACT_BOUND || boundKind == UPPER_BOUND) {
-            addBound(parameterType, Bound(newConstrainingType, UPPER_BOUND, constraintPosition, newConstrainingType.isPure()))
+            addBound(notNullParameterType, Bound(newConstrainingType, UPPER_BOUND, constraintPosition, newConstrainingType.isPure()))
         }
     }
 
@@ -405,7 +406,7 @@ public class ConstraintSystemImpl : ConstraintSystem {
             constrainingTypeProjection
         }
         val capturedType = createCapturedType(typeProjection)
-        addBound(parameterType, Bound(capturedType, EXACT_BOUND, constraintPosition))
+        addBound(TypeUtils.makeNotNullable(parameterType), Bound(capturedType, EXACT_BOUND, constraintPosition))
     }
 
     override fun getTypeVariables() = typeParameterBounds.keySet()

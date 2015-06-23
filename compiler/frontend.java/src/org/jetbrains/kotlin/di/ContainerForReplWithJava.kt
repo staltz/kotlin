@@ -19,9 +19,7 @@ package org.jetbrains.kotlin.frontend.java.di
 import com.intellij.openapi.project.Project
 import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.container.StorageComponentContainer
-import org.jetbrains.kotlin.context.GlobalContext
 import org.jetbrains.kotlin.context.ModuleContext
-import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl
 import org.jetbrains.kotlin.di.*
 import org.jetbrains.kotlin.frontend.di.configureModule
 import org.jetbrains.kotlin.load.java.JavaClassFinderImpl
@@ -33,7 +31,6 @@ import org.jetbrains.kotlin.load.java.structure.impl.JavaPropertyInitializerEval
 import org.jetbrains.kotlin.load.kotlin.DeserializationComponentsForJava
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmCheckerProvider
-import org.jetbrains.kotlin.load.kotlin.VirtualFileFinderFactory
 import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.LazyTopDownAnalyzer
 import org.jetbrains.kotlin.resolve.LazyTopDownAnalyzerForTopLevel
@@ -47,7 +44,7 @@ import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 public fun createContainerForReplWithJava(
         moduleContext: ModuleContext, bindingTrace: BindingTrace, declarationProviderFactory: DeclarationProviderFactory,
         moduleContentScope: GlobalSearchScope, additionalFileScopeProvider: ScopeProvider.AdditionalFileScopeProvider
-): ContainerForReplWithJava = createContainer("REPL") { //TODO: name
+): ContainerForReplWithJava = createContainer("ReplWithJava") {
     configureModule(moduleContext, KotlinJvmCheckerProvider, bindingTrace)
     configureJavaTopDownAnalysis(moduleContentScope, moduleContext.project)
 

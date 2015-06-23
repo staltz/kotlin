@@ -18,13 +18,11 @@ package org.jetbrains.kotlin.tests.di
 
 import com.intellij.openapi.project.Project
 import org.jetbrains.container.StorageComponentContainer
-import org.jetbrains.kotlin.context.GlobalContext
 import org.jetbrains.kotlin.context.ModuleContext
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.di.createContainer
 import org.jetbrains.kotlin.di.injected
 import org.jetbrains.kotlin.di.useImpl
-import org.jetbrains.kotlin.di.useInstance
 import org.jetbrains.kotlin.frontend.di.configureModule
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmCheckerProvider
 import org.jetbrains.kotlin.resolve.*
@@ -32,7 +30,7 @@ import org.jetbrains.kotlin.types.expressions.ExpressionTypingServices
 import org.jetbrains.kotlin.types.expressions.FakeCallResolver
 
 public fun createContainerForTests(project: Project, module: ModuleDescriptor): ContainerForTests {
-    return ContainerForTests(createContainer("Macros") {
+    return ContainerForTests(createContainer("Tests") {
         configureModule(ModuleContext(module, project), KotlinJvmCheckerProvider)
         useImpl<ExpressionTypingServices>()
     })

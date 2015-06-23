@@ -16,12 +16,9 @@
 
 package org.jetbrains.kotlin.frontend.di
 
-import com.intellij.openapi.project.Project
 import org.jetbrains.container.StorageComponentContainer
-import org.jetbrains.kotlin.context.GlobalContext
 import org.jetbrains.kotlin.context.LazyResolveToken
 import org.jetbrains.kotlin.context.ModuleContext
-import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.di.createContainer
 import org.jetbrains.kotlin.di.get
 import org.jetbrains.kotlin.di.useImpl
@@ -32,10 +29,10 @@ import org.jetbrains.kotlin.resolve.lazy.ResolveSession
 import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 import org.jetbrains.kotlin.types.DynamicTypesSettings
 
-public fun createContainerForLazyResolve(
+private fun createContainerForLazyResolve(
         moduleContext: ModuleContext, declarationProviderFactory: DeclarationProviderFactory, bindingTrace: BindingTrace,
         additionalCheckerProvider: AdditionalCheckerProvider, dynamicTypesSettings: DynamicTypesSettings
-): StorageComponentContainer = createContainer("Macros") {
+): StorageComponentContainer = createContainer("LazyResolve") {
     configureModule(moduleContext, additionalCheckerProvider, bindingTrace)
 
     useInstance(dynamicTypesSettings)

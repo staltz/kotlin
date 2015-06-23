@@ -16,12 +16,8 @@
 
 package org.jetbrains.kotlin.frontend.di
 
-import com.intellij.openapi.project.Project
 import org.jetbrains.container.StorageComponentContainer
-import org.jetbrains.kotlin.context.GlobalContext
 import org.jetbrains.kotlin.context.ModuleContext
-import org.jetbrains.kotlin.context.withModule
-import org.jetbrains.kotlin.context.withProject
 import org.jetbrains.kotlin.di.createContainer
 import org.jetbrains.kotlin.di.useImpl
 import org.jetbrains.kotlin.di.useInstance
@@ -35,7 +31,7 @@ public fun createContainerForLazyBodyResolve(
         moduleContext: ModuleContext, kotlinCodeAnalyzer: KotlinCodeAnalyzer,
         bindingTrace: BindingTrace, additionalCheckerProvider: AdditionalCheckerProvider,
         dynamicTypesSettings: DynamicTypesSettings
-): StorageComponentContainer = createContainer("BodyResolve") { //TODO: name
+): StorageComponentContainer = createContainer("LazyBodyResolve") {
     configureModule(moduleContext, additionalCheckerProvider, bindingTrace)
 
     useInstance(kotlinCodeAnalyzer)

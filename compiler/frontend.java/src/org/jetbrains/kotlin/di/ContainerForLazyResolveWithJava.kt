@@ -37,7 +37,7 @@ import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 public fun createContainerForLazyResolveWithJava(
         moduleContext: ModuleContext, bindingTrace: BindingTrace, declarationProviderFactory: DeclarationProviderFactory,
         moduleContentScope: GlobalSearchScope, moduleClassResolver: ModuleClassResolver
-): Pair<ResolveSession, JavaDescriptorResolver> = createContainer("REPL") { //TODO: name
+): Pair<ResolveSession, JavaDescriptorResolver> = createContainer("LazyResolveWithJava") {
     configureModule(moduleContext, KotlinJvmCheckerProvider, bindingTrace)
     configureJavaTopDownAnalysis(moduleContentScope, moduleContext.project)
 

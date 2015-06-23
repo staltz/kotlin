@@ -16,11 +16,8 @@
 
 package org.jetbrains.kotlin.frontend.di
 
-import com.intellij.openapi.project.Project
 import org.jetbrains.container.StorageComponentContainer
-import org.jetbrains.kotlin.context.GlobalContext
 import org.jetbrains.kotlin.context.ModuleContext
-import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.di.createContainer
 import org.jetbrains.kotlin.di.useImpl
 import org.jetbrains.kotlin.di.useInstance
@@ -39,7 +36,7 @@ public fun createContainerForLazyLocalClassifierAnalyzer(
         bindingTrace: BindingTrace,
         additionalCheckerProvider: AdditionalCheckerProvider,
         dynamicTypesSettings: DynamicTypesSettings, localClassDescriptorHolder: LocalClassDescriptorHolder
-): StorageComponentContainer = createContainer("BodyResolve") { //TODO: name
+): StorageComponentContainer = createContainer("LocalClassifierAnalyzer") {
     configureModule(moduleContext, additionalCheckerProvider, bindingTrace)
 
     useInstance(dynamicTypesSettings)

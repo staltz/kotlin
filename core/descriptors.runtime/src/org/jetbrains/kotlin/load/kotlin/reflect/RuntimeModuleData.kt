@@ -16,16 +16,15 @@
 
 package org.jetbrains.kotlin.load.kotlin.reflect
 
-import org.jetbrains.container.*
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
-import org.jetbrains.kotlin.builtins.ReflectionTypes
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleParameters
 import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl
-import org.jetbrains.kotlin.di.*
+import org.jetbrains.kotlin.di.createContainer
+import org.jetbrains.kotlin.di.get
+import org.jetbrains.kotlin.di.useImpl
+import org.jetbrains.kotlin.di.useInstance
 import org.jetbrains.kotlin.load.java.components.*
-import org.jetbrains.kotlin.load.java.lazy.GlobalJavaResolverContext
-import org.jetbrains.kotlin.load.java.lazy.LazyJavaPackageFragmentProvider
 import org.jetbrains.kotlin.load.java.lazy.SingleModuleClassResolver
 import org.jetbrains.kotlin.load.java.reflect.ReflectJavaClassFinder
 import org.jetbrains.kotlin.load.java.structure.JavaPropertyInitializerEvaluator

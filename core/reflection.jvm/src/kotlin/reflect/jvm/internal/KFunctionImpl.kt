@@ -17,10 +17,12 @@
 package kotlin.reflect.jvm.internal
 
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
+import org.jetbrains.kotlin.resolve.scopes.JetScope
 import kotlin.jvm.internal.FunctionImpl
 import kotlin.reflect.KFunction
+import kotlin.reflect.KotlinReflectionInternalError
 
-abstract class KFunctionImpl private constructor(
+open class KFunctionImpl protected constructor(
         container: KCallableContainerImpl,
         name: String,
         signature: String,
@@ -54,4 +56,14 @@ abstract class KFunctionImpl private constructor(
 
     override fun toString(): String =
             ReflectionObjectRenderer.renderFunction(descriptor)
+}
+
+object EmptyContainerForLocal : KCallableContainerImpl() {
+    override val jClass: Class<*>
+        get() = fail()
+
+    override val scope: JetScope
+        get() = fail()
+
+    private fun fail() = throw KotlinReflectionInternalError("Introspecting local functions is not yet supported in Kotlin reflection")
 }

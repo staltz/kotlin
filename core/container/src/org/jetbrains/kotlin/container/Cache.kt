@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.jetbrains.kotlin.di
+package org.jetbrains.kotlin.container
 
 import com.intellij.util.containers.ContainerUtil
 import gnu.trove.TObjectHashingStrategy
@@ -113,6 +113,6 @@ private fun getRegistrations(klass: Class<*>): List<Class<*>> {
     val interfaces = LinkedHashSet<Class<*>>()
     superClasses.forEach { collectInterfacesRecursive(it, interfaces) }
     registrations.addAll(interfaces)
-    registrations.remove(javaClass<java.lang.Object>())
+    registrations.remove(javaClass<Object>())
     return registrations
 }

@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package org.jetbrains.kotlin.di
+package org.jetbrains.kotlin.container
 
-import org.jetbrains.container.StorageComponentContainer
-import org.jetbrains.container.registerInstance
-import org.jetbrains.container.registerSingleton
 import kotlin.properties.ReadOnlyProperty
 
 public fun createContainer(id: String, init: StorageComponentContainer.() -> Unit): StorageComponentContainer {

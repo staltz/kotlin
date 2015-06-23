@@ -295,10 +295,6 @@ public class ConstraintSystemImpl : ConstraintSystem {
         }
 
         fun simplifyConstraint(subType: JetType, superType: JetType) {
-            if (isMyTypeVariable(subType) && isMyTypeVariable(superType)) {
-                addBound(subType, Bound(superType, constraintKind.toBound(), constraintPosition, pure = false))
-            }
-
             if (isMyTypeVariable(subType)) {
                 generateTypeParameterConstraint(subType, superType, constraintKind.toBound(), constraintPosition)
                 return

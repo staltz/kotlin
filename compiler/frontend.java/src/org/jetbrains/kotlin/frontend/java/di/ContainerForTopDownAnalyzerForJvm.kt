@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.frontend.java.di
 import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.kotlin.container.*
 import org.jetbrains.kotlin.context.ModuleContext
-import org.jetbrains.kotlin.di.*
 import org.jetbrains.kotlin.frontend.di.configureModule
 import org.jetbrains.kotlin.load.java.JavaClassFinderImpl
 import org.jetbrains.kotlin.load.java.lazy.SingleModuleClassResolver

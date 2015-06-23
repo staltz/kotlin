@@ -39,7 +39,6 @@ public inline fun <reified T> StorageComponentContainer.get(): T {
 public fun StorageComponentContainer.useInstance(instance: Any) {
     registerInstance(instance)
 }
-}
 
 public class InjectedProperty<T>(
         private val container: StorageComponentContainer, private val requestedComponent: Class<T>

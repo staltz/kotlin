@@ -6,7 +6,7 @@ public @interface A {
     String y();
 }
 
-// FILE: 1.kt
+// FILE: B.kt
 
 A(x = 1, y = "2")
 fun test() {}

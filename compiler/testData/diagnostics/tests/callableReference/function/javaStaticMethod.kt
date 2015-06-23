@@ -11,7 +11,7 @@ public class A {
     }
 }
 
-// FILE: 1.kt
+// FILE: B.kt
 
 import kotlin.reflect.*
 import test.A

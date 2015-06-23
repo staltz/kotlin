@@ -76,10 +76,10 @@ public abstract class AbstractAndroidBoxTest : AbstractBlackBoxCodegenTest() {
         FileUtil.processFilesRecursively(File(path), object : Processor<File> {
             override fun process(file: File?): Boolean {
                 when (file!!.getName()) {
-                    "1.kt" -> {
+                    "A1.kt" -> {
                         if (additionalFiles == null) files.add(relativePath(file))
                     }
-                    "0.kt" -> {
+                    "A0.kt" -> {
                         if (additionalFiles != null) files.add(relativePath(file))
                     }
                     else -> {

@@ -6,7 +6,7 @@ class JavaSuperClass {
     void multipleParameters(int first, long second, String third) {}
 }
 
-// FILE: 1.kt
+// FILE: file1.kt
 
 fun directInvocation() = JavaSuperClass().foo(<!NAMED_ARGUMENTS_NOT_ALLOWED!>javaName<!> = 1)
 

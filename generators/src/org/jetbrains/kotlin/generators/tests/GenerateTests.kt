@@ -245,7 +245,7 @@ fun main(args: Array<String>) {
         }
 
         testClass(javaClass<AbstractCompileKotlinAgainstKotlinTest>()) {
-            model("compileKotlinAgainstKotlin", extension = "A.kt")
+            model("compileKotlinAgainstKotlin", pattern = "^(.+)_A\\.kt\$")
         }
 
         testClass(javaClass<AbstractDescriptorRendererTest>()) {

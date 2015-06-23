@@ -32,138 +32,138 @@ import java.util.regex.Pattern;
 @RunWith(JUnit3RunnerWithInners.class)
 public class CompileKotlinAgainstKotlinTestGenerated extends AbstractCompileKotlinAgainstKotlinTest {
     public void testAllFilesPresentInCompileKotlinAgainstKotlin() throws Exception {
-        JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/compileKotlinAgainstKotlin"), Pattern.compile("^(.+)\\.A.kt$"), true);
+        JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/compileKotlinAgainstKotlin"), Pattern.compile("^(.+)_A\\.kt$"), true);
     }
 
-    @TestMetadata("AnnotationInTrait.A.kt")
+    @TestMetadata("AnnotationInTrait_A.kt")
     public void testAnnotationInTrait() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/AnnotationInTrait.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/AnnotationInTrait_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("ClassInObject.A.kt")
+    @TestMetadata("ClassInObject_A.kt")
     public void testClassInObject() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/ClassInObject.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/ClassInObject_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("ClassObjectInEnum.A.kt")
+    @TestMetadata("ClassObjectInEnum_A.kt")
     public void testClassObjectInEnum() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/ClassObjectInEnum.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/ClassObjectInEnum_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("ClassObjectMember.A.kt")
+    @TestMetadata("ClassObjectMember_A.kt")
     public void testClassObjectMember() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/ClassObjectMember.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/ClassObjectMember_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("ConstructorVararg.A.kt")
+    @TestMetadata("ConstructorVararg_A.kt")
     public void testConstructorVararg() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/ConstructorVararg.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/ConstructorVararg_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("DefaultConstructor.A.kt")
+    @TestMetadata("DefaultConstructor_A.kt")
     public void testDefaultConstructor() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/DefaultConstructor.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/DefaultConstructor_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("DoublyNestedClass.A.kt")
+    @TestMetadata("DoublyNestedClass_A.kt")
     public void testDoublyNestedClass() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/DoublyNestedClass.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/DoublyNestedClass_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("Enum.A.kt")
+    @TestMetadata("Enum_A.kt")
     public void testEnum() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/Enum.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/Enum_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("ImportObject.A.kt")
+    @TestMetadata("ImportObject_A.kt")
     public void testImportObject() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/ImportObject.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/ImportObject_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("InlinedConstants.A.kt")
+    @TestMetadata("InlinedConstants_A.kt")
     public void testInlinedConstants() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/InlinedConstants.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/InlinedConstants_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("InnerClassConstructor.A.kt")
+    @TestMetadata("InnerClassConstructor_A.kt")
     public void testInnerClassConstructor() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/InnerClassConstructor.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/InnerClassConstructor_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("KotlinPropertyAsAnnotationParameter.A.kt")
+    @TestMetadata("KotlinPropertyAsAnnotationParameter_A.kt")
     public void testKotlinPropertyAsAnnotationParameter() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/KotlinPropertyAsAnnotationParameter.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/KotlinPropertyAsAnnotationParameter_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("NestedClass.A.kt")
+    @TestMetadata("NestedClass_A.kt")
     public void testNestedClass() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/NestedClass.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/NestedClass_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("NestedEnum.A.kt")
+    @TestMetadata("NestedEnum_A.kt")
     public void testNestedEnum() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/NestedEnum.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/NestedEnum_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("NestedObject.A.kt")
+    @TestMetadata("NestedObject_A.kt")
     public void testNestedObject() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/NestedObject.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/NestedObject_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("PlatformNames.A.kt")
+    @TestMetadata("PlatformNames_A.kt")
     public void testPlatformNames() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/PlatformNames.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/PlatformNames_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("PlatformTypes.A.kt")
+    @TestMetadata("PlatformTypes_A.kt")
     public void testPlatformTypes() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/PlatformTypes.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/PlatformTypes_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("PropertyReference.A.kt")
+    @TestMetadata("PropertyReference_A.kt")
     public void testPropertyReference() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/PropertyReference.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/PropertyReference_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("RecursiveGeneric.A.kt")
+    @TestMetadata("RecursiveGeneric_A.kt")
     public void testRecursiveGeneric() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/RecursiveGeneric.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/RecursiveGeneric_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("SecondaryConstructors.A.kt")
+    @TestMetadata("SecondaryConstructors_A.kt")
     public void testSecondaryConstructors() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/SecondaryConstructors.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/SecondaryConstructors_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("Simple.A.kt")
+    @TestMetadata("Simple_A.kt")
     public void testSimple() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/Simple.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/Simple_A.kt");
         doTest(fileName);
     }
 
-    @TestMetadata("StarImportEnum.A.kt")
+    @TestMetadata("StarImportEnum_A.kt")
     public void testStarImportEnum() throws Exception {
-        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/StarImportEnum.A.kt");
+        String fileName = JetTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/StarImportEnum_A.kt");
         doTest(fileName);
     }
 }

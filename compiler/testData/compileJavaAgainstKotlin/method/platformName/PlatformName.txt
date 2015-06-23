@@ -2,8 +2,8 @@ package test
 
 kotlin.platform.platformName(name = "bar") internal fun foo(): kotlin.Unit
 
-public open class PlatformName {
-    public constructor PlatformName()
+public/*package*/ open class JavaClass {
+    public/*package*/ constructor JavaClass()
 
     // Static members
     public open fun main(/*0*/ kotlin.Array<(out) kotlin.String!>!): kotlin.Unit

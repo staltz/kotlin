@@ -3640,9 +3640,9 @@ public class BlackBoxWithStdlibCodegenTestGenerated extends AbstractBlackBoxCode
             doTestWithStdlib(fileName);
         }
 
-        @TestMetadata("kt3177-copyToArray.kt")
+        @TestMetadata("kt3177_copyToArray.kt")
         public void testKt3177_copyToArray() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxWithStdlib/toArray/kt3177-copyToArray.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxWithStdlib/toArray/kt3177_copyToArray.kt");
             doTestWithStdlib(fileName);
         }
 

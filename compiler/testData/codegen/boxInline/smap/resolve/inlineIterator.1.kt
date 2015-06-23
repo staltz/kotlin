@@ -15,9 +15,9 @@ fun box(): String {
 //*S Kotlin
 //*F
 //+ 1 inlineIterator.1.kt
-//_DefaultPackage
+//InlineIterator_1
 //+ 2 inlineIterator.2.kt
-//zzz/ZzzPackage
+//zzz/InlineIterator_2
 //*L
 //1#1,24:1
 //5#2:25

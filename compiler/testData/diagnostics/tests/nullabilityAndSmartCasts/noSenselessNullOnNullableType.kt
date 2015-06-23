@@ -6,7 +6,7 @@ class A {
     static Empty foo() { return null; }
 }
 
-// FILE: 1.kt
+// FILE: B.kt
 
 fun bar() = when (A.foo()) {
     null -> "null"

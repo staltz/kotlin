@@ -1068,21 +1068,21 @@ public class JvmSmartCompletionTestGenerated extends AbstractJvmSmartCompletionT
     @TestDataPath("$PROJECT_ROOT")
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Inheritors extends AbstractJvmSmartCompletionTest {
-        @TestMetadata("1.kt")
-        public void test1() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/idea-completion/testData/smart/inheritors/1.kt");
+        @TestMetadata("a1.kt")
+        public void testA1() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/idea-completion/testData/smart/inheritors/a1.kt");
             doTest(fileName);
         }
 
-        @TestMetadata("2.kt")
-        public void test2() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/idea-completion/testData/smart/inheritors/2.kt");
+        @TestMetadata("a2.kt")
+        public void testA2() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/idea-completion/testData/smart/inheritors/a2.kt");
             doTest(fileName);
         }
 
-        @TestMetadata("3.kt")
-        public void test3() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/idea-completion/testData/smart/inheritors/3.kt");
+        @TestMetadata("a3.kt")
+        public void testA3() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/idea-completion/testData/smart/inheritors/a3.kt");
             doTest(fileName);
         }
 

@@ -27,9 +27,9 @@ fun box(): String {
 //*S Kotlin
 //*F
 //+ 1 objectOnCallSite.1.kt
-//_DefaultPackage
+//ObjectOnCallSite_1
 //+ 2 objectOnCallSite.2.kt
-//builders/BuildersPackage
+//builders/ObjectOnCallSite_2
 //*L
 //1#1,36:1
 //4#2:37

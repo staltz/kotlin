@@ -94,6 +94,12 @@ public class KotlinLightClassTestGenerated extends AbstractKotlinLightClassTest 
             doTest(fileName);
         }
 
+        @TestMetadata("DefaultPackage.kt")
+        public void testDefaultPackage() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/asJava/lightClasses/nullabilityAnnotations/DefaultPackage.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("Generic.kt")
         public void testGeneric() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("compiler/testData/asJava/lightClasses/nullabilityAnnotations/Generic.kt");
@@ -181,12 +187,6 @@ public class KotlinLightClassTestGenerated extends AbstractKotlinLightClassTest 
         @TestMetadata("VoidReturn.kt")
         public void testVoidReturn() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("compiler/testData/asJava/lightClasses/nullabilityAnnotations/VoidReturn.kt");
-            doTest(fileName);
-        }
-
-        @TestMetadata("_DefaultPackage.kt")
-        public void test_DefaultPackage() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/asJava/lightClasses/nullabilityAnnotations/_DefaultPackage.kt");
             doTest(fileName);
         }
     }

@@ -4016,27 +4016,27 @@ public class IntentionTestGenerated extends AbstractIntentionTest {
         @TestDataPath("$PROJECT_ROOT")
         @RunWith(JUnit3RunnerWithInners.class)
         public static class KeepComments extends AbstractIntentionTest {
-            @TestMetadata("1.kt")
-            public void test1() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/convertToExpressionBody/keepComments/1.kt");
+            @TestMetadata("a1.kt")
+            public void testA1() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/convertToExpressionBody/keepComments/a1.kt");
                 doTest(fileName);
             }
 
-            @TestMetadata("2.kt")
-            public void test2() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/convertToExpressionBody/keepComments/2.kt");
+            @TestMetadata("a2.kt")
+            public void testA2() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/convertToExpressionBody/keepComments/a2.kt");
                 doTest(fileName);
             }
 
-            @TestMetadata("3.kt")
-            public void test3() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/convertToExpressionBody/keepComments/3.kt");
+            @TestMetadata("a3.kt")
+            public void testA3() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/convertToExpressionBody/keepComments/a3.kt");
                 doTest(fileName);
             }
 
-            @TestMetadata("4.kt")
-            public void test4() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/convertToExpressionBody/keepComments/4.kt");
+            @TestMetadata("a4.kt")
+            public void testA4() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/convertToExpressionBody/keepComments/a4.kt");
                 doTest(fileName);
             }
 
@@ -6009,9 +6009,9 @@ public class IntentionTestGenerated extends AbstractIntentionTest {
             doTest(fileName);
         }
 
-        @TestMetadata("nestedCall-KT-5028.kt")
-        public void testNestedCall_KT_5028() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/removeExplicitTypeArguments/nestedCall-KT-5028.kt");
+        @TestMetadata("nestedCall_kt5028.kt")
+        public void testNestedCall_kt5028() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/removeExplicitTypeArguments/nestedCall_kt5028.kt");
             doTest(fileName);
         }
 

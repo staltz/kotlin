@@ -7,7 +7,7 @@ interface A {
     void foo(String javaName);
 }
 
-// FILE: 1.kt
+// FILE: file1.kt
 
 class B : A {
     override fun foo(<!PARAMETER_NAME_CHANGED_ON_OVERRIDE!>kotlinName<!>: String) {}

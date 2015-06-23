@@ -1,4 +1,6 @@
-public class GenericUnit {
+package test;
+
+class JavaClass {
     public static class Key<T> {}
 
     public static <T> T getNull(Key<T> key) {

@@ -26,9 +26,9 @@ fun box(): String {
 //*S Kotlin
 //*F
 //+ 1 smap.1.kt
-//_DefaultPackage
+//Smap_1
 //+ 2 smap.2.kt
-//builders/BuildersPackage
+//builders/Smap_2
 //*L
 //1#1,38:1
 //16#2:39

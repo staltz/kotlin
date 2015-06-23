@@ -11,7 +11,7 @@ public class Foo {
     }
 }
 
-// FILE: 1.kt
+// FILE: A.kt
 
 fun main(args: Array<String>) {
     javaPackage.Foo.Bar.<!INVISIBLE_MEMBER!>doSmth<!>()

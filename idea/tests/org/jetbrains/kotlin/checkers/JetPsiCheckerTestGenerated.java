@@ -448,9 +448,9 @@ public class JetPsiCheckerTestGenerated extends AbstractJetPsiCheckerTest {
             doTest(fileName);
         }
 
-        @TestMetadata("Jet183-1.kt")
+        @TestMetadata("Jet183_1.kt")
         public void testJet183_1() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/testData/checker/regression/Jet183-1.kt");
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/checker/regression/Jet183_1.kt");
             doTest(fileName);
         }
 

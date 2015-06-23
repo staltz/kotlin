@@ -42,6 +42,5 @@ class ContainerForTests(container: StorageComponentContainer) {
     val typeResolver: TypeResolver by injected(container)
     val fakeCallResolver: FakeCallResolver by injected(container)
     val expressionTypingServices: ExpressionTypingServices by injected(container)
-    val qualifiedExpressionResolver: QualifiedExpressionResolver by injected(container)
     val additionalCheckerProvider: AdditionalCheckerProvider by injected(container)
 }

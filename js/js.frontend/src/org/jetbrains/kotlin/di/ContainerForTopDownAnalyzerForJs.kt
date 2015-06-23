@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.frontend.js.di
 
 import com.intellij.openapi.project.Project
 import org.jetbrains.kotlin.context.GlobalContext
+import org.jetbrains.kotlin.context.ModuleContext
 import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl
 import org.jetbrains.kotlin.di.createContainer
 import org.jetbrains.kotlin.di.get
@@ -33,11 +34,12 @@ import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 import org.jetbrains.kotlin.types.DynamicTypesAllowed
 
 public fun createTopDownAnalyzerForJs(
-        project: Project, globalContext: GlobalContext, bindingTrace: BindingTrace,
-        module: ModuleDescriptorImpl, declarationProviderFactory: DeclarationProviderFactory
+        moduleContext: ModuleContext,
+        bindingTrace: BindingTrace,
+        declarationProviderFactory: DeclarationProviderFactory
 ): LazyTopDownAnalyzerForTopLevel {
     val storageComponentContainer = createContainer("REPL") { //TODO: name
-        configureModule(project, globalContext, module, bindingTrace, KotlinJsCheckerProvider)
+        configureModule(moduleContext, bindingTrace, KotlinJsCheckerProvider)
 
         useInstance(declarationProviderFactory)
         useImpl<ScopeProvider>()

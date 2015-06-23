@@ -16,11 +16,9 @@
 
 package org.jetbrains.kotlin.frontend.java.di
 
-import com.intellij.openapi.project.Project
 import com.intellij.psi.search.GlobalSearchScope
-import org.jetbrains.kotlin.context.GlobalContext
 import org.jetbrains.kotlin.context.LazyResolveToken
-import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl
+import org.jetbrains.kotlin.context.ModuleContext
 import org.jetbrains.kotlin.di.createContainer
 import org.jetbrains.kotlin.di.get
 import org.jetbrains.kotlin.di.useImpl
@@ -37,12 +35,11 @@ import org.jetbrains.kotlin.resolve.lazy.ScopeProvider
 import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 
 public fun createContainerForLazyResolveWithJava(
-        project: Project, globalContext: GlobalContext, bindingTrace: BindingTrace,
-        module: ModuleDescriptorImpl, declarationProviderFactory: DeclarationProviderFactory,
-        moduleContentScope: GlobalSearchScope,  moduleClassResolver: ModuleClassResolver
+        moduleContext: ModuleContext, bindingTrace: BindingTrace, declarationProviderFactory: DeclarationProviderFactory,
+        moduleContentScope: GlobalSearchScope, moduleClassResolver: ModuleClassResolver
 ): Pair<ResolveSession, JavaDescriptorResolver> = createContainer("REPL") { //TODO: name
-    configureModule(project, globalContext, module, bindingTrace, KotlinJvmCheckerProvider)
-    configureJavaTopDownAnalysis(moduleContentScope, project)
+    configureModule(moduleContext, bindingTrace, KotlinJvmCheckerProvider)
+    configureJavaTopDownAnalysis(moduleContentScope, moduleContext.project)
 
     useInstance(moduleClassResolver)
 

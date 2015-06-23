@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.frontend.di
 import com.intellij.openapi.project.Project
 import org.jetbrains.container.StorageComponentContainer
 import org.jetbrains.kotlin.context.GlobalContext
+import org.jetbrains.kotlin.context.ModuleContext
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.di.createContainer
 import org.jetbrains.kotlin.di.useImpl
@@ -29,26 +30,25 @@ import org.jetbrains.kotlin.resolve.BodyResolver
 import org.jetbrains.kotlin.resolve.StatementFilter
 
 public fun createContainerForBodyResolve(
-        project: Project, globalContext: GlobalContext, bindingTrace: BindingTrace, module: ModuleDescriptor,
+        moduleContext: ModuleContext, bindingTrace: BindingTrace,
         additionalCheckerProvider: AdditionalCheckerProvider, statementFilter: StatementFilter
 ): StorageComponentContainer = createContainer("BodyResolve") {
-    configureModule(project, globalContext, module, bindingTrace, additionalCheckerProvider)
+    configureModule(moduleContext, bindingTrace, additionalCheckerProvider)
 
     useInstance(statementFilter)
     useImpl<BodyResolver>()
 }
 
 public fun StorageComponentContainer.configureModule(
-        project: Project, globalContext: GlobalContext,
-        module: ModuleDescriptor, bindingTrace: BindingTrace, additionalCheckerProvider: AdditionalCheckerProvider
+        moduleContext: ModuleContext, trace: BindingTrace, additionalCheckerProvider: AdditionalCheckerProvider
 ) {
-    useInstance(project)
-    useInstance(globalContext)
-    useInstance(globalContext.storageManager)
-    useInstance(bindingTrace)
-    useInstance(module)
-    useInstance(module.builtIns)
-    useInstance(module.platformToKotlinClassMap)
+    useInstance(moduleContext)
+    useInstance(moduleContext.module)
+    useInstance(moduleContext.project)
+    useInstance(moduleContext.storageManager)
+    useInstance(moduleContext.builtIns)
+    useInstance(moduleContext.platformToKotlinClassMap)
+    useInstance(trace)
     useInstance(additionalCheckerProvider)
     useInstance(additionalCheckerProvider.symbolUsageValidator)
 }

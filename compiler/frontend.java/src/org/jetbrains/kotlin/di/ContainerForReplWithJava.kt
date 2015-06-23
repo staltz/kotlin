@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.container.StorageComponentContainer
 import org.jetbrains.kotlin.context.GlobalContext
+import org.jetbrains.kotlin.context.ModuleContext
 import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl
 import org.jetbrains.kotlin.di.*
 import org.jetbrains.kotlin.frontend.di.configureModule
@@ -30,6 +31,7 @@ import org.jetbrains.kotlin.load.java.lazy.SingleModuleClassResolver
 import org.jetbrains.kotlin.load.java.sam.SamConversionResolverImpl
 import org.jetbrains.kotlin.load.java.structure.impl.JavaPropertyInitializerEvaluatorImpl
 import org.jetbrains.kotlin.load.kotlin.DeserializationComponentsForJava
+import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmCheckerProvider
 import org.jetbrains.kotlin.load.kotlin.VirtualFileFinderFactory
 import org.jetbrains.kotlin.resolve.BindingTrace
@@ -43,12 +45,11 @@ import org.jetbrains.kotlin.resolve.lazy.ScopeProvider
 import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 
 public fun createContainerForReplWithJava(
-        project: Project, globalContext: GlobalContext, bindingTrace: BindingTrace,
-        module: ModuleDescriptorImpl, declarationProviderFactory: DeclarationProviderFactory,
+        moduleContext: ModuleContext, bindingTrace: BindingTrace, declarationProviderFactory: DeclarationProviderFactory,
         moduleContentScope: GlobalSearchScope, additionalFileScopeProvider: ScopeProvider.AdditionalFileScopeProvider
 ): ContainerForReplWithJava = createContainer("REPL") { //TODO: name
-    configureModule(project, globalContext, module, bindingTrace, KotlinJvmCheckerProvider)
-    configureJavaTopDownAnalysis(moduleContentScope, project)
+    configureModule(moduleContext, bindingTrace, KotlinJvmCheckerProvider)
+    configureJavaTopDownAnalysis(moduleContentScope, moduleContext.project)
 
 
     useInstance(additionalFileScopeProvider)
@@ -72,13 +73,12 @@ private fun StorageComponentContainer.configureJavaTopDownAnalysis(moduleContent
     useImpl<JavaDescriptorResolver>()
     useImpl<DeserializationComponentsForJava>()
 
-    useInstance(VirtualFileFinderFactory.SERVICE.getInstance(project).create(moduleContentScope))
+    useInstance(JvmVirtualFileFinderFactory.SERVICE.getInstance(project).create(moduleContentScope))
 
     useImpl<JavaClassFinderImpl>()
     useImpl<TraceBasedExternalSignatureResolver>()
     useImpl<LazyResolveBasedCache>()
     useImpl<TraceBasedErrorReporter>()
-    useImpl<PsiBasedMethodSignatureChecker>()
     useImpl<PsiBasedExternalAnnotationResolver>()
     useImpl<JavaPropertyInitializerEvaluatorImpl>()
     useInstance(SamConversionResolverImpl)

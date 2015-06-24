@@ -6698,6 +6698,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                     doTest(fileName);
                 }
 
+                @TestMetadata("inferenceWithUpperBoundsInLambda.kt")
+                public void testCommonSystemWithLambda() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/inference/commonSystem/inferenceWithUpperBoundsInLambda.kt");
+                    doTest(fileName);
+                }
+
                 @TestMetadata("dontCaptureTypeVariable.kt")
                 public void testDontCaptureTypeVariable() throws Exception {
                     String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/inference/commonSystem/dontCaptureTypeVariable.kt");

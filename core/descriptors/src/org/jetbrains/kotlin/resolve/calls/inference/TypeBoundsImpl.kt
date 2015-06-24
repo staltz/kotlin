@@ -90,9 +90,6 @@ public class TypeBoundsImpl(
         return result
     }
 
-    override val value: JetType?
-        get() = if (values.size() == 1) values.first() else null
-
     override val values: Collection<JetType>
         get() {
             if (resultValues == null) {

@@ -34,6 +34,7 @@ public trait TypeBounds {
     public val bounds: Collection<Bound>
 
     public val value: JetType?
+        get() = if (values.size() == 1) values.first() else null
 
     public val values: Collection<JetType>
 
@@ -47,6 +48,7 @@ public trait TypeBounds {
             public val constrainingType: JetType,
             public val kind: BoundKind,
             public val position: ConstraintPosition,
+            //todo (see java 8 specification for name)
             public val pure: Boolean = true
     ) {
         public var typeVariable: TypeParameterDescriptor by Delegates.notNull()

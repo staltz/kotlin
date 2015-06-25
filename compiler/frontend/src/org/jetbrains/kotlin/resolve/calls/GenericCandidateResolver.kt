@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.psi.JetExpression
+import org.jetbrains.kotlin.psi.JetPsiUtil
 import org.jetbrains.kotlin.psi.ValueArgument
 import org.jetbrains.kotlin.resolve.FunctionDescriptorUtil
 import org.jetbrains.kotlin.resolve.calls.CallResolverUtil.getEffectiveExpectedType
@@ -30,10 +31,14 @@ import org.jetbrains.kotlin.resolve.calls.context.ContextDependency.PARTLY_DEPEN
 import org.jetbrains.kotlin.resolve.calls.context.ResolutionContext
 import org.jetbrains.kotlin.resolve.calls.context.ResolutionResultsCache
 import org.jetbrains.kotlin.resolve.calls.context.ResolveArgumentsMode.SHAPE_FUNCTION_ARGUMENTS
-import org.jetbrains.kotlin.resolve.calls.inference.*
+import org.jetbrains.kotlin.resolve.calls.context.TemporaryTraceAndCache
+import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystem
+import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPosition
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.RECEIVER_POSITION
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.VALUE_PARAMETER_POSITION
+import org.jetbrains.kotlin.resolve.calls.inference.createTypeForFunctionPlaceholder
+import org.jetbrains.kotlin.resolve.calls.inference.fixVariablesInType
 import org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus
 import org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus.INCOMPLETE_TYPE_INFERENCE
 import org.jetbrains.kotlin.resolve.calls.results.ResolutionStatus.OTHER_ERROR
@@ -48,7 +53,6 @@ import org.jetbrains.kotlin.types.TypeUtils.makeConstantSubstitutor
 import org.jetbrains.kotlin.types.Variance
 import org.jetbrains.kotlin.types.checker.JetTypeChecker
 import org.jetbrains.kotlin.types.expressions.ExpressionTypingUtils
-import org.jetbrains.kotlin.types.typeUtil.getNestedTypeArguments
 
 class GenericCandidateResolver(
         val argumentTypeResolver: ArgumentTypeResolver
@@ -252,6 +256,25 @@ class GenericCandidateResolver(
 
         val expectedReturnType = KotlinBuiltIns.getReturnTypeFromFunctionType(expectedType)
         val hasUnitReturnType = KotlinBuiltIns.isUnit(expectedReturnType)
+
+        // todo function literal argument should be analyzed once: build common system with an outer call?
+        if (!expectedReturnType.isError()) {
+            val temporaryToResolveFunctionLiteral = TemporaryTraceAndCache.create(context, "trace to resolve function literal with expected return type", argumentExpression)
+
+            val statementExpression = JetPsiUtil.getExpressionOrLastStatementInBlock(functionLiteral.getBodyExpression()) ?: return
+            val mismatch = BooleanArray(1)
+            val errorInterceptingTrace = ExpressionTypingUtils.makeTraceInterceptingTypeMismatch(temporaryToResolveFunctionLiteral.trace, statementExpression, mismatch)
+            val newContext = context.replaceBindingTrace(errorInterceptingTrace).replaceExpectedType(expectedType)
+                    .replaceDataFlowInfo(dataFlowInfoForArgument).replaceResolutionResultsCache(temporaryToResolveFunctionLiteral.cache)
+                    .replaceContextDependency(INDEPENDENT)
+            val type = argumentTypeResolver.getFunctionLiteralTypeInfo(argumentExpression, functionLiteral, newContext).type
+            if (!mismatch[0]) {
+                constraintSystem.addSubtypeConstraint(type, effectiveExpectedType, VALUE_PARAMETER_POSITION.position(valueParameterDescriptor.getIndex()))
+                temporaryToResolveFunctionLiteral.commit()
+                return
+            }
+        }
+
         // Unit is not replaced by DONT_CARE to be able to do COERCION_TO_UNIT
         val expectedTypeWithNoOrUnitReturnType = if (hasUnitReturnType) expectedType else CallResolverUtil.replaceReturnTypeBy(expectedType, DONT_CARE)
         val newContext = context.replaceExpectedType(expectedTypeWithNoOrUnitReturnType)

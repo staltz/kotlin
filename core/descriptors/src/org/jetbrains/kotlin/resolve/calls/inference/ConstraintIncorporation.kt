@@ -54,13 +54,10 @@ fun ConstraintSystemImpl.incorporateConstraint(variable: JetType, constrainingBo
         addBound(constrainingType, bound)
         return
     }
-    constrainingType.getNestedTypeArguments().forEach {
-        val argument = it.getType()
-        if (isMyTypeVariable(argument)) {
-            val boundsForNestedVariable = ArrayList(getTypeBounds(argument).bounds)
-            for (variableBound in boundsForNestedVariable) {
-                generateNewConstraint(variable, constrainingBound, variableBound)
-            }
+    constrainingType.getNestedTypeVariables().forEach {
+        val boundsForNestedVariable = ArrayList(getTypeBounds(it).bounds)
+        for (variableBound in boundsForNestedVariable) {
+            generateNewConstraint(variable, constrainingBound, variableBound)
         }
     }
 }

@@ -35,17 +35,16 @@ public abstract class SingletonDescriptor(val container: ComponentContainer) : C
     private val disposableObjects by Delegates.lazy { ArrayList<Closeable>() }
 
     public override fun getValue(): Any {
-        if (state == ComponentState.Corrupted)
-            throw ContainerConsistencyException("Component descriptor $this is corrupted and cannot be accessed")
-        if (state == ComponentState.Disposed)
-            throw ContainerConsistencyException("Component descriptor $this is disposed and cannot be accessed");
-        if (instance == null)
-            createInstance(container);
+        when {
+            state == ComponentState.Corrupted -> throw ContainerConsistencyException("Component descriptor $this is corrupted and cannot be accessed")
+            state == ComponentState.Disposed -> throw ContainerConsistencyException("Component descriptor $this is disposed and cannot be accessed")
+            instance == null -> createInstance(container)
+        }
         return instance!!
     }
 
     protected fun registerDisposableObject(ownedObject: Closeable) {
-        disposableObjects.add(ownedObject);
+        disposableObjects.add(ownedObject)
     }
 
     protected abstract fun createInstance(context: ValueResolveContext): Any
@@ -54,61 +53,61 @@ public abstract class SingletonDescriptor(val container: ComponentContainer) : C
         when (state) {
             ComponentState.Null -> {
                 try {
-                    instance = createInstance(container.createResolveContext(this));
-                    return;
+                    instance = createInstance(container.createResolveContext(this))
+                    return
                 }
                 catch (ex: Throwable) {
-                    state = ComponentState.Corrupted;
+                    state = ComponentState.Corrupted
                     for (disposable in disposableObjects)
-                        disposable.close();
+                        disposable.close()
                     throw ex
                 }
             }
             ComponentState.Initializing ->
-                throw ContainerConsistencyException("Could not create the component $this because it is being initialized. Do we have undetected circular dependency?");
+                throw ContainerConsistencyException("Could not create the component $this because it is being initialized. Do we have undetected circular dependency?")
             ComponentState.Initialized ->
-                throw ContainerConsistencyException("Could not get the component $this. Instance is null in Initialized state");
+                throw ContainerConsistencyException("Could not get the component $this. Instance is null in Initialized state")
             ComponentState.Corrupted ->
-                throw ContainerConsistencyException("Could not get the component $this because it is corrupted");
+                throw ContainerConsistencyException("Could not get the component $this because it is corrupted")
             ComponentState.Disposing ->
-                throw ContainerConsistencyException("Could not get the component $this because it is being disposed");
+                throw ContainerConsistencyException("Could not get the component $this because it is being disposed")
             ComponentState.Disposed ->
-                throw ContainerConsistencyException("Could not get the component $this because it is already disposed");
+                throw ContainerConsistencyException("Could not get the component $this because it is already disposed")
         }
     }
 
     private fun disposeImpl() {
-        val wereInstance = instance;
-        state = ComponentState.Disposing;
-        instance = null; // cannot get instance any more
+        val wereInstance = instance
+        state = ComponentState.Disposing
+        instance = null // cannot get instance any more
         try {
             if (wereInstance is Closeable)
-                wereInstance.close();
+                wereInstance.close()
             for (disposable in disposableObjects)
-                disposable.close();
+                disposable.close()
         }
         catch(ex: Throwable) {
-            state = ComponentState.Corrupted;
-            throw ex;
+            state = ComponentState.Corrupted
+            throw ex
         }
-        state = ComponentState.Disposed;
+        state = ComponentState.Disposed
     }
 
     override fun close() {
         when (state) {
             ComponentState.Initialized ->
-                disposeImpl();
+                disposeImpl()
             ComponentState.Corrupted -> {
             } // corrupted component is in the undefined state, ignore
             ComponentState.Null -> {
             } // it's ok to to remove null component, it may have been never needed
 
             ComponentState.Initializing ->
-                throw ContainerConsistencyException("The component is being initialized and cannot be disposed.");
+                throw ContainerConsistencyException("The component is being initialized and cannot be disposed.")
             ComponentState.Disposing ->
-                throw ContainerConsistencyException("The component is already in disposing state.");
+                throw ContainerConsistencyException("The component is already in disposing state.")
             ComponentState.Disposed ->
-                throw ContainerConsistencyException("The component has already been destroyed.");
+                throw ContainerConsistencyException("The component has already been destroyed.")
         }
     }
 
@@ -122,6 +121,7 @@ public abstract class SingletonComponentDescriptor(container: ComponentContainer
 
 public class SingletonTypeComponentDescriptor(container: ComponentContainer, klass: Class<*>) : SingletonComponentDescriptor(container, klass) {
     override fun createInstance(context: ValueResolveContext): Any = createInstanceOf(klass, context)
+
     private fun createInstanceOf(klass: Class<*>, context: ValueResolveContext): Any {
         val binding = klass.bindToConstructor(context)
         state = ComponentState.Initializing
@@ -132,7 +132,7 @@ public class SingletonTypeComponentDescriptor(container: ComponentContainer, kla
         }
 
         val constructor = binding.constructor
-        val arguments = bindArguments(binding.argumentDescriptors)
+        val arguments = computeArguments(binding.argumentDescriptors)
 
         val instance = constructor.newInstance(*arguments.toTypedArray())!!
         state = ComponentState.Initialized

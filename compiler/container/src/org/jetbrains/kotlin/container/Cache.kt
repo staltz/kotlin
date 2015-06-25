@@ -54,7 +54,8 @@ data class ConstructorInfo(
 
 data class SetterInfo(
         val method: Method,
-        val parameters: List<Class<*>>)
+        val parameters: List<Class<*>>
+)
 
 private fun traverseClass(c: Class<*>): ClassInfo {
     return ClassInfo(getConstructorInfo(c), getSetterInfos(c), getRegistrations(c))
@@ -62,12 +63,10 @@ private fun traverseClass(c: Class<*>): ClassInfo {
 
 private fun getSetterInfos(c: Class<*>): List<SetterInfo> {
     val setterInfos = ArrayList<SetterInfo>()
-    for (member in c.getMethods()) {
-        val annotations = member.getDeclaredAnnotations()
-        for (annotation in annotations) {
-            val annotationType = annotation.annotationType()
-            if (annotationType.getName().substringAfterLast('.') == "Inject") {
-                setterInfos.add(SetterInfo(member, member.getParameterTypes().toList()))
+    for (method in c.getMethods()) {
+        for (annotation in method.getDeclaredAnnotations()) {
+            if (annotation.annotationType().getName().endsWith(".Inject")) {
+                setterInfos.add(SetterInfo(method, method.getParameterTypes().toList()))
             }
         }
     }
@@ -75,8 +74,7 @@ private fun getSetterInfos(c: Class<*>): List<SetterInfo> {
 }
 
 private fun getConstructorInfo(c: Class<*>): ConstructorInfo? {
-    val modifiers = c.getModifiers()
-    if (Modifier.isInterface(modifiers) || Modifier.isAbstract(modifiers) || c.isPrimitive())
+    if (Modifier.isAbstract(c.getModifiers()) || c.isPrimitive())
         return null
 
     val constructors = c.getConstructors()
@@ -84,15 +82,13 @@ private fun getConstructorInfo(c: Class<*>): ConstructorInfo? {
     if (!hasSinglePublicConstructor)
         return null
 
-
     val constructor = constructors.single()
     return ConstructorInfo(constructor, constructor.getParameterTypes().toList())
 }
 
 
 private fun collectInterfacesRecursive(cl: Class<*>, result: MutableSet<Class<*>>) {
-    val interfaces = cl.getInterfaces()
-    interfaces.forEach {
+    cl.getInterfaces().forEach {
         if (result.add(it)) {
             collectInterfacesRecursive(it, result)
         }
@@ -101,13 +97,13 @@ private fun collectInterfacesRecursive(cl: Class<*>, result: MutableSet<Class<*>
 
 private fun getRegistrations(klass: Class<*>): List<Class<*>> {
     val registrations = ArrayList<Class<*>>()
-    val superClasses = sequence(klass) { it: Class<*> ->
-        (it as Class<Any>).getSuperclass()
-    }
+
+    val superClasses = sequence(klass) { (it as Class<Any>).getSuperclass() }
     registrations.addAll(superClasses)
+
     val interfaces = LinkedHashSet<Class<*>>()
     superClasses.forEach { collectInterfacesRecursive(it, interfaces) }
     registrations.addAll(interfaces)
-    registrations.remove(javaClass<java.lang.Object>())
+    registrations.remove(javaClass<Any>())
     return registrations
 }

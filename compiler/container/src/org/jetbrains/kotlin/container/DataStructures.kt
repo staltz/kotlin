@@ -20,32 +20,32 @@ import java.util.ArrayList
 import java.util.HashSet
 
 public fun topologicalSort<T>(items: Iterable<T>, dependencies: (T) -> Iterable<T>): List<T> {
-    val itemsInProgress = HashSet<T>();
-    val completedItems = HashSet<T>();
+    val itemsInProgress = HashSet<T>()
+    val completedItems = HashSet<T>()
     val result = ArrayList<T>()
 
     fun DfsVisit(item: T) {
-        if (completedItems.contains(item))
-            return;
+        if (item in completedItems)
+            return
 
-        if (itemsInProgress.contains(item))
-            throw CycleInTopoSortException();
+        if (item in itemsInProgress)
+            throw CycleInTopoSortException()
 
-        itemsInProgress.add(item);
+        itemsInProgress.add(item)
 
         for (dependency in dependencies(item)) {
-            DfsVisit(dependency);
+            DfsVisit(dependency)
         }
 
-        itemsInProgress.remove(item);
-        completedItems.add(item);
-        result.add(item);
+        itemsInProgress.remove(item)
+        completedItems.add(item)
+        result.add(item)
     }
 
     for (item in items)
         DfsVisit(item)
 
-    return result.reverse();
+    return result.reverse()
 }
 
 public class CycleInTopoSortException : Exception()

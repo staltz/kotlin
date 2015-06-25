@@ -38,40 +38,36 @@ public class ConstructorBinding(val constructor: Constructor<*>, val argumentDes
 
 public class MethodBinding(val method: Method, val argumentDescriptors: List<ValueDescriptor>) {
     fun invoke(instance: Any) {
-        val arguments = bindArguments(argumentDescriptors).toTypedArray()
+        val arguments = computeArguments(argumentDescriptors).toTypedArray()
         method.invoke(instance, *arguments)
     }
 }
 
-public fun bindArguments(argumentDescriptors: List<ValueDescriptor>): List<Any> = argumentDescriptors.map { it.getValue() }
+public fun computeArguments(argumentDescriptors: List<ValueDescriptor>): List<Any> = argumentDescriptors.map { it.getValue() }
 
 fun Class<*>.bindToConstructor(context: ValueResolveContext): ConstructorBinding {
     val constructorInfo = getInfo().constructorInfo!!
     val candidate = constructorInfo.constructor
-    val arguments = ArrayList<ValueDescriptor>(constructorInfo.parameters.size())
-    var unsatisfied: MutableList<Type>? = null
+    val (bound, unsatisfied) = bindArguments(constructorInfo.parameters, context)
 
-    for (parameter in constructorInfo.parameters) {
-        val descriptor = context.resolve(parameter)
-        if (descriptor == null) {
-            if (unsatisfied == null)
-                unsatisfied = ArrayList<Type>()
-            unsatisfied.add(parameter)
-        }
-        else {
-            arguments.add(descriptor)
-        }
-    }
-
-    if (unsatisfied == null) // constructor is satisfied with arguments
-        return ConstructorBinding(candidate, arguments)
+    if (unsatisfied == null)
+        return ConstructorBinding(candidate, bound)
 
     throw UnresolvedDependenciesException("Dependencies for type `$this` cannot be satisfied:\n  $unsatisfied")
 }
 
 fun Method.bindToMethod(context: ValueResolveContext): MethodBinding {
-    val parameters = getParameterTypes()!!
-    val arguments = ArrayList<ValueDescriptor>(parameters.size())
+    val parameters = getParameterTypes().toList()
+    val (bound, unsatisfied) = bindArguments(parameters, context)
+
+    if (unsatisfied == null) // constructor is satisfied with arguments
+        return MethodBinding(this, bound)
+
+    throw UnresolvedDependenciesException("Dependencies for method `$this` cannot be satisfied:\n  $unsatisfied")
+}
+
+private fun bindArguments(parameters: List<Class<*>>, context: ValueResolveContext): Pair<List<ValueDescriptor>, MutableList<Type>?> {
+    val bound = ArrayList<ValueDescriptor>(parameters.size())
     var unsatisfied: MutableList<Type>? = null
 
     for (parameter in parameters) {
@@ -82,14 +78,10 @@ fun Method.bindToMethod(context: ValueResolveContext): MethodBinding {
             unsatisfied.add(parameter)
         }
         else {
-            arguments.add(descriptor)
+            bound.add(descriptor)
         }
     }
-
-    if (unsatisfied == null) // constructor is satisfied with arguments
-        return MethodBinding(this, arguments)
-
-    throw UnresolvedDependenciesException("Dependencies for method `$this` cannot be satisfied:\n  $unsatisfied")
+    return Pair(bound, unsatisfied)
 }
 
 class UnresolvedDependenciesException(message: String) : Exception(message)

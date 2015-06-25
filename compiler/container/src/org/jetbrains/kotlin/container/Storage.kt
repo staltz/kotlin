@@ -54,7 +54,7 @@ public class ComponentStorage(val myId: String) : ValueResolver {
         if (context is ComponentResolveContext) {
             val descriptor = context.requestingDescriptor
             if (descriptor is ComponentDescriptor) {
-                dependencies.putValue(descriptor, request);
+                dependencies.putValue(descriptor, request)
             }
         }
     }
@@ -70,25 +70,25 @@ public class ComponentStorage(val myId: String) : ValueResolver {
         }
 
         for (descriptor in items)
-            descriptors.add(descriptor);
+            descriptors.add(descriptor)
 
         if (state == ComponentStorageState.Initialized)
-            composeDescriptors(context, items);
+            composeDescriptors(context, items)
 
     }
 
     public fun compose(context: ComponentResolveContext) {
         if (state != ComponentStorageState.Initial)
-            throw ContainerConsistencyException("Container $myId was already composed.");
+            throw ContainerConsistencyException("Container $myId was already composed.")
 
-        state = ComponentStorageState.Initialized;
-        composeDescriptors(context, descriptors);
+        state = ComponentStorageState.Initialized
+        composeDescriptors(context, descriptors)
     }
 
     private fun composeDescriptors(context: ComponentResolveContext, descriptors: Collection<ComponentDescriptor>) {
         if (descriptors.isEmpty()) return
 
-        registry.addAll(descriptors);
+        registry.addAll(descriptors)
 
         val implicits = inspectDependenciesAndRegisterImplicits(context, descriptors)
 
@@ -146,21 +146,21 @@ public class ComponentStorage(val myId: String) : ValueResolver {
     public fun dispose() {
         if (state != ComponentStorageState.Initialized) {
             if (state == ComponentStorageState.Initial)
-                return; // it is valid to dispose container which was not initialized
-            throw ContainerConsistencyException("Component container cannot be disposed in the $state state.");
+                return // it is valid to dispose container which was not initialized
+            throw ContainerConsistencyException("Component container cannot be disposed in the $state state.")
         }
 
-        state = ComponentStorageState.Disposing;
+        state = ComponentStorageState.Disposing
         val disposeList = getDescriptorsInDisposeOrder()
         for (descriptor in disposeList)
-            disposeDescriptor(descriptor);
-        state = ComponentStorageState.Disposed;
+            disposeDescriptor(descriptor)
+        state = ComponentStorageState.Disposed
     }
 
     fun getDescriptorsInDisposeOrder(): List<ComponentDescriptor> {
         return topologicalSort(descriptors)
         {
-            val dependent = ArrayList<ComponentDescriptor>();
+            val dependent = ArrayList<ComponentDescriptor>()
             for (interfaceType in dependencies[it]) {
                 val entry = registry.tryGetEntry(interfaceType)
                 if (entry.isEmpty())
@@ -175,6 +175,6 @@ public class ComponentStorage(val myId: String) : ValueResolver {
 
     fun disposeDescriptor(descriptor: ComponentDescriptor) {
         if (descriptor is Closeable)
-            descriptor.close();
+            descriptor.close()
     }
 }

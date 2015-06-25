@@ -17,14 +17,14 @@
 package org.jetbrains.kotlin.frontend.di
 
 import org.jetbrains.kotlin.container.StorageComponentContainer
-import org.jetbrains.kotlin.context.ModuleContext
 import org.jetbrains.kotlin.container.createContainer
 import org.jetbrains.kotlin.container.useImpl
 import org.jetbrains.kotlin.container.useInstance
+import org.jetbrains.kotlin.context.ModuleContext
 import org.jetbrains.kotlin.resolve.AdditionalCheckerProvider
 import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.LazyTopDownAnalyzer
-import org.jetbrains.kotlin.resolve.lazy.NoFileScopeProvider
+import org.jetbrains.kotlin.resolve.lazy.FileScopeProvider
 import org.jetbrains.kotlin.resolve.lazy.NoTopLevelDescriptorProvider
 import org.jetbrains.kotlin.types.DynamicTypesSettings
 import org.jetbrains.kotlin.types.expressions.DeclarationScopeProviderForLocalClassifierAnalyzer
@@ -45,7 +45,7 @@ public fun createContainerForLazyLocalClassifierAnalyzer(
     useImpl<LazyTopDownAnalyzer>()
 
     useInstance(NoTopLevelDescriptorProvider)
-    useInstance(NoFileScopeProvider)
+    useInstance(FileScopeProvider.NoFileScope)
 
     useImpl<DeclarationScopeProviderForLocalClassifierAnalyzer>()
     useImpl<LocalLazyDeclarationResolver>()

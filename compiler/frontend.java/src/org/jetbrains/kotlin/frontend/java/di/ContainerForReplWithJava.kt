@@ -36,13 +36,14 @@ import org.jetbrains.kotlin.resolve.LazyTopDownAnalyzerForTopLevel
 import org.jetbrains.kotlin.resolve.jvm.JavaClassFinderPostConstruct
 import org.jetbrains.kotlin.resolve.jvm.JavaDescriptorResolver
 import org.jetbrains.kotlin.resolve.jvm.JavaLazyAnalyzerPostConstruct
+import org.jetbrains.kotlin.resolve.lazy.FileScopeProvider
+import org.jetbrains.kotlin.resolve.lazy.FileScopeProviderImpl
 import org.jetbrains.kotlin.resolve.lazy.ResolveSession
-import org.jetbrains.kotlin.resolve.lazy.ScopeProvider
 import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 
 public fun createContainerForReplWithJava(
         moduleContext: ModuleContext, bindingTrace: BindingTrace, declarationProviderFactory: DeclarationProviderFactory,
-        moduleContentScope: GlobalSearchScope, additionalFileScopeProvider: ScopeProvider.AdditionalFileScopeProvider
+        moduleContentScope: GlobalSearchScope, additionalFileScopeProvider: FileScopeProvider.AdditionalScopes
 ): ContainerForReplWithJava = createContainer("ReplWithJava") {
     configureModule(moduleContext, KotlinJvmCheckerProvider, bindingTrace)
     configureJavaTopDownAnalysis(moduleContentScope, moduleContext.project)
@@ -51,7 +52,7 @@ public fun createContainerForReplWithJava(
     useInstance(additionalFileScopeProvider)
     useInstance(declarationProviderFactory)
 
-    useImpl<ScopeProvider>()
+    useImpl<FileScopeProviderImpl>()
     useImpl<SingleModuleClassResolver>()
 }.let {
     it.get<JavaClassFinderImpl>().initialize()

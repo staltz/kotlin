@@ -28,7 +28,7 @@ import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.LazyTopDownAnalyzerForTopLevel
 import org.jetbrains.kotlin.resolve.jvm.JavaClassFinderPostConstruct
 import org.jetbrains.kotlin.resolve.jvm.JavaDescriptorResolver
-import org.jetbrains.kotlin.resolve.lazy.ScopeProvider
+import org.jetbrains.kotlin.resolve.lazy.FileScopeProviderImpl
 import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 
 public fun createContainerForTopDownAnalyzerForJvm(
@@ -41,7 +41,7 @@ public fun createContainerForTopDownAnalyzerForJvm(
     useInstance(declarationProviderFactory)
 
     useImpl<SingleModuleClassResolver>()
-    useImpl<ScopeProvider>()
+    useImpl<FileScopeProviderImpl>()
 }.let {
     it.get<JavaClassFinderImpl>().initialize()
     it.get<JavaClassFinderPostConstruct>().postCreate()

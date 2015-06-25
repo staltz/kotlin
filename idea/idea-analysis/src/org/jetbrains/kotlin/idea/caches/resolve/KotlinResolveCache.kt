@@ -298,7 +298,7 @@ private object KotlinResolveDataProvider {
 
         if (scopeForContextElement == null) return BindingContext.EMPTY
 
-        val codeFragmentScope = resolveSession.getScopeProvider().getFileScope(codeFragment)
+        val codeFragmentScope = resolveSession.getFileScopeProvider().getFileScope(codeFragment)
         val chainedScope = ChainedScope(
                                 scopeForContextElement.getContainingDeclaration(),
                                 "Scope for resolve code fragment",

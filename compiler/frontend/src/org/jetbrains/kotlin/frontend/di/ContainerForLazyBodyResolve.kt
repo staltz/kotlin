@@ -35,7 +35,8 @@ public fun createContainerForLazyBodyResolve(
     configureModule(moduleContext, additionalCheckerProvider, bindingTrace)
 
     useInstance(kotlinCodeAnalyzer)
-    useInstance(kotlinCodeAnalyzer.getScopeProvider())
+    useInstance(kotlinCodeAnalyzer.getDeclarationScopeProvider())
+    useInstance(kotlinCodeAnalyzer.getFileScopeProvider())
     useInstance(dynamicTypesSettings)
     useImpl<LazyTopDownAnalyzerForTopLevel>()
 }

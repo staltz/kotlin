@@ -30,8 +30,8 @@ import org.jetbrains.kotlin.load.kotlin.KotlinJvmCheckerProvider
 import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.jvm.JavaClassFinderPostConstruct
 import org.jetbrains.kotlin.resolve.jvm.JavaDescriptorResolver
+import org.jetbrains.kotlin.resolve.lazy.FileScopeProviderImpl
 import org.jetbrains.kotlin.resolve.lazy.ResolveSession
-import org.jetbrains.kotlin.resolve.lazy.ScopeProvider
 import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 
 public fun createContainerForLazyResolveWithJava(
@@ -44,7 +44,7 @@ public fun createContainerForLazyResolveWithJava(
     useInstance(moduleClassResolver)
 
     useInstance(declarationProviderFactory)
-    useImpl<ScopeProvider>()
+    useImpl<FileScopeProviderImpl>()
     useImpl<LazyResolveToken>()
 }.let {
     it.get<JavaClassFinderImpl>().initialize()

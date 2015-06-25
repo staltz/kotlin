@@ -122,7 +122,7 @@ public enum TopDownAnalyzerFacadeForJVM {
         FileBasedDeclarationProviderFactory providerFactory =
                 new FileBasedDeclarationProviderFactory(moduleContext.getStorageManager(), allFiles);
 
-        ContainerForTopDownAnalyzerForJvm injector = DiPackage.createContainerForTopDownAnalyzerForJvm(
+        ContainerForTopDownAnalyzerForJvm container = DiPackage.createContainerForTopDownAnalyzerForJvm(
                 moduleContext,
                 trace,
                 providerFactory,
@@ -138,15 +138,15 @@ public enum TopDownAnalyzerFacadeForJVM {
                 additionalProviders.add(
                         new IncrementalPackageFragmentProvider(
                                 files, moduleContext.getModule(), moduleContext.getStorageManager(),
-                                injector.getDeserializationComponentsForJava().getComponents(),
+                                container.getDeserializationComponentsForJava().getComponents(),
                                 incrementalCache, moduleId
                         )
                 );
             }
         }
-        additionalProviders.add(injector.getJavaDescriptorResolver().getPackageFragmentProvider());
+        additionalProviders.add(container.getJavaDescriptorResolver().getPackageFragmentProvider());
 
-        injector.getLazyTopDownAnalyzerForTopLevel().analyzeFiles(topDownAnalysisMode, allFiles, additionalProviders);
+        container.getLazyTopDownAnalyzerForTopLevel().analyzeFiles(topDownAnalysisMode, allFiles, additionalProviders);
 
         BindingContext bindingContext = trace.getBindingContext();
         ModuleDescriptor module = moduleContext.getModule();

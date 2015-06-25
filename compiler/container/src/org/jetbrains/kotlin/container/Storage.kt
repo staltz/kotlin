@@ -44,8 +44,7 @@ public class ComponentStorage(val myId: String) : ValueResolver {
         if (entry.isNotEmpty()) {
             registerDependency(request, context)
 
-            val descriptor = entry.singleOrNull()
-            return descriptor // we have single component or null (none or multiple)
+            return entry.singleOrNull()
         }
         return null
     }
@@ -119,13 +118,11 @@ public class ComponentStorage(val myId: String) : ValueResolver {
     ) {
         val dependencies = descriptor.getDependencies(context)
         for (type in dependencies) {
-            if (!visitedTypes.add(type))
-                continue
-            visitedTypes.add(type)
+            if (!visitedTypes.add(type)) continue
+
             val entry = registry.tryGetEntry(type)
             if (entry.isEmpty()) {
-                val modifiers = type.getModifiers()
-                if (!Modifier.isInterface(modifiers) && !Modifier.isAbstract(modifiers) && !type.isPrimitive()) {
+                if (!Modifier.isAbstract(type.getModifiers()) && !type.isPrimitive()) {
                     val implicitDescriptor = SingletonTypeComponentDescriptor(context.container, type)
                     implicitDescriptors.add(implicitDescriptor)
                     registerImplicits(context, implicitDescriptor, visitedTypes, implicitDescriptors)
@@ -158,14 +155,10 @@ public class ComponentStorage(val myId: String) : ValueResolver {
     }
 
     fun getDescriptorsInDisposeOrder(): List<ComponentDescriptor> {
-        return topologicalSort(descriptors)
-        {
+        return topologicalSort(descriptors) {
             val dependent = ArrayList<ComponentDescriptor>()
             for (interfaceType in dependencies[it]) {
-                val entry = registry.tryGetEntry(interfaceType)
-                if (entry.isEmpty())
-                    continue
-                for (dependency in entry) {
+                for (dependency in registry.tryGetEntry(interfaceType)) {
                     dependent.add(dependency)
                 }
             }

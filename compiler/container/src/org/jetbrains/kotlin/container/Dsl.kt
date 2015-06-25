@@ -37,13 +37,6 @@ public fun StorageComponentContainer.useInstance(instance: Any) {
     registerInstance(instance)
 }
 
-public class InjectedProperty<T>(
-        private val container: StorageComponentContainer, private val requestedComponent: Class<T>
-) : ReadOnlyProperty<Any?, T> {
-    override fun get(thisRef: Any?, desc: PropertyMetadata): T {
-        return container.resolve(requestedComponent)!!.getValue() as T
-    }
+public inline fun <reified T> StorageComponentContainer.get(thisRef: Any?, desc: PropertyMetadata): T {
+    return resolve(javaClass<T>())!!.getValue() as T
 }
-
-public inline fun <R, reified T> injected(container: StorageComponentContainer): ReadOnlyProperty<R, T>
-        = InjectedProperty(container, javaClass<T>())

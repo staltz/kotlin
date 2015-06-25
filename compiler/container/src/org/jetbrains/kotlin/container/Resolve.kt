@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.container
 
 import java.lang.reflect.Constructor
+import java.lang.reflect.Member
 import java.lang.reflect.Method
 import java.lang.reflect.Type
 import java.util.ArrayList
@@ -31,7 +32,8 @@ public interface ValueResolveContext {
 
 internal class ComponentResolveContext(val container: StorageComponentContainer, val requestingDescriptor: ValueDescriptor) : ValueResolveContext {
     override fun resolve(registration: Class<*>): ValueDescriptor? = container.resolve(registration, this)
-    public override fun toString(): String = "for $requestingDescriptor in $container"
+
+    override fun toString(): String = "for $requestingDescriptor in $container"
 }
 
 public class ConstructorBinding(val constructor: Constructor<*>, val argumentDescriptors: List<ValueDescriptor>)
@@ -48,25 +50,14 @@ public fun computeArguments(argumentDescriptors: List<ValueDescriptor>): List<An
 fun Class<*>.bindToConstructor(context: ValueResolveContext): ConstructorBinding {
     val constructorInfo = getInfo().constructorInfo!!
     val candidate = constructorInfo.constructor
-    val (bound, unsatisfied) = bindArguments(constructorInfo.parameters, context)
-
-    if (unsatisfied == null)
-        return ConstructorBinding(candidate, bound)
-
-    throw UnresolvedDependenciesException("Dependencies for type `$this` cannot be satisfied:\n  $unsatisfied")
+    return ConstructorBinding(candidate, candidate.bindArguments(constructorInfo.parameters, context))
 }
 
 fun Method.bindToMethod(context: ValueResolveContext): MethodBinding {
-    val parameters = getParameterTypes().toList()
-    val (bound, unsatisfied) = bindArguments(parameters, context)
-
-    if (unsatisfied == null) // constructor is satisfied with arguments
-        return MethodBinding(this, bound)
-
-    throw UnresolvedDependenciesException("Dependencies for method `$this` cannot be satisfied:\n  $unsatisfied")
+    return MethodBinding(this, bindArguments(getParameterTypes().toList(), context))
 }
 
-private fun bindArguments(parameters: List<Class<*>>, context: ValueResolveContext): Pair<List<ValueDescriptor>, MutableList<Type>?> {
+private fun Member.bindArguments(parameters: List<Class<*>>, context: ValueResolveContext): List<ValueDescriptor> {
     val bound = ArrayList<ValueDescriptor>(parameters.size())
     var unsatisfied: MutableList<Type>? = null
 
@@ -81,7 +72,10 @@ private fun bindArguments(parameters: List<Class<*>>, context: ValueResolveConte
             bound.add(descriptor)
         }
     }
-    return Pair(bound, unsatisfied)
+    if (unsatisfied != null) {
+        throw UnresolvedDependenciesException("Dependencies for `$this` cannot be satisfied:\n  $unsatisfied")
+    }
+    return bound
 }
 
 class UnresolvedDependenciesException(message: String) : Exception(message)

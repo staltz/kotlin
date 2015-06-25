@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.load.java.lazy.descriptors
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
+import org.jetbrains.kotlin.descriptors.annotations.AnnotationTarget
 import org.jetbrains.kotlin.load.java.JvmAnnotationNames.DEFAULT_ANNOTATION_MEMBER_NAME
 import org.jetbrains.kotlin.load.java.JvmAnnotationNames.isSpecialAnnotation
 import org.jetbrains.kotlin.load.java.components.DescriptorResolverUtils
@@ -65,6 +66,8 @@ class LazyJavaAnnotationDescriptor(
     }
 
     override fun getType(): JetType = type()
+
+    override fun getTarget() = AnnotationTarget.NO_TARGET
 
     private val allValueArguments = c.storageManager.createLazyValue {
         computeValueArguments()

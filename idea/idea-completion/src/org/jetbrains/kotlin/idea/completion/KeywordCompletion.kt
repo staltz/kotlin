@@ -49,7 +49,8 @@ object KeywordCompletion {
 
     private val KEYWORD_TO_DUMMY_POSTFIX = mapOf(
             OUT_KEYWORD to " X",
-            FILE_KEYWORD to ":"
+            FILE_KEYWORD to ":",
+            FIELD_KEYWORD to ":"
     )
 
     public fun complete(position: PsiElement, prefix: String, consumer: (LookupElement) -> Unit) {

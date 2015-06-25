@@ -28,13 +28,16 @@ import java.util.Map;
 public class AnnotationDescriptorImpl implements AnnotationDescriptor {
     private final JetType annotationType;
     private final Map<ValueParameterDescriptor, CompileTimeConstant<?>> valueArguments;
+    private final AnnotationTarget annotationTarget;
 
     public AnnotationDescriptorImpl(
             @NotNull JetType annotationType,
-            @NotNull Map<ValueParameterDescriptor, CompileTimeConstant<?>> valueArguments
+            @NotNull Map<ValueParameterDescriptor, CompileTimeConstant<?>> valueArguments,
+            @NotNull AnnotationTarget annotationTarget
     ) {
         this.annotationType = annotationType;
         this.valueArguments = Collections.unmodifiableMap(valueArguments);
+        this.annotationTarget = annotationTarget;
     }
 
     @Override
@@ -47,6 +50,12 @@ public class AnnotationDescriptorImpl implements AnnotationDescriptor {
     @NotNull
     public Map<ValueParameterDescriptor, CompileTimeConstant<?>> getAllValueArguments() {
         return valueArguments;
+    }
+
+    @NotNull
+    @Override
+    public AnnotationTarget getTarget() {
+        return annotationTarget;
     }
 
     @Override

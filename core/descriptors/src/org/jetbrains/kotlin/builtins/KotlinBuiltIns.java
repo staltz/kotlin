@@ -22,10 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.builtins.functions.BuiltInFictitiousFunctionClassFactory;
 import org.jetbrains.kotlin.descriptors.*;
-import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor;
-import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptorImpl;
-import org.jetbrains.kotlin.descriptors.annotations.Annotations;
-import org.jetbrains.kotlin.descriptors.annotations.AnnotationsImpl;
+import org.jetbrains.kotlin.descriptors.annotations.*;
 import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl;
 import org.jetbrains.kotlin.descriptors.impl.ValueParameterDescriptorImpl;
 import org.jetbrains.kotlin.name.FqName;
@@ -643,7 +640,9 @@ public class KotlinBuiltIns {
     @NotNull
     public AnnotationDescriptor createExtensionAnnotation() {
         return new AnnotationDescriptorImpl(getBuiltInClassByName("extension").getDefaultType(),
-                                            Collections.<ValueParameterDescriptor, CompileTimeConstant<?>>emptyMap());
+                                            Collections.<ValueParameterDescriptor,
+                                            CompileTimeConstant<?>>emptyMap(),
+                                            AnnotationTarget.NO_TARGET);
     }
 
     private static boolean isTypeAnnotatedWithExtension(@NotNull JetType type) {

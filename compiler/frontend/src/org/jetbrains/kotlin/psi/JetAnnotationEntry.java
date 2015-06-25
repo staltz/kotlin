@@ -18,9 +18,16 @@ package org.jetbrains.kotlin.psi;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import com.intellij.psi.impl.source.tree.TreeElement;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.JetNodeType;
 import org.jetbrains.kotlin.JetNodeTypes;
+import org.jetbrains.kotlin.lexer.JetKeywordToken;
+import org.jetbrains.kotlin.lexer.JetToken;
 import org.jetbrains.kotlin.lexer.JetTokens;
 import org.jetbrains.kotlin.psi.stubs.KotlinAnnotationEntryStub;
 import org.jetbrains.kotlin.psi.stubs.elements.JetStubElementTypes;
@@ -106,5 +113,23 @@ public class JetAnnotationEntry extends JetElementImplStub<KotlinAnnotationEntry
     @Nullable
     public PsiElement getAtSymbol() {
         return findChildByType(JetTokens.AT);
+    }
+
+    public boolean isTargeted() {
+        return getTarget() != null;
+    }
+
+    @Nullable
+    public JetAnnotationTarget getTarget() {
+        JetAnnotationTarget target = getStubOrPsiChild(JetStubElementTypes.ANNOTATION_TARGET);
+
+        if (target == null) {
+            PsiElement parent = getStubOrPsiParent();
+            if (parent instanceof JetAnnotation) {
+                return ((JetAnnotation) parent).getTarget();
+            }
+        }
+
+        return target;
     }
 }

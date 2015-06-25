@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 
-package org.jetbrains.kotlin.descriptors.annotations;
+package org.jetbrains.kotlin.descriptors.annotations
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.ReadOnly;
-import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor;
-import org.jetbrains.kotlin.resolve.constants.CompileTimeConstant;
-import org.jetbrains.kotlin.types.JetType;
-
-import java.util.Map;
-
-public interface AnnotationDescriptor {
-    @NotNull
-    JetType getType();
-
-    @NotNull
-    AnnotationTarget getTarget();
-
-    @NotNull
-    @ReadOnly
-    Map<ValueParameterDescriptor, CompileTimeConstant<?>> getAllValueArguments();
+public enum class AnnotationTarget {
+    NO_TARGET,
+    FIELD,
+    FILE
 }

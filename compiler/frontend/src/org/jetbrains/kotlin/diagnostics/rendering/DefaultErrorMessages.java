@@ -139,6 +139,8 @@ public class DefaultErrorMessages {
         MAP.put(INAPPLICABLE_PLATFORM_NAME, "platformName annotation is not applicable to this declaration");
         MAP.put(INAPPLICABLE_PUBLIC_FIELD, "publicField annotation is not applicable to this declaration");
 
+        MAP.put(INAPPLICABLE_FIELD_TARGET, "''@field:'' annotations could be applied only to the property declarations with a backing field");
+
         MAP.put(REDUNDANT_MODIFIER, "Modifier ''{0}'' is redundant because ''{1}'' is present", TO_STRING, TO_STRING);
         MAP.put(ABSTRACT_MODIFIER_IN_TRAIT, "Modifier ''abstract'' is redundant in interface");
         MAP.put(OPEN_MODIFIER_IN_TRAIT, "Modifier ''open'' is redundant in interface");

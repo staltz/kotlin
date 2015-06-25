@@ -18,9 +18,12 @@ package org.jetbrains.kotlin.resolve.lazy.descriptors
 
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
+import org.jetbrains.kotlin.descriptors.annotations.AnnotationTarget
 import org.jetbrains.kotlin.descriptors.annotations.Annotations
+import org.jetbrains.kotlin.lexer.JetTokens
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.JetAnnotationEntry
+import org.jetbrains.kotlin.psi.JetAnnotationTarget
 import org.jetbrains.kotlin.resolve.AnnotationResolver
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.BindingTrace
@@ -107,7 +110,13 @@ public class LazyAnnotationDescriptor(
         computeValueArguments()
     }
 
+    private val target = c.storageManager.createLazyValue {
+        computeTarget()
+    }
+
     override fun getAllValueArguments() = valueArguments()
+
+    override fun getTarget() = target()
 
     private fun computeValueArguments(): Map<ValueParameterDescriptor, CompileTimeConstant<*>> {
         val resolutionResults = c.annotationResolver.resolveAnnotationCall(annotationEntry, c.scope, c.trace)
@@ -122,6 +131,10 @@ public class LazyAnnotationDescriptor(
                     else AnnotationResolver.getAnnotationArgumentValue(c.trace, valueParameter, resolvedArgument)
                 }
                 .filterValues { it != null } as Map<ValueParameterDescriptor, CompileTimeConstant<*>>
+    }
+
+    private fun computeTarget(): AnnotationTarget {
+        return annotationEntry.getTarget()?.getAnnotationTarget() ?: AnnotationTarget.NO_TARGET
     }
 
     override fun forceResolveAllContents() {

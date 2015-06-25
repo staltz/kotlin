@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.descriptors.*;
 import org.jetbrains.kotlin.descriptors.annotations.Annotated;
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationArgumentVisitor;
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor;
+import org.jetbrains.kotlin.descriptors.annotations.AnnotationTarget;
 import org.jetbrains.kotlin.load.java.JvmAnnotationNames;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.resolve.constants.*;
@@ -94,6 +95,8 @@ public abstract class AnnotationCodegen {
         Set<String> annotationDescriptorsAlreadyPresent = new HashSet<String>();
 
         for (AnnotationDescriptor annotation : annotated.getAnnotations()) {
+            if (!isApplicable(annotated, annotation)) continue;
+
             String descriptor = genAnnotation(annotation);
             if (descriptor != null) {
                 annotationDescriptorsAlreadyPresent.add(descriptor);
@@ -101,6 +104,17 @@ public abstract class AnnotationCodegen {
         }
 
         generateAdditionalAnnotations(annotated, returnType, annotationDescriptorsAlreadyPresent);
+    }
+
+    private boolean isApplicable(Annotated annotated, AnnotationDescriptor annotation) {
+        AnnotationTarget annotationTarget = annotation.getTarget();
+        if (annotationTarget == AnnotationTarget.NO_TARGET) return true;
+
+        if (annotationTarget == AnnotationTarget.FIELD) {
+            return annotated instanceof PropertyDescriptor;
+        }
+
+        throw new IllegalArgumentException("Annotation target was not handled: " + annotationTarget.name());
     }
 
     private void generateAdditionalAnnotations(

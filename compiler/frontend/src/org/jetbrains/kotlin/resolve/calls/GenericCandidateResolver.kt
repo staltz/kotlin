@@ -175,17 +175,21 @@ class GenericCandidateResolver(
 
         val conversion = candidateDescriptor.getTypeParameters().zip(freshTypeParameters).toMap()
 
-        val constraintSystemWithFreshVariables = argumentConstraintSystem.substituteTypeVariables { conversion[it] }
+        val constraintSystemWithFreshVariables = argumentConstraintSystem.substituteTypeVariables { conversion[it] } as ConstraintSystemImpl
 
-        val variables = constraintSystemWithFreshVariables.getTypeVariables()
-        constraintSystem.registerTypeVariables(variables, { Variance.INVARIANT }, local = false)
+        val returnType = candidateWithFreshVariables.getReturnType() ?: return false
 
-        for (variable in variables) {
-            constraintSystem.addTypeBounds(variable, constraintSystemWithFreshVariables.getTypeBounds(variable))
+        val nestedTypeVariables = with (constraintSystemWithFreshVariables) {
+            returnType.getNestedTypeVariables()
+        }
+        for (nestedTypeVariable in nestedTypeVariables) {
+            val typeBounds = constraintSystemWithFreshVariables.getTypeBounds(nestedTypeVariable)
+            if (typeBounds.value != null) return false
         }
 
-        val type = candidateWithFreshVariables.getReturnType()
-        constraintSystem.addSubtypeConstraint(type, effectiveExpectedType, constraintPosition)
+        constraintSystem.registerTypeVariables(nestedTypeVariables, { Variance.INVARIANT }, local = false)
+
+        constraintSystem.addSubtypeConstraint(returnType, effectiveExpectedType, constraintPosition)
         return true
     }
 

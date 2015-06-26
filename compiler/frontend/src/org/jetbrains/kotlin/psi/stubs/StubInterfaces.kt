@@ -81,6 +81,10 @@ public interface KotlinEnumEntrySuperclassReferenceExpressionStub : StubElement<
     public fun getReferencedName(): String
 }
 
+public interface KotlinAnnotationModifierReferenceExpressionStub : StubElement<JetAnnotationModifierReferenceExpression> {
+    public fun getReferencedName(): String
+}
+
 public interface KotlinParameterStub : KotlinStubWithFqName<JetParameter> {
     public fun isMutable(): Boolean
     public fun hasValOrVar(): Boolean

@@ -114,6 +114,10 @@ public fun PsiElement.getNextSiblingIgnoringWhitespaceAndComments(): PsiElement?
     return siblings(withItself = false).filter { it !is PsiWhiteSpace && it !is PsiComment }.firstOrNull()
 }
 
+public fun PsiElement.getPrevSiblingIgnoringWhitespaceAndComments(): PsiElement? {
+    return siblings(forward = false, withItself = false).filter { it !is PsiWhiteSpace && it !is PsiComment }.firstOrNull()
+}
+
 public fun PsiElement?.isAncestor(element: PsiElement, strict: Boolean = false): Boolean {
     return PsiTreeUtil.isAncestor(this, element, strict)
 }

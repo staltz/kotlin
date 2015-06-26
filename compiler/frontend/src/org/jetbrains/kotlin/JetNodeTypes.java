@@ -58,6 +58,7 @@ public interface JetNodeTypes {
     IElementType MODIFIER_LIST                      = JetStubElementTypes.MODIFIER_LIST;
     IElementType ANNOTATION                         = JetStubElementTypes.ANNOTATION;
     IElementType ANNOTATION_ENTRY                   = JetStubElementTypes.ANNOTATION_ENTRY;
+    IElementType ANNOTATION_MODIFIER_REFERENCE_EXPRESSION = JetStubElementTypes.ANNOTATION_MODIFIER_REFERENCE_EXPRESSION;
 
     IElementType TYPE_ARGUMENT_LIST                 = JetStubElementTypes.TYPE_ARGUMENT_LIST;
     JetNodeType VALUE_ARGUMENT_LIST                 = new JetNodeType("VALUE_ARGUMENT_LIST", JetValueArgumentList.class);

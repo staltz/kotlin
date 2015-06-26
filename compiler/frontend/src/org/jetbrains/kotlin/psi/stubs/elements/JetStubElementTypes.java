@@ -49,6 +49,8 @@ public interface JetStubElementTypes {
     JetAnnotationEntryElementType ANNOTATION_ENTRY = new JetAnnotationEntryElementType("ANNOTATION_ENTRY");
     JetPlaceHolderStubElementType<JetAnnotation> ANNOTATION =
             new JetPlaceHolderStubElementType<JetAnnotation>("ANNOTATION", JetAnnotation.class);
+    JetAnnotationModifierReferenceExpressionElementType
+            ANNOTATION_MODIFIER_REFERENCE_EXPRESSION = new JetAnnotationModifierReferenceExpressionElementType("ANNOTATION_MODIFIER_REFERENCE_EXPRESSION");
 
     JetPlaceHolderStubElementType<JetClassBody> CLASS_BODY =
             new JetPlaceHolderStubElementType<JetClassBody>("CLASS_BODY", JetClassBody.class);

@@ -490,8 +490,25 @@ public class JetParsing extends AbstractJetParsing {
             if (tokenConsumer != null) {
                 tokenConsumer.consume(tt);
             }
+            boolean isAnnotation = at(ANNOTATION_KEYWORD);
             advance(); // MODIFIER
             marker.collapse(tt);
+            // Possible "annotation" modifier arguments
+            if (isAnnotation && at(LPAR)) {
+                // Special ANNOTATION_ENTRY with ANNOTATION_MODIFIER_REFERENCE_EXPRESSION inside created here
+                PsiBuilder.Marker annotationEntry = mark();
+                PsiBuilder.Marker constructorCallee = mark();
+                PsiBuilder.Marker typeReference = mark();
+                PsiBuilder.Marker userType = mark();
+                PsiBuilder.Marker referenceExpr = mark();
+                referenceExpr.done(ANNOTATION_MODIFIER_REFERENCE_EXPRESSION);
+                userType.done(USER_TYPE);
+                typeReference.done(TYPE_REFERENCE);
+                constructorCallee.done(CONSTRUCTOR_CALLEE);
+
+                myExpressionParsing.parseValueArgumentList();
+                annotationEntry.done(ANNOTATION_ENTRY);
+            }
             return true;
         }
 

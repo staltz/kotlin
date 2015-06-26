@@ -899,6 +899,27 @@ public class JetParsingTestGenerated extends AbstractJetParsingTest {
                     doParsingTest(fileName);
                 }
             }
+
+            @TestMetadata("compiler/testData/psi/annotation/options")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class Options extends AbstractJetParsingTest {
+                public void testAllFilesPresentInOptions() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/psi/annotation/options"), Pattern.compile("^(.*)\\.kts?$"), true);
+                }
+
+                @TestMetadata("annotation.kt")
+                public void testAnnotation() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/options/annotation.kt");
+                    doParsingTest(fileName);
+                }
+
+                @TestMetadata("options.kt")
+                public void testOptions() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/options/options.kt");
+                    doParsingTest(fileName);
+                }
+            }
         }
 
         @TestMetadata("compiler/testData/psi/examples")

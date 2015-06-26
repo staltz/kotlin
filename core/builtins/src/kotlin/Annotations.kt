@@ -16,12 +16,48 @@
 
 package kotlin
 
+public enum class AnnotationTarget {
+    PACKAGE,
+    CLASSIFIER,
+    ANNOTATION_CLASS,
+    TYPE_PARAMETER,
+    PROPERTY,
+    FIELD,
+    LOCAL_VARIABLE,
+    VALUE_PARAMETER,
+    CONSTRUCTOR,
+    FUNCTION,
+    // TODO: should we join them together?
+    PROPERTY_GETTER,
+    PROPERTY_SETTER,
+    TYPE,
+    EXPRESSION,
+    FILE
+}
+
+public enum class AnnotationRetention {
+    SOURCE,
+    BINARY,
+    RUNTIME
+}
+
+target(AnnotationTarget.CLASSIFIER)
+public annotation class target(vararg val allowedTargets: AnnotationTarget)
+
+// TODO: uncomment SOURCE below
+target(AnnotationTarget.CLASSIFIER)
+public annotation /*(SOURCE)*/ class annotation(
+        val retention: AnnotationRetention = AnnotationRetention.RUNTIME,
+        val repeatable: Boolean = false
+)
+
 /**
  * Marks the annotated class as a data class. The compiler automatically generates
  * equals()/hashCode(), toString(), componentN() and copy() functions for data classes.
  * See [the Kotlin language documentation](http://kotlinlang.org/docs/reference/data-classes.html)
  * for more information.
  */
+target(AnnotationTarget.CLASSIFIER)
 public annotation class data
 
 /**
@@ -30,6 +66,7 @@ public annotation class data
  * @property replaceWith if present, specifies a code fragment which should be used as a replacement for
  *     the deprecated API usage.
  */
+target(AnnotationTarget.CLASSIFIER, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
 public annotation class deprecated(val value: String, val replaceWith: ReplaceWith = ReplaceWith(""))
 
 /**
@@ -64,4 +101,5 @@ public annotation class suppress(vararg val names: String)
  * growing the stack depth. Tail call optimization is currently only supported by the JVM
  * backend.
  */
+target(AnnotationTarget.FUNCTION)
 public annotation class tailRecursive

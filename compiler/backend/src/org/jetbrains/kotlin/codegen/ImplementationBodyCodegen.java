@@ -239,7 +239,8 @@ public class ImplementationBodyCodegen extends ClassBodyCodegen {
             kind = KotlinClass.Kind.ANONYMOUS_OBJECT;
         }
         else if (isTopLevelOrInnerClass(descriptor)) {
-            kind = KotlinClass.Kind.CLASS;
+            // Default value is Kind.CLASS
+            kind = null;
         }
         else {
             // LOCAL_CLASS is also written to inner classes of local classes
@@ -257,11 +258,13 @@ public class ImplementationBodyCodegen extends ClassBodyCodegen {
 
         AnnotationVisitor av = v.getVisitor().visitAnnotation(asmDescByFqNameWithoutInnerClasses(JvmAnnotationNames.KOTLIN_CLASS), true);
         av.visit(JvmAnnotationNames.ABI_VERSION_FIELD_NAME, JvmAbi.VERSION);
-        av.visitEnum(
-                JvmAnnotationNames.KIND_FIELD_NAME,
-                Type.getObjectType(KotlinClass.KIND_INTERNAL_NAME).getDescriptor(),
-                kind.toString()
-        );
+        if (kind != null) {
+            av.visitEnum(
+                    JvmAnnotationNames.KIND_FIELD_NAME,
+                    Type.getObjectType(KotlinClass.KIND_INTERNAL_NAME).getDescriptor(),
+                    kind.toString()
+            );
+        }
         AnnotationVisitor array = av.visitArray(JvmAnnotationNames.DATA_FIELD_NAME);
         for (String string : BitEncoding.encodeBytes(SerializationUtil.serializeClassData(data))) {
             array.visit(null, string);

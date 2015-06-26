@@ -41,6 +41,7 @@ import org.jetbrains.kotlin.resolve.lazy.FileScopeProviderImpl
 import org.jetbrains.kotlin.resolve.lazy.ResolveSession
 import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 
+//TODO: move to repl module
 public fun createContainerForReplWithJava(
         moduleContext: ModuleContext, bindingTrace: BindingTrace, declarationProviderFactory: DeclarationProviderFactory,
         moduleContentScope: GlobalSearchScope, additionalFileScopeProvider: FileScopeProvider.AdditionalScopes
@@ -60,6 +61,7 @@ public fun createContainerForReplWithJava(
     ContainerForReplWithJava(it)
 }
 
+// TODO: move somewhere
 private fun StorageComponentContainer.configureJavaTopDownAnalysis(moduleContentScope: GlobalSearchScope, project: Project) {
     useInstance(moduleContentScope)
 
@@ -85,7 +87,7 @@ private fun StorageComponentContainer.configureJavaTopDownAnalysis(moduleContent
 }
 
 public class ContainerForReplWithJava(container: StorageComponentContainer) {
-    val resolveSession: ResolveSession by injected(container)
-    val lazyTopDownAnalyzerForTopLevel: LazyTopDownAnalyzerForTopLevel by injected(container)
-    val javaDescriptorResolver: JavaDescriptorResolver by injected(container)
+    val resolveSession: ResolveSession by container
+    val lazyTopDownAnalyzerForTopLevel: LazyTopDownAnalyzerForTopLevel by container
+    val javaDescriptorResolver: JavaDescriptorResolver by container
 }

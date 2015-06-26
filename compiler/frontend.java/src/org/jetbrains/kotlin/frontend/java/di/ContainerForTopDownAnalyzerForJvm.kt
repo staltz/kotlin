@@ -50,8 +50,8 @@ public fun createContainerForTopDownAnalyzerForJvm(
 }
 
 public class ContainerForTopDownAnalyzerForJvm(container: StorageComponentContainer) {
-    val lazyTopDownAnalyzerForTopLevel: LazyTopDownAnalyzerForTopLevel by injected(container)
-    val javaDescriptorResolver: JavaDescriptorResolver by injected(container)
-    val deserializationComponentsForJava: DeserializationComponentsForJava by injected(container)
+    val lazyTopDownAnalyzerForTopLevel: LazyTopDownAnalyzerForTopLevel by container
+    val javaDescriptorResolver: JavaDescriptorResolver by container
+    val deserializationComponentsForJava: DeserializationComponentsForJava by container
 }
 

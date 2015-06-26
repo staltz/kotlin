@@ -370,11 +370,10 @@ public abstract class ElementResolver protected constructor(
 
     private fun createBodyResolver(resolveSession: ResolveSession, trace: BindingTrace, file: JetFile, statementFilter: StatementFilter): BodyResolver {
         val globalContext = SimpleGlobalContext(resolveSession.getStorageManager(), resolveSession.getExceptionTracker())
-        val bodyResolve = createContainerForBodyResolve(
+        return createContainerForBodyResolve(
                 globalContext.withProject(file.getProject()).withModule(resolveSession.getModuleDescriptor()),
                 trace, getAdditionalCheckerProvider(file), statementFilter
-        )
-        return bodyResolve.get<BodyResolver>()
+        ).get<BodyResolver>()
     }
 
     private fun createEmptyContext(): BodyResolveContextForLazy {

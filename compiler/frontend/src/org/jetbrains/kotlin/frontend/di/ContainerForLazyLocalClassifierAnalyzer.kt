@@ -35,7 +35,8 @@ public fun createContainerForLazyLocalClassifierAnalyzer(
         moduleContext: ModuleContext,
         bindingTrace: BindingTrace,
         additionalCheckerProvider: AdditionalCheckerProvider,
-        dynamicTypesSettings: DynamicTypesSettings, localClassDescriptorHolder: LocalClassDescriptorHolder
+        dynamicTypesSettings: DynamicTypesSettings,
+        localClassDescriptorHolder: LocalClassDescriptorHolder
 ): StorageComponentContainer = createContainer("LocalClassifierAnalyzer") {
     configureModule(moduleContext, additionalCheckerProvider, bindingTrace)
 

@@ -39,6 +39,7 @@ public fun createContainerForBodyResolve(
     useImpl<BodyResolver>()
 }
 
+//TODO_R: move somewhere
 public fun StorageComponentContainer.configureModule(
         moduleContext: ModuleContext, additionalCheckerProvider: AdditionalCheckerProvider
 ) {
@@ -57,5 +58,4 @@ public fun StorageComponentContainer.configureModule(
 ) {
     configureModule(moduleContext, additionalCheckerProvider)
     useInstance(trace)
-
 }

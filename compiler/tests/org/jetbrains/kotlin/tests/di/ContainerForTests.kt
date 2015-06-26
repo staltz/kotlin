@@ -18,14 +18,17 @@ package org.jetbrains.kotlin.tests.di
 
 import com.intellij.openapi.project.Project
 import org.jetbrains.kotlin.container.StorageComponentContainer
+import org.jetbrains.kotlin.container.createContainer
+import org.jetbrains.kotlin.container.get
+import org.jetbrains.kotlin.container.useImpl
 import org.jetbrains.kotlin.context.ModuleContext
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.container.createContainer
-import org.jetbrains.kotlin.container.injected
-import org.jetbrains.kotlin.container.useImpl
 import org.jetbrains.kotlin.frontend.di.configureModule
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmCheckerProvider
-import org.jetbrains.kotlin.resolve.*
+import org.jetbrains.kotlin.resolve.AdditionalCheckerProvider
+import org.jetbrains.kotlin.resolve.DescriptorResolver
+import org.jetbrains.kotlin.resolve.FunctionDescriptorResolver
+import org.jetbrains.kotlin.resolve.TypeResolver
 import org.jetbrains.kotlin.types.expressions.ExpressionTypingServices
 import org.jetbrains.kotlin.types.expressions.FakeCallResolver
 
@@ -37,10 +40,10 @@ public fun createContainerForTests(project: Project, module: ModuleDescriptor): 
 }
 
 class ContainerForTests(container: StorageComponentContainer) {
-    val descriptorResolver: DescriptorResolver by injected(container)
-    val functionDescriptorResolver: FunctionDescriptorResolver by injected(container)
-    val typeResolver: TypeResolver by injected(container)
-    val fakeCallResolver: FakeCallResolver by injected(container)
-    val expressionTypingServices: ExpressionTypingServices by injected(container)
-    val additionalCheckerProvider: AdditionalCheckerProvider by injected(container)
+    val descriptorResolver: DescriptorResolver by container
+    val functionDescriptorResolver: FunctionDescriptorResolver by container
+    val typeResolver: TypeResolver by container
+    val fakeCallResolver: FakeCallResolver by container
+    val expressionTypingServices: ExpressionTypingServices by container
+    val additionalCheckerProvider: AdditionalCheckerProvider by container
 }

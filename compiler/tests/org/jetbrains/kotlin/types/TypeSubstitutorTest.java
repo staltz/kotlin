@@ -57,7 +57,7 @@ import static org.jetbrains.kotlin.psi.PsiPackage.JetPsiFactory;
 @SuppressWarnings("unchecked")
 public class TypeSubstitutorTest extends KotlinTestWithEnvironment {
     private JetScope scope;
-    private ContainerForTests injector;
+    private ContainerForTests container;
 
     @Override
     protected KotlinCoreEnvironment createEnvironment() {
@@ -68,13 +68,13 @@ public class TypeSubstitutorTest extends KotlinTestWithEnvironment {
     protected void setUp() throws Exception {
         super.setUp();
 
-        injector = DiPackage.createContainerForTests(getProject(), JetTestUtils.createEmptyModule());
+        container = DiPackage.createContainerForTests(getProject(), JetTestUtils.createEmptyModule());
         scope = getContextScope();
     }
 
     @Override
     protected void tearDown() throws Exception {
-        injector = null;
+        container = null;
         scope = null;
         super.tearDown();
     }
@@ -141,7 +141,7 @@ public class TypeSubstitutorTest extends KotlinTestWithEnvironment {
         JetTypeReference jetTypeReference = JetPsiFactory(getProject()).createType(typeStr);
         AnalyzingUtils.checkForSyntacticErrors(jetTypeReference);
         BindingTrace trace = new BindingTraceContext();
-        JetType type = injector.getTypeResolver().resolveType(scope, jetTypeReference, trace, true);
+        JetType type = container.getTypeResolver().resolveType(scope, jetTypeReference, trace, true);
         if (!trace.getBindingContext().getDiagnostics().isEmpty()) {
             fail("Errors:\n" + StringUtil.join(
                     trace.getBindingContext().getDiagnostics(),

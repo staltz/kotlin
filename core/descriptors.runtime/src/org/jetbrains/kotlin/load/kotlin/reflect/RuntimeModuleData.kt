@@ -52,8 +52,7 @@ public class RuntimeModuleData private constructor(public val module: ModuleDesc
                     ExternalAnnotationResolver.EMPTY, ExternalSignatureResolver.DO_NOTHING, RuntimeErrorReporter, JavaResolverCache.EMPTY,
                     JavaPropertyInitializerEvaluator.DO_NOTHING, SamConversionResolver, RuntimeSourceElementFactory, singleModuleClassResolver
             )
-            val reflectionTypes = ReflectionTypes(module)
-            val lazyJavaPackageFragmentProvider = LazyJavaPackageFragmentProvider(globalJavaResolverContext, module, reflectionTypes)
+            val lazyJavaPackageFragmentProvider = LazyJavaPackageFragmentProvider(globalJavaResolverContext, module, ReflectionTypes(module))
             val javaDescriptorResolver = JavaDescriptorResolver(lazyJavaPackageFragmentProvider, module)
             val javaClassDataFinder = JavaClassDataFinder(reflectKotlinClassFinder, deserializedDescriptorResolver)
             val binaryClassAnnotationAndConstantLoader = BinaryClassAnnotationAndConstantLoaderImpl(module, storageManager, reflectKotlinClassFinder, RuntimeErrorReporter)

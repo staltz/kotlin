@@ -100,7 +100,7 @@ public class TypeBoundsImpl(
 
     private fun computeValues(): Collection<JetType> {
         val values = LinkedHashSet<JetType>()
-        val bounds = bounds.filter { it.pure }
+        val bounds = bounds.filter { it.isProper }
 
         if (bounds.isEmpty()) {
             return listOf()
@@ -202,7 +202,7 @@ fun Collection<Bound>.substitute(substituteTypeVariable: (TypeParameterDescripto
             it.constrainingType
         }
         substitutedType?.let { type ->
-            val newBound = Bound(type, it.kind, it.position, it.pure)
+            val newBound = Bound(type, it.kind, it.position, it.isProper)
             newBound.typeVariable = substituteTypeVariable(it.typeVariable) ?: it.typeVariable
             newBound
         }

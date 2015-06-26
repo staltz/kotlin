@@ -48,8 +48,7 @@ public trait TypeBounds {
             public val constrainingType: JetType,
             public val kind: BoundKind,
             public val position: ConstraintPosition,
-            //todo (see java 8 specification for name)
-            public val pure: Boolean = true
+            public val isProper: Boolean = true
     ) {
         public var typeVariable: TypeParameterDescriptor by Delegates.notNull()
 
@@ -74,7 +73,7 @@ public trait TypeBounds {
             return result
         }
 
-        override fun toString() = "Bound($constrainingType, $kind, $position, pure = $pure)"
+        override fun toString() = "Bound($constrainingType, $kind, $position, isProper = $isProper)"
     }
 }
 

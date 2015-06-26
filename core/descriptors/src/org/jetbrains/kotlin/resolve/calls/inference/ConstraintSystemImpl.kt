@@ -54,7 +54,7 @@ public class ConstraintSystemImpl : ConstraintSystem {
     private val localTypeParameters = HashSet<TypeParameterDescriptor>()
     private val localTypeParameterBounds: Map<TypeParameterDescriptor, TypeBoundsImpl>
         get() = typeParameterBounds.filter { localTypeParameters.contains(it.key) }
-    private val dependentBounds = HashMap<TypeParameterDescriptor, MutableCollection<TypeBounds.Bound>>()
+    private val usedInBounds = HashMap<TypeParameterDescriptor, MutableCollection<TypeBounds.Bound>>()
 
     private val errors = ArrayList<ConstraintError>()
     public val constraintErrors: List<ConstraintError>
@@ -138,12 +138,12 @@ public class ConstraintSystemImpl : ConstraintSystem {
                 if (KotlinBuiltIns.getInstance().getNullableAnyType() == declaredUpperBound) continue //todo remove this line (?)
                 val position = TYPE_BOUND_POSITION.position(typeVariable.getIndex())
                 val variableType = JetTypeImpl(Annotations.EMPTY, typeVariable.getTypeConstructor(), false, listOf(), JetScope.Empty)
-                addBound(variableType, Bound(declaredUpperBound, UPPER_BOUND, position, declaredUpperBound.isPure()))
+                addBound(variableType, Bound(declaredUpperBound, UPPER_BOUND, position, declaredUpperBound.isProper()))
             }
         }
     }
 
-    fun JetType.isPure() = !TypeUtils.containsSpecialType(this) {
+    fun JetType.isProper() = !TypeUtils.containsSpecialType(this) {
         type -> type.getConstructor().getDeclarationDescriptor() in getTypeVariables()
     }
 
@@ -188,10 +188,10 @@ public class ConstraintSystemImpl : ConstraintSystem {
             val newTypeParameter = substituteTypeVariable(typeParameter) ?: typeParameter
             newSystem.typeParameterBounds.put(newTypeParameter, typeBounds.copy(substituteTypeVariable).filter(filterConstraintPosition))
         }
-        for ((typeVariable, bounds) in dependentBounds) {
+        for ((typeVariable, bounds) in usedInBounds) {
             if (bounds.isNotEmpty()) {
                 val newTypeVariable = substituteTypeVariable(typeVariable) ?: typeVariable
-                newSystem.dependentBounds.put(newTypeVariable, ArrayList(bounds.substitute(substituteTypeVariable)))
+                newSystem.usedInBounds.put(newTypeVariable, ArrayList(bounds.substitute(substituteTypeVariable)))
             }
         }
         newSystem.localTypeParameters.addAll(localTypeParameters.map { substituteTypeVariable(it) ?: it })
@@ -296,11 +296,11 @@ public class ConstraintSystemImpl : ConstraintSystem {
 
         fun simplifyConstraint(subType: JetType, superType: JetType) {
             if (isMyTypeVariable(subType)) {
-                generateTypeParameterConstraint(subType, superType, constraintKind.toBound(), constraintPosition)
+                generateTypeParameterBound(subType, superType, constraintKind.toBound(), constraintPosition)
                 return
             }
             if (isMyTypeVariable(superType)) {
-                generateTypeParameterConstraint(superType, subType, constraintKind.toBound().reverse(), constraintPosition)
+                generateTypeParameterBound(superType, subType, constraintKind.toBound().reverse(), constraintPosition)
                 return
             }
             // if superType is nullable and subType is not nullable, unsafe call or type mismatch error will be generated later,
@@ -332,17 +332,17 @@ public class ConstraintSystemImpl : ConstraintSystem {
 
         typeBounds.addBound(bound)
 
-        if (!bound.pure) {
+        if (!bound.isProper) {
             for (dependentTypeVariable in bound.constrainingType.getNestedTypeVariables()) {
-                val dependentBounds = dependentBounds.getOrPut(dependentTypeVariable) { arrayListOf() }
+                val dependentBounds = usedInBounds.getOrPut(dependentTypeVariable) { arrayListOf() }
                 dependentBounds.add(bound)
             }
         }
 
-        incorporateConstraint(variable, bound)
+        incorporateBound(variable, bound)
     }
 
-    private fun generateTypeParameterConstraint(
+    private fun generateTypeParameterBound(
             parameterType: JetType,
             constrainingType: JetType,
             boundKind: TypeBounds.BoundKind,
@@ -366,7 +366,7 @@ public class ConstraintSystemImpl : ConstraintSystem {
         }
 
         if (!parameterType.isMarkedNullable() || !TypeUtils.isNullableType(newConstrainingType)) {
-            addBound(parameterType, Bound(newConstrainingType, boundKind, constraintPosition, newConstrainingType.isPure()))
+            addBound(parameterType, Bound(newConstrainingType, boundKind, constraintPosition, newConstrainingType.isProper()))
             return
         }
         // For parameter type T:
@@ -377,11 +377,11 @@ public class ConstraintSystemImpl : ConstraintSystem {
         val notNullParameterType = TypeUtils.makeNotNullable(parameterType)
         val notNullConstrainingType = TypeUtils.makeNotNullable(newConstrainingType)
         if (boundKind == EXACT_BOUND || boundKind == LOWER_BOUND) {
-            addBound(notNullParameterType, Bound(notNullConstrainingType, LOWER_BOUND, constraintPosition, notNullConstrainingType.isPure()))
+            addBound(notNullParameterType, Bound(notNullConstrainingType, LOWER_BOUND, constraintPosition, notNullConstrainingType.isProper()))
         }
         // constraints T? <: Int?; T? <: Int! should transform to T <: Int?; T <: Int! correspondingly
         if (boundKind == EXACT_BOUND || boundKind == UPPER_BOUND) {
-            addBound(notNullParameterType, Bound(newConstrainingType, UPPER_BOUND, constraintPosition, newConstrainingType.isPure()))
+            addBound(notNullParameterType, Bound(newConstrainingType, UPPER_BOUND, constraintPosition, newConstrainingType.isProper()))
         }
     }
 
@@ -407,7 +407,7 @@ public class ConstraintSystemImpl : ConstraintSystem {
 
     override fun getTypeVariables() = typeParameterBounds.keySet()
 
-    fun getDependentBounds(typeVariable: TypeParameterDescriptor): Collection<Bound> = dependentBounds[typeVariable] ?: emptyList()
+    fun getBoundsUsedIn(typeVariable: TypeParameterDescriptor): Collection<Bound> = usedInBounds[typeVariable] ?: emptyList()
 
     override fun getTypeBounds(typeVariable: TypeParameterDescriptor): TypeBoundsImpl {
         if (!isMyTypeVariable(typeVariable)) {

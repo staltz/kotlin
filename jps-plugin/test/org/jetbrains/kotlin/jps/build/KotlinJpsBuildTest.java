@@ -335,7 +335,7 @@ public class KotlinJpsBuildTest extends AbstractKotlinJpsBuildTestCase {
                   new String[] {
                           klass("kotlinProject", "foo.Bar"),
                           klass("kotlinProject", "foo.FooPackage"),
-                          packagePartClass("kotlinProject", "src/Bar.kt", "foo.FooPackage")});
+                          klass("kotlinProject", "foo.Bar_")});
 
         checkWhen(del("src/main.kt"),
                   new String[] {"src/Bar.kt", "src/boo.kt"},
@@ -343,7 +343,8 @@ public class KotlinJpsBuildTest extends AbstractKotlinJpsBuildTestCase {
                           packageClasses("kotlinProject", "src/main.kt", "foo.FooPackage"),
                           packageClasses("kotlinProject", "src/Bar.kt", "foo.FooPackage"),
                           packageClasses("kotlinProject", "src/boo.kt", "boo.BooPackage"),
-                          new String[] {klass("kotlinProject", "foo.Bar")}
+                          new String[] {klass("kotlinProject", "foo.Bar"),
+                          klass("kotlinProject", "foo.Bar_")}
                   ));
         assertFilesExistInOutput(module, "foo/FooPackage.class", "boo/BooPackage.class", "foo/Bar.class");
 
@@ -352,7 +353,7 @@ public class KotlinJpsBuildTest extends AbstractKotlinJpsBuildTestCase {
                   new String[] {
                           klass("kotlinProject", "foo.Bar"),
                           klass("kotlinProject", "foo.FooPackage"),
-                          packagePartClass("kotlinProject", "src/Bar.kt", "foo.FooPackage")
+                          klass("kotlinProject", "foo.Bar_")
                   });
     }
 

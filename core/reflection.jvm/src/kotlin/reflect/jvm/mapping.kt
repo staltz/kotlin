@@ -42,6 +42,13 @@ public val KPackage.javaFacade: Class<*>
 
 
 /**
+ * Returns a Java [Field] instance corresponding to the backing field of the given property,
+ * or `null` if the property has no backing field.
+ */
+public val KProperty<*>.javaField: Field?
+    get() = (this as KPropertyImpl<*>).field
+
+/**
  * Returns a Java [Method] instance corresponding to the getter of the given property,
  * or `null` if the property has no getter, for example in case of a simple private `val` in a class.
  */
@@ -57,44 +64,17 @@ public val KMutableProperty<*>.javaSetter: Method?
 
 
 /**
- * Returns a Java [Field] instance corresponding to the backing field of the given top level property,
- * or `null` if the property has no backing field.
+ * Returns a Java [Method] instance corresponding to the getter of the given property.
  */
-public val KTopLevelVariable<*>.javaField: Field?
-    get() = (this as KPropertyImpl<*>).field
+public val KProperty0<*>.javaGetter: Method
+    get() = (this as KProperty0Impl<*>).getter
 
 /**
- * Returns a Java [Method] instance corresponding to the getter of the given top level property.
+ * Returns a Java [Method] instance corresponding to the setter of the given property.
  */
-public val KTopLevelVariable<*>.javaGetter: Method
-    get() = (this as KTopLevelVariableImpl<*>).getter
+public val KMutableProperty0<*>.javaSetter: Method
+    get() = (this as KMutableProperty0Impl<*>).setter
 
-/**
- * Returns a Java [Method] instance corresponding to the setter of the given top level property.
- */
-public val KMutableTopLevelVariable<*>.javaSetter: Method
-    get() = (this as KMutableTopLevelVariableImpl<*>).setter
-
-
-/**
- * Returns a Java [Method] instance corresponding to the getter of the given top level extension property.
- */
-public val KTopLevelExtensionProperty<*, *>.javaGetter: Method
-    get() = (this as KTopLevelExtensionPropertyImpl<*, *>).getter
-
-/**
- * Returns a Java [Method] instance corresponding to the setter of the given top level extension property.
- */
-public val KMutableTopLevelExtensionProperty<*, *>.javaSetter: Method
-    get() = (this as KMutableTopLevelExtensionPropertyImpl<*, *>).setter
-
-
-/**
- * Returns a Java [Field] instance corresponding to the backing field of the given member property,
- * or `null` if the property has no backing field.
- */
-public val KMemberProperty<*, *>.javaField: Field?
-    get() = (this as KPropertyImpl<*>).field
 
 
 // Java reflection -> Kotlin reflection

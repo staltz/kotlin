@@ -977,6 +977,45 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                     doTest(fileName);
                 }
             }
+
+            @TestMetadata("compiler/testData/diagnostics/tests/annotations/options")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class Options extends AbstractJetDiagnosticsTest {
+                public void testAllFilesPresentInOptions() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/diagnostics/tests/annotations/options"), Pattern.compile("^(.+)\\.kt$"), true);
+                }
+
+                @TestMetadata("annotation.kt")
+                public void testAnnotation() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/annotations/options/annotation.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("brackets.kt")
+                public void testBrackets() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/annotations/options/brackets.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("repeatable.kt")
+                public void testRepeatable() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/annotations/options/repeatable.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("retention.kt")
+                public void testRetention() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/annotations/options/retention.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("target.kt")
+                public void testTarget() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/annotations/options/target.kt");
+                    doTest(fileName);
+                }
+            }
         }
 
         @TestMetadata("compiler/testData/diagnostics/tests/backingField")

@@ -44,9 +44,8 @@ public enum class AnnotationRetention {
 target(AnnotationTarget.CLASSIFIER)
 public annotation class target(vararg val allowedTargets: AnnotationTarget)
 
-// TODO: uncomment SOURCE below
 target(AnnotationTarget.CLASSIFIER)
-public annotation /*(SOURCE)*/ class annotation(
+public annotation class __annotation (
         val retention: AnnotationRetention = AnnotationRetention.RUNTIME,
         val repeatable: Boolean = false
 )

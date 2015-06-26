@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.tree.IElementType
+import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.lexer.JetTokens
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
@@ -48,11 +49,11 @@ public class JetAnnotationModifierReferenceExpression:
     }
 
     override fun getReferencedName(): String {
-        return JetTokens.ANNOTATION_KEYWORD.getValue()
+        return KotlinBuiltIns.FQ_NAMES.annotation.asString()
     }
 
     override fun getReferencedNameAsName(): Name {
-        return Name.identifier(getReferencedName())
+        return KotlinBuiltIns.FQ_NAMES.annotation.shortName()
     }
 
     override fun getReferencedNameElement(): PsiElement {

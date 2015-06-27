@@ -132,8 +132,8 @@ public class CallCompleter(
             expectedType: JetType,
             trace: BindingTrace
     ) {
-        fun updateSystemIfSuccessful(update: (ConstraintSystem) -> Boolean) {
-            val copy = (getConstraintSystem() as ConstraintSystemImpl).copy()
+        fun updateSystemIfSuccessful(update: (ConstraintSystemImpl) -> Boolean) {
+            val copy = (getConstraintSystem() as ConstraintSystemImpl).copy() as ConstraintSystemImpl
             if (update(copy)) {
                 setConstraintSystem(copy)
             }
@@ -150,7 +150,7 @@ public class CallCompleter(
             updateSystemIfSuccessful {
                 system ->
                 constraintSystemCompleter.completeConstraintSystem(system, this)
-                !system.getStatus().hasOnlyErrorsFromPosition(FROM_COMPLETER.position())
+                !system.getSystemWithoutWeakConstraints().getStatus().hasOnlyErrorsFromPosition(FROM_COMPLETER.position())
             }
         }
 

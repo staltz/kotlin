@@ -23,7 +23,7 @@ fun test(z: Z) {
 fun <T> Z.plus(a: A<T>): A<T> = a
 
 fun test1(z: Z) {
-    id(z <!TYPE_INFERENCE_NO_INFORMATION_FOR_PARAMETER!>+<!> <!TYPE_INFERENCE_NO_INFORMATION_FOR_PARAMETER!>newA<!>())
+    <!TYPE_INFERENCE_NO_INFORMATION_FOR_PARAMETER!>id<!>(z <!TYPE_INFERENCE_NO_INFORMATION_FOR_PARAMETER!>+<!> <!TYPE_INFERENCE_NO_INFORMATION_FOR_PARAMETER!>newA<!>())
     val a: A<Z> = z + newA()
     val b: A<Z> = z.plus(newA())
     val c: A<Z> = id(z + newA())

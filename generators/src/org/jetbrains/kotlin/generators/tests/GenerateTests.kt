@@ -161,7 +161,7 @@ fun main(args: Array<String>) {
         }
 
         testClass(javaClass<AbstractConstraintSystemTest>()) {
-            model("constraintSystem", extension = "bounds")
+            model("constraintSystem", extension = "constraints")
         }
 
         testClass(javaClass<AbstractJetParsingTest>()) {

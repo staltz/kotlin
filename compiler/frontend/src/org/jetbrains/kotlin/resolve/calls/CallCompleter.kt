@@ -48,7 +48,8 @@ import org.jetbrains.kotlin.resolve.calls.model.*
 
 public class CallCompleter(
         val argumentTypeResolver: ArgumentTypeResolver,
-        val candidateResolver: CandidateResolver
+        val candidateResolver: CandidateResolver,
+        val builtIns: KotlinBuiltIns
 ) {
     fun <D : CallableDescriptor> completeCall(
             context: BasicCallResolutionContext,
@@ -157,7 +158,7 @@ public class CallCompleter(
         if (returnType != null && expectedType === TypeUtils.UNIT_EXPECTED_TYPE) {
             updateSystemIfSuccessful {
                 system ->
-                system.addSupertypeConstraint(KotlinBuiltIns.getInstance().getUnitType(), returnType, EXPECTED_TYPE_POSITION.position())
+                system.addSupertypeConstraint(builtIns.getUnitType(), returnType, EXPECTED_TYPE_POSITION.position())
                 system.getStatus().isSuccessful()
             }
         }

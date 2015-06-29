@@ -16,7 +16,6 @@
 
 package org.jetbrains.kotlin.resolve.lazy.descriptors
 
-import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptorVisitor
 import org.jetbrains.kotlin.descriptors.PropertyDescriptor
 import org.jetbrains.kotlin.descriptors.ScriptDescriptor
@@ -56,7 +55,7 @@ public class LazyScriptDescriptor(
         resolveSession.getTrace().record(BindingContext.SCRIPT, jetScript, this)
     }
 
-    private val implicitReceiver = ReceiverParameterDescriptorImpl(this, KotlinBuiltIns.getInstance().getAnyType(), ScriptReceiver(this))
+    private val implicitReceiver = ReceiverParameterDescriptorImpl(this, resolveSession.getModuleDescriptor().builtIns.getAnyType(), ScriptReceiver(this))
 
     override fun getThisAsReceiverParameter() = implicitReceiver
 

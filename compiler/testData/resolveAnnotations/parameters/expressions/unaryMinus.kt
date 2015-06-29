@@ -12,4 +12,4 @@ annotation class Ann(
 
 Ann(-1, -1, -1, -1, -1.0, -1.0.toFloat(), -'c') class MyClass
 
-// EXPECTED: Ann(b1 = IntegerValueType(-1): IntegerValueType(-1), b2 = IntegerValueType(-1): IntegerValueType(-1), b3 = IntegerValueType(-1): IntegerValueType(-1), b4 = IntegerValueType(-1): IntegerValueType(-1), b5 = -1.0.toDouble(): Double, b6 = -1.0.toFloat(): Float, b7 = IntegerValueType(-99): IntegerValueType(-99))
+// EXPECTED: Ann(b1 = IntegerValueType(-1): kotlin.Byte, b2 = IntegerValueType(-1): kotlin.Short, b3 = IntegerValueType(-1): kotlin.Int, b4 = IntegerValueType(-1): kotlin.Long, b5 = -1.0.toDouble(): kotlin.Double, b6 = -1.0.toFloat(): kotlin.Float, b7 = IntegerValueType(-99): kotlin.Char)

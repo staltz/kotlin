@@ -51,7 +51,7 @@ Ann1(arg = {kotlin.Any::class}: kotlin.Array<kotlin.reflect.KClass<in A>>) inter
     public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
 }
 
-Ann1(arg = {B1::class}: kotlin.Array<???>) internal final class MyClass2 {
+Ann1(arg = {B1::class}: kotlin.Array<kotlin.reflect.KClass<in A>>) internal final class MyClass2 {
     public constructor MyClass2()
     public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
     public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
@@ -72,7 +72,7 @@ Ann2(arg = {B1::class}: kotlin.Array<kotlin.reflect.KClass<in B1>>) internal fin
     public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
 }
 
-Ann2(arg = {B2::class}: kotlin.Array<???>) internal final class MyClass5 {
+Ann2(arg = {B2::class}: kotlin.Array<kotlin.reflect.KClass<in B1>>) internal final class MyClass5 {
     public constructor MyClass5()
     public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
     public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int

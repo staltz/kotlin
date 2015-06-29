@@ -8,4 +8,4 @@ annotation class Ann(
 
 Ann(true and false, false or true, true xor false) class MyClass
 
-// EXPECTED: Ann(b1 = false: Boolean, b2 = true: Boolean, b3 = true: Boolean)
+// EXPECTED: Ann(b1 = false: kotlin.Boolean, b2 = true: kotlin.Boolean, b3 = true: kotlin.Boolean)

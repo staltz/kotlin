@@ -16,4 +16,4 @@ Ann(
     s4 = "a${i}a$i"
 ) class MyClass
 
-// EXPECTED: Ann(s1 = "a1": String, s2 = "a1 b": String, s3 = "1": String, s4 = "a1a1": String)
+// EXPECTED: Ann(s1 = "a1": kotlin.String, s2 = "a1 b": kotlin.String, s3 = "1": kotlin.String, s4 = "a1a1": kotlin.String)

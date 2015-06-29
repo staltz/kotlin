@@ -22,7 +22,7 @@ import org.jetbrains.kotlin.resolve.*
 import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 
 public trait LazyClassContext {
-    val scopeProvider: DeclarationScopeProvider
+    val declarationScopeProvider: DeclarationScopeProvider
 
     val storageManager: StorageManager
     val trace: BindingTrace

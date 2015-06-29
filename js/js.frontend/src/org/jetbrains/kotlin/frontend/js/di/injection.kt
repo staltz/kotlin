@@ -25,8 +25,8 @@ import org.jetbrains.kotlin.frontend.di.configureModule
 import org.jetbrains.kotlin.js.resolve.KotlinJsCheckerProvider
 import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.LazyTopDownAnalyzerForTopLevel
+import org.jetbrains.kotlin.resolve.lazy.FileScopeProviderImpl
 import org.jetbrains.kotlin.resolve.lazy.ResolveSession
-import org.jetbrains.kotlin.resolve.lazy.ScopeProvider
 import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 import org.jetbrains.kotlin.types.DynamicTypesAllowed
 
@@ -39,7 +39,7 @@ public fun createTopDownAnalyzerForJs(
         configureModule(moduleContext, KotlinJsCheckerProvider, bindingTrace)
 
         useInstance(declarationProviderFactory)
-        useImpl<ScopeProvider>()
+        useImpl<FileScopeProviderImpl>()
         useImpl<ResolveSession>()
         useImpl<LazyTopDownAnalyzerForTopLevel>()
         useImpl<DynamicTypesAllowed>()

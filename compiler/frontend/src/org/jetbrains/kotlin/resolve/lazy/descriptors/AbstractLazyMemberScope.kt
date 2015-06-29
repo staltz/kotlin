@@ -76,7 +76,7 @@ protected constructor(
                     resolutionScope,
                     functionDeclaration,
                     trace,
-                    c.scopeProvider.getOuterDataFlowInfoForDeclaration(functionDeclaration)))
+                    c.declarationScopeProvider.getOuterDataFlowInfoForDeclaration(functionDeclaration)))
         }
 
         getNonDeclaredFunctions(name, result)
@@ -101,7 +101,7 @@ protected constructor(
                     resolutionScope,
                     propertyDeclaration,
                     trace,
-                    c.scopeProvider.getOuterDataFlowInfoForDeclaration(propertyDeclaration))
+                    c.declarationScopeProvider.getOuterDataFlowInfoForDeclaration(propertyDeclaration))
             result.add(propertyDescriptor)
         }
 

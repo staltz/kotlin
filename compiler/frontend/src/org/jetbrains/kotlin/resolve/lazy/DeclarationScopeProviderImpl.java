@@ -30,15 +30,14 @@ public class DeclarationScopeProviderImpl implements DeclarationScopeProvider {
 
     private final LazyDeclarationResolver lazyDeclarationResolver;
 
-    private FileScopeProvider fileScopeProvider;
+    private final FileScopeProvider fileScopeProvider;
 
-    @Inject
-    public void setFileScopeProvider(@NotNull FileScopeProvider fileScopeProvider) {
-        this.fileScopeProvider = fileScopeProvider;
-    }
-
-    public DeclarationScopeProviderImpl(@NotNull LazyDeclarationResolver lazyDeclarationResolver) {
+    public DeclarationScopeProviderImpl(
+            @NotNull LazyDeclarationResolver lazyDeclarationResolver,
+            @NotNull FileScopeProvider fileScopeProvider
+    ) {
         this.lazyDeclarationResolver = lazyDeclarationResolver;
+        this.fileScopeProvider = fileScopeProvider;
     }
 
     @Override

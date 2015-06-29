@@ -29,6 +29,7 @@ import org.jetbrains.kotlin.lexer.JetModifierKeywordToken;
 import org.jetbrains.kotlin.lexer.JetTokens;
 import org.jetbrains.kotlin.psi.*;
 import org.jetbrains.kotlin.psi.psiUtil.PsiUtilPackage;
+import org.jetbrains.kotlin.resolve.calls.checkers.FileNameChecker;
 import org.jetbrains.kotlin.types.JetType;
 import org.jetbrains.kotlin.types.SubstitutionUtils;
 import org.jetbrains.kotlin.types.TypeConstructor;
@@ -48,6 +49,7 @@ public class DeclarationsChecker {
     private BindingTrace trace;
     private ModifiersChecker modifiersChecker;
     private DescriptorResolver descriptorResolver;
+    private AdditionalCheckerProvider additionalCheckerProvider;
 
     @Inject
     public void setTrace(@NotNull BindingTrace trace) {
@@ -64,9 +66,16 @@ public class DeclarationsChecker {
         this.modifiersChecker = modifiersChecker;
     }
 
+    @Inject
+    public void setAdditionalCheckerProvider(@NotNull AdditionalCheckerProvider additionalCheckerProvider) {
+        this.additionalCheckerProvider = additionalCheckerProvider;
+    }
+
     public void process(@NotNull BodiesResolveContext bodiesResolveContext) {
+        FileNameChecker fileNameChecker = additionalCheckerProvider.getFileNameChecker();
         for (JetFile file : bodiesResolveContext.getFiles()) {
             checkModifiersAndAnnotationsInPackageDirective(file);
+            fileNameChecker.check(file, trace);
         }
 
         Map<JetClassOrObject, ClassDescriptorWithResolutionScopes> classes = bodiesResolveContext.getDeclaredClasses();

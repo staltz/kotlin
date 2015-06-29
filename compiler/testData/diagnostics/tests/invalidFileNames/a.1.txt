@@ -1,0 +1,5 @@
+package
+
+package zz2 {
+    internal fun test(): kotlin.Unit
+}

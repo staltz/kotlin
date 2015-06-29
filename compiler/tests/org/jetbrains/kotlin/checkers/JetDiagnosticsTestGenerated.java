@@ -7930,6 +7930,27 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
             }
         }
 
+        @TestMetadata("compiler/testData/diagnostics/tests/invalidFileNames")
+        @TestDataPath("$PROJECT_ROOT")
+        @RunWith(JUnit3RunnerWithInners.class)
+        public static class InvalidFileNames extends AbstractJetDiagnosticsTest {
+            @TestMetadata("1.kt")
+            public void test1() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/invalidFileNames/1.kt");
+                doTest(fileName);
+            }
+
+            @TestMetadata("a.1.kt")
+            public void testA_1() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/invalidFileNames/a.1.kt");
+                doTest(fileName);
+            }
+
+            public void testAllFilesPresentInInvalidFileNames() throws Exception {
+                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/diagnostics/tests/invalidFileNames"), Pattern.compile("^(.+)\\.kt$"), true);
+            }
+        }
+
         @TestMetadata("compiler/testData/diagnostics/tests/j+k")
         @TestDataPath("$PROJECT_ROOT")
         @RunWith(JUnit3RunnerWithInners.class)

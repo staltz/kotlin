@@ -70,6 +70,8 @@ public class DefaultErrorMessagesJvm implements DefaultErrorMessages.Extension {
         MAP.put(ErrorsJvm.WHEN_ENUM_CAN_BE_NULL_IN_JAVA, "Enum argument can be null in Java, but exhaustive when contains no null branch");
 
         MAP.put(ErrorsJvm.DUPLICATE_CLASS_NAMES, "Class names ''{0}'' conflict with package name (facade or part)", Renderers.TO_STRING);
+
+        MAP.put(ErrorsJvm.INVALID_FILE_NAME, "Kotlin file name ''{0}'' should be valid java identifier", Renderers.TO_STRING);
     }
 
     @NotNull

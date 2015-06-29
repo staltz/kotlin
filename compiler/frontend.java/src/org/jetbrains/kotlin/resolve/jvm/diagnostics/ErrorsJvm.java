@@ -61,6 +61,8 @@ public interface ErrorsJvm {
 
     DiagnosticFactory1<PsiElement, String> DUPLICATE_CLASS_NAMES = DiagnosticFactory1.create(ERROR);
 
+    DiagnosticFactory1<PsiElement, String> INVALID_FILE_NAME = DiagnosticFactory1.create(ERROR);
+
     enum NullabilityInformationSource {
         KOTLIN {
             @NotNull

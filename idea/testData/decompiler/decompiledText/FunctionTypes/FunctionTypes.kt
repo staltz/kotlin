@@ -14,4 +14,13 @@ class FunctionTypes {
 
     public fun <A> (A.(A) -> A)?.bar() {
     }
+
+    public fun f(f: Function1<*, *>) {
+    }
+
+    public fun f(f: @extension Function2<Int, Int, Unit>) {
+    }
+
+    public fun f(f: List<@extension Function1<*, *>>) {
+    }
 }

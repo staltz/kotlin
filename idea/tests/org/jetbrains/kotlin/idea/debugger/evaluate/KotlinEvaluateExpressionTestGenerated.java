@@ -253,9 +253,9 @@ public class KotlinEvaluateExpressionTestGenerated extends AbstractKotlinEvaluat
             doSingleBreakpointTest(fileName);
         }
 
-        @TestMetadata(".kt.kt")
+        @TestMetadata("_kt.kt")
         public void test_kt() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/testData/debugger/tinyApp/src/evaluate/singleBreakpoint/.kt.kt");
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/debugger/tinyApp/src/evaluate/singleBreakpoint/_kt.kt");
             doSingleBreakpointTest(fileName);
         }
 

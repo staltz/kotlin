@@ -206,6 +206,9 @@ public abstract class KotlinDebuggerTestCase extends DescriptorTestCase {
     protected void createDebugProcess(@NotNull String path) throws Exception {
         File file = new File(path);
         String packageName = file.getName().replace(".kt", "");
+        if (packageName.startsWith("_kt")) {
+            packageName = "";
+        }
         createLocalProcess(PackageClassUtils.getPackageClassFqName(new FqName(packageName)).asString());
     }
 

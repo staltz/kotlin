@@ -16,4 +16,4 @@ Ann(
     p5 = 1.toInt() + 1.toInt()
 ) class MyClass
 
-// EXPECTED: Ann(p1 = -2147483648: kotlin.Int, p2 = IntegerValueType(2): kotlin.Int, p3 = -2147483648: kotlin.Long, p4 = 2: kotlin.Long, p5 = 2: kotlin.Int)
+// EXPECTED: Ann(p1 = -2147483648, p2 = IntegerValueType(2), p3 = -2147483648, p4 = 2, p5 = 2)

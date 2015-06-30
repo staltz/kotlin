@@ -16,4 +16,4 @@ Ann(
     p5 = 1.toByte() + 1.toByte()
 ) class MyClass
 
-// EXPECTED: Ann(p1 = 128: kotlin.Byte, p2 = IntegerValueType(2): kotlin.Byte, p3 = 128: kotlin.Int, p4 = 2: kotlin.Int, p5 = 2: kotlin.Byte)
+// EXPECTED: Ann(p1 = 128, p2 = IntegerValueType(2), p3 = 128, p4 = 2, p5 = 2)

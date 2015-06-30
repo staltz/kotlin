@@ -6,4 +6,4 @@ val i = 1
 
 Ann(s1 = "a" + "b", s2 = "a" + "a$i") class MyClass
 
-// EXPECTED: Ann(s1 = "ab": kotlin.String, s2 = "aa1": kotlin.String)
+// EXPECTED: Ann(s1 = "ab", s2 = "aa1")

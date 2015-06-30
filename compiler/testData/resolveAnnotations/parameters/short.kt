@@ -9,4 +9,4 @@ annotation class Ann(
 
 Ann(1, 1.toShort(), 32768.toShort(), 32768) class MyClass
 
-// EXPECTED: Ann(b1 = IntegerValueType(1): kotlin.Short, b2 = 1.toShort(): kotlin.Short, b3 = -32768.toShort(): kotlin.Short, b4 = IntegerValueType(32768): kotlin.Short)
+// EXPECTED: Ann(b1 = IntegerValueType(1), b2 = 1.toShort(), b3 = -32768.toShort(), b4 = IntegerValueType(32768))

@@ -14,4 +14,4 @@ val b = 2
 
 Ann(1 < 2, 1.0 < 2.0, 2 < a, b < a, 'b' < 'a', "a" < "b") class MyClass
 
-// EXPECTED: Ann(b1 = true: kotlin.Boolean, b2 = true: kotlin.Boolean, b3 = false: kotlin.Boolean, b4 = false: kotlin.Boolean, b5 = false: kotlin.Boolean, b6 = true: kotlin.Boolean)
+// EXPECTED: Ann(b1 = true, b2 = true, b3 = false, b4 = false, b5 = false, b6 = true)

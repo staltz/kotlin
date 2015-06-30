@@ -8,4 +8,4 @@ annotation class Ann(
 
 Ann(1 + 1, java.lang.Long.MAX_VALUE + 1 - 1, java.lang.Long.MAX_VALUE - 1) class MyClass
 
-// EXPECTED: Ann(l1 = IntegerValueType(2): kotlin.Long, l2 = 9223372036854775807.toLong(): kotlin.Long, l3 = 9223372036854775806.toLong(): kotlin.Long)
+// EXPECTED: Ann(l1 = IntegerValueType(2), l2 = 9223372036854775807.toLong(), l3 = 9223372036854775806.toLong())

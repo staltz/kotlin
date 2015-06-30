@@ -4,4 +4,4 @@ annotation class Ann(i: Int)
 
 Ann((1 + 2) * 2) class MyClass
 
-// EXPECTED: Ann(i = IntegerValueType(6): kotlin.Int)
+// EXPECTED: Ann(i = IntegerValueType(6))

@@ -37,6 +37,6 @@ internal final annotation class ann : kotlin.Annotation {
     internal final val m: kotlin.Array<out test.My>
 }
 
-test.ann(m = {My.ALPHA, My.BETA}: kotlin.Array<out test.My>) internal final annotation class annotated : kotlin.Annotation {
+test.ann(m = {My.ALPHA, My.BETA}) internal final annotation class annotated : kotlin.Annotation {
     public constructor annotated()
 }

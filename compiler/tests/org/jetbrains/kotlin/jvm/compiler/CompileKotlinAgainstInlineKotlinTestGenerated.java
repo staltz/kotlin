@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 @RunWith(JUnit3RunnerWithInners.class)
 public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompileKotlinAgainstInlineKotlinTest {
     public void testAllFilesPresentInBoxInline() throws Exception {
-        JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline"), Pattern.compile("^(.+)\\.1.kt$"), true);
+        JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline"), Pattern.compile("^(.+)_1\\.kt$"), true);
     }
 
     @TestMetadata("compiler/testData/codegen/boxInline/anonymousObject")
@@ -40,60 +40,60 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class AnonymousObject extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInAnonymousObject() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/anonymousObject"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/anonymousObject"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("anonymousObjectOnCallSite.1.kt")
+        @TestMetadata("anonymousObjectOnCallSite_1.kt")
         public void testAnonymousObjectOnCallSite() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/anonymousObjectOnCallSite.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/anonymousObjectOnCallSite_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("anonymousObjectOnCallSiteSuperParams.1.kt")
+        @TestMetadata("anonymousObjectOnCallSiteSuperParams_1.kt")
         public void testAnonymousObjectOnCallSiteSuperParams() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/anonymousObjectOnCallSiteSuperParams.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/anonymousObjectOnCallSiteSuperParams_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("anonymousObjectOnDeclarationSite.1.kt")
+        @TestMetadata("anonymousObjectOnDeclarationSite_1.kt")
         public void testAnonymousObjectOnDeclarationSite() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/anonymousObjectOnDeclarationSite.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/anonymousObjectOnDeclarationSite_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("anonymousObjectOnDeclarationSiteSuperParams.1.kt")
+        @TestMetadata("anonymousObjectOnDeclarationSiteSuperParams_1.kt")
         public void testAnonymousObjectOnDeclarationSiteSuperParams() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/anonymousObjectOnDeclarationSiteSuperParams.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/anonymousObjectOnDeclarationSiteSuperParams_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("capturedLambdaInInline.1.kt")
+        @TestMetadata("capturedLambdaInInline_1.kt")
         public void testCapturedLambdaInInline() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/capturedLambdaInInline.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/capturedLambdaInInline_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("capturedLambdaInInline2.1.kt")
+        @TestMetadata("capturedLambdaInInline2_1.kt")
         public void testCapturedLambdaInInline2() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/capturedLambdaInInline2.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/capturedLambdaInInline2_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("capturedLambdaInInline3.1.kt")
+        @TestMetadata("capturedLambdaInInline3_1.kt")
         public void testCapturedLambdaInInline3() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/capturedLambdaInInline3.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/capturedLambdaInInline3_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("capturedLambdaInInlineObject.1.kt")
+        @TestMetadata("capturedLambdaInInlineObject_1.kt")
         public void testCapturedLambdaInInlineObject() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/capturedLambdaInInlineObject.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/capturedLambdaInInlineObject_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("changingReturnType.1.kt")
+        @TestMetadata("changingReturnType_1.kt")
         public void testChangingReturnType() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/changingReturnType.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/anonymousObject/changingReturnType_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -103,18 +103,18 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Builders extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInBuilders() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/builders"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/builders"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("builders.1.kt")
+        @TestMetadata("builders_1.kt")
         public void testBuilders() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/builders/builders.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/builders/builders_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("buildersAndLambdaCapturing.1.kt")
+        @TestMetadata("buildersAndLambdaCapturing_1.kt")
         public void testBuildersAndLambdaCapturing() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/builders/buildersAndLambdaCapturing.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/builders/buildersAndLambdaCapturing_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -124,42 +124,42 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class CallableReference extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInCallableReference() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/callableReference"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/callableReference"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("classLevel.1.kt")
+        @TestMetadata("classLevel_1.kt")
         public void testClassLevel() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/classLevel.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/classLevel_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("classLevel2.1.kt")
+        @TestMetadata("classLevel2_1.kt")
         public void testClassLevel2() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/classLevel2.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/classLevel2_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("constructor.1.kt")
+        @TestMetadata("constructor_1.kt")
         public void testConstructor() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/constructor.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/constructor_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("intrinsic.1.kt")
+        @TestMetadata("intrinsic_1.kt")
         public void testIntrinsic() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/intrinsic.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/intrinsic_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("topLevel.1.kt")
+        @TestMetadata("topLevel_1.kt")
         public void testTopLevel() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/topLevel.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/topLevel_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("topLevelExtension.1.kt")
+        @TestMetadata("topLevelExtension_1.kt")
         public void testTopLevelExtension() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/topLevelExtension.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/callableReference/topLevelExtension_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -169,42 +169,42 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Capture extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInCapture() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/capture"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/capture"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("captureInlinable.1.kt")
+        @TestMetadata("captureInlinable_1.kt")
         public void testCaptureInlinable() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/captureInlinable.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/captureInlinable_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("captureInlinableAndOther.1.kt")
+        @TestMetadata("captureInlinableAndOther_1.kt")
         public void testCaptureInlinableAndOther() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/captureInlinableAndOther.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/captureInlinableAndOther_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("captureThisAndReceiver.1.kt")
+        @TestMetadata("captureThisAndReceiver_1.kt")
         public void testCaptureThisAndReceiver() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/captureThisAndReceiver.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/captureThisAndReceiver_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("generics.1.kt")
+        @TestMetadata("generics_1.kt")
         public void testGenerics() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/generics.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/generics_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleCapturingInClass.1.kt")
+        @TestMetadata("simpleCapturingInClass_1.kt")
         public void testSimpleCapturingInClass() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/simpleCapturingInClass.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/simpleCapturingInClass_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleCapturingInPackage.1.kt")
+        @TestMetadata("simpleCapturingInPackage_1.kt")
         public void testSimpleCapturingInPackage() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/simpleCapturingInPackage.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/capture/simpleCapturingInPackage_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -214,36 +214,36 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Complex extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInComplex() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/complex"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/complex"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("closureChain.1.kt")
+        @TestMetadata("closureChain_1.kt")
         public void testClosureChain() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/complex/closureChain.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/complex/closureChain_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("forEachLine.1.kt")
+        @TestMetadata("forEachLine_1.kt")
         public void testForEachLine() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/complex/forEachLine.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/complex/forEachLine_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("lambdaInLambda.1.kt")
+        @TestMetadata("lambdaInLambda_1.kt")
         public void testLambdaInLambda() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/complex/lambdaInLambda.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/complex/lambdaInLambda_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("use.1.kt")
+        @TestMetadata("use_1.kt")
         public void testUse() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/complex/use.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/complex/use_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("with.1.kt")
+        @TestMetadata("with_1.kt")
         public void testWith() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/complex/with.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/complex/with_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -253,48 +253,48 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class DefaultValues extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInDefaultValues() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/defaultValues"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/defaultValues"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("defaultInExtension.1.kt")
+        @TestMetadata("defaultInExtension_1.kt")
         public void testDefaultInExtension() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/defaultInExtension.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/defaultInExtension_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("defaultMethod.1.kt")
+        @TestMetadata("defaultMethod_1.kt")
         public void testDefaultMethod() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/defaultMethod.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/defaultMethod_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("defaultMethodInClass.1.kt")
+        @TestMetadata("defaultMethodInClass_1.kt")
         public void testDefaultMethodInClass() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/defaultMethodInClass.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/defaultMethodInClass_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("defaultParamRemapping.1.kt")
+        @TestMetadata("defaultParamRemapping_1.kt")
         public void testDefaultParamRemapping() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/defaultParamRemapping.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/defaultParamRemapping_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("inlineInDefaultParameter.1.kt")
+        @TestMetadata("inlineInDefaultParameter_1.kt")
         public void testInlineInDefaultParameter() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/inlineInDefaultParameter.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/inlineInDefaultParameter_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("kt5685.1.kt")
+        @TestMetadata("kt5685_1.kt")
         public void testKt5685() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/kt5685.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/kt5685_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleDefaultMethod.1.kt")
+        @TestMetadata("simpleDefaultMethod_1.kt")
         public void testSimpleDefaultMethod() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/simpleDefaultMethod.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/defaultValues/simpleDefaultMethod_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -304,12 +304,12 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class FunctionExpression extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInFunctionExpression() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/functionExpression"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/functionExpression"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("extension.1.kt")
+        @TestMetadata("extension_1.kt")
         public void testExtension() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/functionExpression/extension.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/functionExpression/extension_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -319,18 +319,18 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class LambdaClassClash extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInLambdaClassClash() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/lambdaClassClash"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/lambdaClassClash"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("lambdaClassClash.1.kt")
+        @TestMetadata("lambdaClassClash_1.kt")
         public void testLambdaClassClash() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaClassClash/lambdaClassClash.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaClassClash/lambdaClassClash_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("noInlineLambdaX2.1.kt")
+        @TestMetadata("noInlineLambdaX2_1.kt")
         public void testNoInlineLambdaX2() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaClassClash/noInlineLambdaX2.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaClassClash/noInlineLambdaX2_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -340,36 +340,36 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class LambdaTransformation extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInLambdaTransformation() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/lambdaTransformation"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/lambdaTransformation"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("lambdaCloning.1.kt")
+        @TestMetadata("lambdaCloning_1.kt")
         public void testLambdaCloning() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaTransformation/lambdaCloning.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaTransformation/lambdaCloning_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("lambdaInLambda2.1.kt")
+        @TestMetadata("lambdaInLambda2_1.kt")
         public void testLambdaInLambda2() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaTransformation/lambdaInLambda2.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaTransformation/lambdaInLambda2_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("lambdaInLambdaNoInline.1.kt")
+        @TestMetadata("lambdaInLambdaNoInline_1.kt")
         public void testLambdaInLambdaNoInline() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaTransformation/lambdaInLambdaNoInline.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaTransformation/lambdaInLambdaNoInline_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("regeneratedLambdaName.1.kt")
+        @TestMetadata("regeneratedLambdaName_1.kt")
         public void testRegeneratedLambdaName() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaTransformation/regeneratedLambdaName.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaTransformation/regeneratedLambdaName_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("sameCaptured.1.kt")
+        @TestMetadata("sameCaptured_1.kt")
         public void testSameCaptured() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaTransformation/sameCaptured.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/lambdaTransformation/sameCaptured_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -379,12 +379,12 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class LocalFunInLambda extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInLocalFunInLambda() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/localFunInLambda"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/localFunInLambda"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("localFunInLambda.1.kt")
+        @TestMetadata("localFunInLambda_1.kt")
         public void testLocalFunInLambda() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/localFunInLambda/localFunInLambda.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/localFunInLambda/localFunInLambda_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -394,18 +394,18 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Modifiers extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInModifiers() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/modifiers"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/modifiers"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("packagePrivateMembers.1.kt")
+        @TestMetadata("packagePrivateMembers_1.kt")
         public void testPackagePrivateMembers() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/modifiers/packagePrivateMembers.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/modifiers/packagePrivateMembers_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("propertyModifiers.1.kt")
+        @TestMetadata("propertyModifiers_1.kt")
         public void testPropertyModifiers() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/modifiers/propertyModifiers.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/modifiers/propertyModifiers_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -415,42 +415,42 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class NoInline extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInNoInline() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/noInline"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/noInline"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("lambdaAsGeneric.1.kt")
+        @TestMetadata("lambdaAsGeneric_1.kt")
         public void testLambdaAsGeneric() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/lambdaAsGeneric.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/lambdaAsGeneric_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("lambdaAsNonFunction.1.kt")
+        @TestMetadata("lambdaAsNonFunction_1.kt")
         public void testLambdaAsNonFunction() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/lambdaAsNonFunction.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/lambdaAsNonFunction_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("noInline.1.kt")
+        @TestMetadata("noInline_1.kt")
         public void testNoInline() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/noInline.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/noInline_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("noInlineLambdaChain.1.kt")
+        @TestMetadata("noInlineLambdaChain_1.kt")
         public void testNoInlineLambdaChain() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/noInlineLambdaChain.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/noInlineLambdaChain_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("noInlineLambdaChainWithCapturedInline.1.kt")
+        @TestMetadata("noInlineLambdaChainWithCapturedInline_1.kt")
         public void testNoInlineLambdaChainWithCapturedInline() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/noInlineLambdaChainWithCapturedInline.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/noInlineLambdaChainWithCapturedInline_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("withoutInline.1.kt")
+        @TestMetadata("withoutInline_1.kt")
         public void testWithoutInline() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/withoutInline.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/noInline/withoutInline_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -460,72 +460,72 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class NonLocalReturns extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInNonLocalReturns() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("explicitLocalReturn.1.kt")
+        @TestMetadata("explicitLocalReturn_1.kt")
         public void testExplicitLocalReturn() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/explicitLocalReturn.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/explicitLocalReturn_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("justReturnInLambda.1.kt")
+        @TestMetadata("justReturnInLambda_1.kt")
         public void testJustReturnInLambda() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/justReturnInLambda.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/justReturnInLambda_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("kt5199.1.kt")
+        @TestMetadata("kt5199_1.kt")
         public void testKt5199() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/kt5199.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/kt5199_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("nestedNonLocals.1.kt")
+        @TestMetadata("nestedNonLocals_1.kt")
         public void testNestedNonLocals() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/nestedNonLocals.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/nestedNonLocals_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("noInlineLocalReturn.1.kt")
+        @TestMetadata("noInlineLocalReturn_1.kt")
         public void testNoInlineLocalReturn() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/noInlineLocalReturn.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/noInlineLocalReturn_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("nonLocalReturnFromOuterLambda.1.kt")
+        @TestMetadata("nonLocalReturnFromOuterLambda_1.kt")
         public void testNonLocalReturnFromOuterLambda() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/nonLocalReturnFromOuterLambda.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/nonLocalReturnFromOuterLambda_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("propertyAccessors.1.kt")
+        @TestMetadata("propertyAccessors_1.kt")
         public void testPropertyAccessors() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/propertyAccessors.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/propertyAccessors_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("returnFromFunctionExpr.1.kt")
+        @TestMetadata("returnFromFunctionExpr_1.kt")
         public void testReturnFromFunctionExpr() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/returnFromFunctionExpr.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/returnFromFunctionExpr_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simple.1.kt")
+        @TestMetadata("simple_1.kt")
         public void testSimple() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/simple.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/simple_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleFunctional.1.kt")
+        @TestMetadata("simpleFunctional_1.kt")
         public void testSimpleFunctional() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/simpleFunctional.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/simpleFunctional_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleVoid.1.kt")
+        @TestMetadata("simpleVoid_1.kt")
         public void testSimpleVoid() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
@@ -534,18 +534,18 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
         @RunWith(JUnit3RunnerWithInners.class)
         public static class Deparenthesize extends AbstractCompileKotlinAgainstInlineKotlinTest {
             public void testAllFilesPresentInDeparenthesize() throws Exception {
-                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/deparenthesize"), Pattern.compile("^(.+)\\.1.kt$"), true);
+                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/deparenthesize"), Pattern.compile("^(.+)_1\\.kt$"), true);
             }
 
-            @TestMetadata("bracket.1.kt")
+            @TestMetadata("bracket_1.kt")
             public void testBracket() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/deparenthesize/bracket.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/deparenthesize/bracket_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("labeled.1.kt")
+            @TestMetadata("labeled_1.kt")
             public void testLabeled() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/deparenthesize/labeled.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/deparenthesize/labeled_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
         }
@@ -555,24 +555,24 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
         @RunWith(JUnit3RunnerWithInners.class)
         public static class TryFinally extends AbstractCompileKotlinAgainstInlineKotlinTest {
             public void testAllFilesPresentInTryFinally() throws Exception {
-                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally"), Pattern.compile("^(.+)\\.1.kt$"), true);
+                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally"), Pattern.compile("^(.+)_1\\.kt$"), true);
             }
 
-            @TestMetadata("kt6956.1.kt")
+            @TestMetadata("kt6956_1.kt")
             public void testKt6956() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/kt6956.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/kt6956_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("kt7273.1.kt")
+            @TestMetadata("kt7273_1.kt")
             public void testKt7273() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/kt7273.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/kt7273_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("nonLocalReturnFromOuterLambda.1.kt")
+            @TestMetadata("nonLocalReturnFromOuterLambda_1.kt")
             public void testNonLocalReturnFromOuterLambda() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/nonLocalReturnFromOuterLambda.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/nonLocalReturnFromOuterLambda_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
@@ -581,36 +581,36 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
             @RunWith(JUnit3RunnerWithInners.class)
             public static class CallSite extends AbstractCompileKotlinAgainstInlineKotlinTest {
                 public void testAllFilesPresentInCallSite() throws Exception {
-                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite"), Pattern.compile("^(.+)\\.1.kt$"), true);
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite"), Pattern.compile("^(.+)_1\\.kt$"), true);
                 }
 
-                @TestMetadata("callSite.1.kt")
+                @TestMetadata("callSite_1.kt")
                 public void testCallSite() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite/callSite.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite/callSite_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("callSiteComplex.1.kt")
+                @TestMetadata("callSiteComplex_1.kt")
                 public void testCallSiteComplex() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite/callSiteComplex.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite/callSiteComplex_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("exceptionTableSplit.1.kt")
+                @TestMetadata("exceptionTableSplit_1.kt")
                 public void testExceptionTableSplit() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite/exceptionTableSplit.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite/exceptionTableSplit_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("exceptionTableSplitNoReturn.1.kt")
+                @TestMetadata("exceptionTableSplitNoReturn_1.kt")
                 public void testExceptionTableSplitNoReturn() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite/exceptionTableSplitNoReturn.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite/exceptionTableSplitNoReturn_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("finallyInFinally.1.kt")
+                @TestMetadata("finallyInFinally_1.kt")
                 public void testFinallyInFinally() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite/finallyInFinally.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/callSite/finallyInFinally_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
             }
@@ -620,54 +620,54 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
             @RunWith(JUnit3RunnerWithInners.class)
             public static class Chained extends AbstractCompileKotlinAgainstInlineKotlinTest {
                 public void testAllFilesPresentInChained() throws Exception {
-                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained"), Pattern.compile("^(.+)\\.1.kt$"), true);
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained"), Pattern.compile("^(.+)_1\\.kt$"), true);
                 }
 
-                @TestMetadata("finallyInFinally.1.kt")
+                @TestMetadata("finallyInFinally_1.kt")
                 public void testFinallyInFinally() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/finallyInFinally.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/finallyInFinally_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("finallyInFinally2.1.kt")
+                @TestMetadata("finallyInFinally2_1.kt")
                 public void testFinallyInFinally2() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/finallyInFinally2.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/finallyInFinally2_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("intReturn.1.kt")
+                @TestMetadata("intReturn_1.kt")
                 public void testIntReturn() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/intReturn.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/intReturn_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("intReturnComplex.1.kt")
+                @TestMetadata("intReturnComplex_1.kt")
                 public void testIntReturnComplex() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/intReturnComplex.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/intReturnComplex_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("intReturnComplex2.1.kt")
+                @TestMetadata("intReturnComplex2_1.kt")
                 public void testIntReturnComplex2() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/intReturnComplex2.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/intReturnComplex2_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("intReturnComplex3.1.kt")
+                @TestMetadata("intReturnComplex3_1.kt")
                 public void testIntReturnComplex3() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/intReturnComplex3.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/intReturnComplex3_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("intReturnComplex4.1.kt")
+                @TestMetadata("intReturnComplex4_1.kt")
                 public void testIntReturnComplex4() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/intReturnComplex4.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/intReturnComplex4_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("nestedLambda.1.kt")
+                @TestMetadata("nestedLambda_1.kt")
                 public void testNestedLambda() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/nestedLambda.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/chained/nestedLambda_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
             }
@@ -677,78 +677,78 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
             @RunWith(JUnit3RunnerWithInners.class)
             public static class DeclSite extends AbstractCompileKotlinAgainstInlineKotlinTest {
                 public void testAllFilesPresentInDeclSite() throws Exception {
-                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite"), Pattern.compile("^(.+)\\.1.kt$"), true);
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite"), Pattern.compile("^(.+)_1\\.kt$"), true);
                 }
 
-                @TestMetadata("complex.1.kt")
+                @TestMetadata("complex_1.kt")
                 public void testComplex() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/complex.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/complex_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("intReturn.1.kt")
+                @TestMetadata("intReturn_1.kt")
                 public void testIntReturn() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/intReturn.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/intReturn_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("intReturnComplex.1.kt")
+                @TestMetadata("intReturnComplex_1.kt")
                 public void testIntReturnComplex() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/intReturnComplex.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/intReturnComplex_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("longReturn.1.kt")
+                @TestMetadata("longReturn_1.kt")
                 public void testLongReturn() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/longReturn.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/longReturn_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("nested.1.kt")
+                @TestMetadata("nested_1.kt")
                 public void testNested() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/nested.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/nested_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("returnInFinally.1.kt")
+                @TestMetadata("returnInFinally_1.kt")
                 public void testReturnInFinally() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/returnInFinally.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/returnInFinally_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("returnInTry.1.kt")
+                @TestMetadata("returnInTry_1.kt")
                 public void testReturnInTry() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/returnInTry.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/returnInTry_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("returnInTryAndFinally.1.kt")
+                @TestMetadata("returnInTryAndFinally_1.kt")
                 public void testReturnInTryAndFinally() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/returnInTryAndFinally.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/returnInTryAndFinally_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("severalInTry.1.kt")
+                @TestMetadata("severalInTry_1.kt")
                 public void testSeveralInTry() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/severalInTry.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/severalInTry_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("severalInTryComplex.1.kt")
+                @TestMetadata("severalInTryComplex_1.kt")
                 public void testSeveralInTryComplex() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/severalInTryComplex.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/severalInTryComplex_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("voidInlineFun.1.kt")
+                @TestMetadata("voidInlineFun_1.kt")
                 public void testVoidInlineFun() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/voidInlineFun.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/voidInlineFun_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("voidNonLocal.1.kt")
+                @TestMetadata("voidNonLocal_1.kt")
                 public void testVoidNonLocal() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/voidNonLocal.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/declSite/voidNonLocal_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
             }
@@ -758,102 +758,102 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
             @RunWith(JUnit3RunnerWithInners.class)
             public static class ExceptionTable extends AbstractCompileKotlinAgainstInlineKotlinTest {
                 public void testAllFilesPresentInExceptionTable() throws Exception {
-                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable"), Pattern.compile("^(.+)\\.1.kt$"), true);
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable"), Pattern.compile("^(.+)_1\\.kt$"), true);
                 }
 
-                @TestMetadata("break.1.kt")
+                @TestMetadata("break_1.kt")
                 public void testBreak() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/break.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/break_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("continue.1.kt")
+                @TestMetadata("continue_1.kt")
                 public void testContinue() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/continue.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/continue_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("exceptionInFinally.1.kt")
+                @TestMetadata("exceptionInFinally_1.kt")
                 public void testExceptionInFinally() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/exceptionInFinally.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/exceptionInFinally_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("forInFinally.1.kt")
+                @TestMetadata("forInFinally_1.kt")
                 public void testForInFinally() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/forInFinally.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/forInFinally_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("innerAndExternal.1.kt")
+                @TestMetadata("innerAndExternal_1.kt")
                 public void testInnerAndExternal() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/innerAndExternal.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/innerAndExternal_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("innerAndExternalNested.1.kt")
+                @TestMetadata("innerAndExternalNested_1.kt")
                 public void testInnerAndExternalNested() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/innerAndExternalNested.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/innerAndExternalNested_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("innerAndExternalSimple.1.kt")
+                @TestMetadata("innerAndExternalSimple_1.kt")
                 public void testInnerAndExternalSimple() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/innerAndExternalSimple.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/innerAndExternalSimple_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("nested.1.kt")
+                @TestMetadata("nested_1.kt")
                 public void testNested() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/nested.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/nested_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("nestedWithReturns.1.kt")
+                @TestMetadata("nestedWithReturns_1.kt")
                 public void testNestedWithReturns() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/nestedWithReturns.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/nestedWithReturns_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("nestedWithReturnsSimple.1.kt")
+                @TestMetadata("nestedWithReturnsSimple_1.kt")
                 public void testNestedWithReturnsSimple() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/nestedWithReturnsSimple.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/nestedWithReturnsSimple_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("noFinally.1.kt")
+                @TestMetadata("noFinally_1.kt")
                 public void testNoFinally() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/noFinally.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/noFinally_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("severalCatchClause.1.kt")
+                @TestMetadata("severalCatchClause_1.kt")
                 public void testSeveralCatchClause() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/severalCatchClause.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/severalCatchClause_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("simpleThrow.1.kt")
+                @TestMetadata("simpleThrow_1.kt")
                 public void testSimpleThrow() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/simpleThrow.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/simpleThrow_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("synchonized.1.kt")
+                @TestMetadata("synchonized_1.kt")
                 public void testSynchonized() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/synchonized.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/synchonized_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("throwInFinally.1.kt")
+                @TestMetadata("throwInFinally_1.kt")
                 public void testThrowInFinally() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/throwInFinally.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/throwInFinally_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
 
-                @TestMetadata("tryCatchInFinally.1.kt")
+                @TestMetadata("tryCatchInFinally_1.kt")
                 public void testTryCatchInFinally() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/tryCatchInFinally.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/exceptionTable/tryCatchInFinally_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
             }
@@ -863,12 +863,12 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
             @RunWith(JUnit3RunnerWithInners.class)
             public static class Variables extends AbstractCompileKotlinAgainstInlineKotlinTest {
                 public void testAllFilesPresentInVariables() throws Exception {
-                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/variables"), Pattern.compile("^(.+)\\.1.kt$"), true);
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/variables"), Pattern.compile("^(.+)_1\\.kt$"), true);
                 }
 
-                @TestMetadata("kt7792.1.kt")
+                @TestMetadata("kt7792_1.kt")
                 public void testKt7792() throws Exception {
-                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/variables/kt7792.1.kt");
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/nonLocalReturns/tryFinally/variables/kt7792_1.kt");
                     doBoxTestWithInlineCheck(fileName);
                 }
             }
@@ -880,24 +880,24 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Reified extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInReified() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/reified"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/reified"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("capturedLambda.1.kt")
+        @TestMetadata("capturedLambda_1.kt")
         public void testCapturedLambda() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/reified/capturedLambda.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/reified/capturedLambda_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("capturedLambda2.1.kt")
+        @TestMetadata("capturedLambda2_1.kt")
         public void testCapturedLambda2() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/reified/capturedLambda2.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/reified/capturedLambda2_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("packages.1.kt")
+        @TestMetadata("packages_1.kt")
         public void testPackages() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/reified/packages.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/reified/packages_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -907,90 +907,90 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Simple extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInSimple() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/simple"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/simple"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("classObject.1.kt")
+        @TestMetadata("classObject_1.kt")
         public void testClassObject() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/classObject.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/classObject_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("extension.1.kt")
+        @TestMetadata("extension_1.kt")
         public void testExtension() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/extension.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/extension_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("extensionLambda.1.kt")
+        @TestMetadata("extensionLambda_1.kt")
         public void testExtensionLambda() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/extensionLambda.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/extensionLambda_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("params.1.kt")
+        @TestMetadata("params_1.kt")
         public void testParams() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/params.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/params_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("rootConstructor.1.kt")
+        @TestMetadata("rootConstructor_1.kt")
         public void testRootConstructor() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/rootConstructor.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/rootConstructor_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("severalClosures.1.kt")
+        @TestMetadata("severalClosures_1.kt")
         public void testSeveralClosures() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/severalClosures.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/severalClosures_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("severalUsage.1.kt")
+        @TestMetadata("severalUsage_1.kt")
         public void testSeveralUsage() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/severalUsage.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/severalUsage_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleDouble.1.kt")
+        @TestMetadata("simpleDouble_1.kt")
         public void testSimpleDouble() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleDouble.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleDouble_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleEnum.1.kt")
+        @TestMetadata("simpleEnum_1.kt")
         public void testSimpleEnum() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleEnum.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleEnum_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleGenerics.1.kt")
+        @TestMetadata("simpleGenerics_1.kt")
         public void testSimpleGenerics() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleGenerics.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleGenerics_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleInt.1.kt")
+        @TestMetadata("simpleInt_1.kt")
         public void testSimpleInt() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleInt.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleInt_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleLambda.1.kt")
+        @TestMetadata("simpleLambda_1.kt")
         public void testSimpleLambda() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleLambda.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleLambda_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("simpleObject.1.kt")
+        @TestMetadata("simpleObject_1.kt")
         public void testSimpleObject() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleObject.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/simpleObject_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("vararg.1.kt")
+        @TestMetadata("vararg_1.kt")
         public void testVararg() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/vararg.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/simple/vararg_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -1000,24 +1000,24 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Smap extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInSmap() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/smap"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/smap"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("assertion.1.kt")
+        @TestMetadata("assertion_1.kt")
         public void testAssertion() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/assertion.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/assertion_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("oneFile.1.kt")
+        @TestMetadata("oneFile_1.kt")
         public void testOneFile() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/oneFile.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/oneFile_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("smap.1.kt")
+        @TestMetadata("smap_1.kt")
         public void testSmap() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/smap.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/smap_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
@@ -1026,54 +1026,54 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
         @RunWith(JUnit3RunnerWithInners.class)
         public static class Anonymous extends AbstractCompileKotlinAgainstInlineKotlinTest {
             public void testAllFilesPresentInAnonymous() throws Exception {
-                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/smap/anonymous"), Pattern.compile("^(.+)\\.1.kt$"), true);
+                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/smap/anonymous"), Pattern.compile("^(.+)_1\\.kt$"), true);
             }
 
-            @TestMetadata("lambda.1.kt")
+            @TestMetadata("lambda_1.kt")
             public void testLambda() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/lambda.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/lambda_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("lambdaOnCallSite.1.kt")
+            @TestMetadata("lambdaOnCallSite_1.kt")
             public void testLambdaOnCallSite() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/lambdaOnCallSite.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/lambdaOnCallSite_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("lambdaOnInlineCallSite.1.kt")
+            @TestMetadata("lambdaOnInlineCallSite_1.kt")
             public void testLambdaOnInlineCallSite() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/lambdaOnInlineCallSite.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/lambdaOnInlineCallSite_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("object.1.kt")
+            @TestMetadata("object_1.kt")
             public void testObject() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/object.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/object_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("objectOnCallSite.1.kt")
+            @TestMetadata("objectOnCallSite_1.kt")
             public void testObjectOnCallSite() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/objectOnCallSite.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/objectOnCallSite_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("objectOnInlineCallSite.1.kt")
+            @TestMetadata("objectOnInlineCallSite_1.kt")
             public void testObjectOnInlineCallSite() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/objectOnInlineCallSite.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/objectOnInlineCallSite_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("objectOnInlineCallSite2.1.kt")
+            @TestMetadata("objectOnInlineCallSite2_1.kt")
             public void testObjectOnInlineCallSite2() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/objectOnInlineCallSite2.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/objectOnInlineCallSite2_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("objectOnInlineCallSiteWithCapture.1.kt")
+            @TestMetadata("objectOnInlineCallSiteWithCapture_1.kt")
             public void testObjectOnInlineCallSiteWithCapture() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/objectOnInlineCallSiteWithCapture.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/anonymous/objectOnInlineCallSiteWithCapture_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
         }
@@ -1083,18 +1083,18 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
         @RunWith(JUnit3RunnerWithInners.class)
         public static class Resolve extends AbstractCompileKotlinAgainstInlineKotlinTest {
             public void testAllFilesPresentInResolve() throws Exception {
-                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/smap/resolve"), Pattern.compile("^(.+)\\.1.kt$"), true);
+                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/smap/resolve"), Pattern.compile("^(.+)_1\\.kt$"), true);
             }
 
-            @TestMetadata("inlineComponent.1.kt")
+            @TestMetadata("inlineComponent_1.kt")
             public void testInlineComponent() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/resolve/inlineComponent.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/resolve/inlineComponent_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
 
-            @TestMetadata("inlineIterator.1.kt")
+            @TestMetadata("inlineIterator_1.kt")
             public void testInlineIterator() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/resolve/inlineIterator.1.kt");
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/smap/resolve/inlineIterator_1.kt");
                 doBoxTestWithInlineCheck(fileName);
             }
         }
@@ -1105,42 +1105,42 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Special extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInSpecial() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/special"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/special"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("identityCheck.1.kt")
+        @TestMetadata("identityCheck_1.kt")
         public void testIdentityCheck() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/identityCheck.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/identityCheck_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("ifBranches.1.kt")
+        @TestMetadata("ifBranches_1.kt")
         public void testIfBranches() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/ifBranches.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/ifBranches_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("iinc.1.kt")
+        @TestMetadata("iinc_1.kt")
         public void testIinc() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/iinc.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/iinc_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("inlineChain.1.kt")
+        @TestMetadata("inlineChain_1.kt")
         public void testInlineChain() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/inlineChain.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/inlineChain_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("plusAssign.1.kt")
+        @TestMetadata("plusAssign_1.kt")
         public void testPlusAssign() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/plusAssign.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/plusAssign_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("stackHeightBug.1.kt")
+        @TestMetadata("stackHeightBug_1.kt")
         public void testStackHeightBug() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/stackHeightBug.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/special/stackHeightBug_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -1150,12 +1150,12 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Trait extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInTrait() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/trait"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/trait"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("trait.1.kt")
+        @TestMetadata("trait_1.kt")
         public void testTrait() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/trait/trait.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/trait/trait_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }
@@ -1165,30 +1165,30 @@ public class CompileKotlinAgainstInlineKotlinTestGenerated extends AbstractCompi
     @RunWith(JUnit3RunnerWithInners.class)
     public static class TryCatchFinally extends AbstractCompileKotlinAgainstInlineKotlinTest {
         public void testAllFilesPresentInTryCatchFinally() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/tryCatchFinally"), Pattern.compile("^(.+)\\.1.kt$"), true);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/boxInline/tryCatchFinally"), Pattern.compile("^(.+)_1\\.kt$"), true);
         }
 
-        @TestMetadata("kt5863.1.kt")
+        @TestMetadata("kt5863_1.kt")
         public void testKt5863() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/tryCatchFinally/kt5863.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/tryCatchFinally/kt5863_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("tryCatch.1.kt")
+        @TestMetadata("tryCatch_1.kt")
         public void testTryCatch() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/tryCatchFinally/tryCatch.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/tryCatchFinally/tryCatch_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("tryCatch2.1.kt")
+        @TestMetadata("tryCatch2_1.kt")
         public void testTryCatch2() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/tryCatchFinally/tryCatch2.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/tryCatchFinally/tryCatch2_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
 
-        @TestMetadata("tryCatchFinally.1.kt")
+        @TestMetadata("tryCatchFinally_1.kt")
         public void testTryCatchFinally() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/tryCatchFinally/tryCatchFinally.1.kt");
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/boxInline/tryCatchFinally/tryCatchFinally_1.kt");
             doBoxTestWithInlineCheck(fileName);
         }
     }

@@ -22,14 +22,14 @@ JetFile: nonFIleAnnotationBeforePackage.kt
             REFERENCE_EXPRESSION
               PsiElement(IDENTIFIER)('bar')
     PsiWhiteSpace('\n')
-    PsiErrorElement:Expected annotation identifier after '@file:'
+    PsiErrorElement:Expected annotation identifier after ':'
       PsiElement(AT)('@')
       PsiElement(IDENTIFIER)('file')
       PsiElement(COLON)(':')
     PsiWhiteSpace('\n')
     ANNOTATION_ENTRY
       PsiElement(AT)('@')
-      PsiErrorElement:Expected 'file' keyword before ':'
+      PsiErrorElement:Expected annotation target before ':'
         PsiElement(COLON)(':')
       CONSTRUCTOR_CALLEE
         TYPE_REFERENCE
@@ -39,7 +39,7 @@ JetFile: nonFIleAnnotationBeforePackage.kt
     PsiWhiteSpace('\n')
     ANNOTATION_ENTRY
       PsiElement(AT)('@')
-      PsiErrorElement:Expected 'file' keyword as target
+      PsiErrorElement:Expected annotation target before ':'
         PsiElement(IDENTIFIER)('fil')
       PsiElement(COLON)(':')
       CONSTRUCTOR_CALLEE

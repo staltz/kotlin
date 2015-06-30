@@ -843,6 +843,39 @@ public class JetParsingTestGenerated extends AbstractJetParsingTest {
                 }
             }
 
+            @TestMetadata("compiler/testData/psi/annotation/onField")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class OnField extends AbstractJetParsingTest {
+                public void testAllFilesPresentInOnField() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/psi/annotation/onField"), Pattern.compile("^(.*)\\.kts?$"), true);
+                }
+
+                @TestMetadata("fieldAnnotationInWrongPlace.kt")
+                public void testFieldAnnotationInWrongPlace() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/onField/fieldAnnotationInWrongPlace.kt");
+                    doParsingTest(fileName);
+                }
+
+                @TestMetadata("manyInOneAnnotationBlock.kt")
+                public void testManyInOneAnnotationBlock() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/onField/manyInOneAnnotationBlock.kt");
+                    doParsingTest(fileName);
+                }
+
+                @TestMetadata("simple.kt")
+                public void testSimple() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/onField/simple.kt");
+                    doParsingTest(fileName);
+                }
+
+                @TestMetadata("simpleFieldAnnotation.kt")
+                public void testSimpleFieldAnnotation() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/onField/simpleFieldAnnotation.kt");
+                    doParsingTest(fileName);
+                }
+            }
+
             @TestMetadata("compiler/testData/psi/annotation/onFile")
             @TestDataPath("$PROJECT_ROOT")
             @RunWith(JUnit3RunnerWithInners.class)

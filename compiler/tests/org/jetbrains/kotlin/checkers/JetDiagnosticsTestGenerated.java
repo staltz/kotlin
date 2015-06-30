@@ -753,6 +753,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                 doTest(fileName);
             }
 
+            @TestMetadata("FieldAnnotations.kt")
+            public void testFieldAnnotations() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/annotations/FieldAnnotations.kt");
+                doTest(fileName);
+            }
+
             @TestMetadata("forParameterAnnotationResolve.kt")
             public void testForParameterAnnotationResolve() throws Exception {
                 String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/annotations/forParameterAnnotationResolve.kt");

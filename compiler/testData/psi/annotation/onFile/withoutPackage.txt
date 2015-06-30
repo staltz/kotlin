@@ -34,7 +34,7 @@ JetFile: withoutPackage.kt
       PsiWhiteSpace('\n')
       ANNOTATION
         PsiElement(AT)('@')
-        PsiErrorElement:File annotations are only allowed before package declaration
+        PsiErrorElement:@file annotations are only allowed before package declaration
           PsiElement(file)('file')
           PsiElement(COLON)(':')
         PsiElement(LBRACKET)('[')

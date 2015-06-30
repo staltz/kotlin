@@ -32,7 +32,7 @@ JetFile: withoutPackageWithSimpleAnnotation.kt
       PsiWhiteSpace('\n')
       ANNOTATION_ENTRY
         PsiElement(AT)('@')
-        PsiErrorElement:File annotations are only allowed before package declaration
+        PsiErrorElement:@file annotations are only allowed before package declaration
           PsiElement(file)('file')
           PsiElement(COLON)(':')
         PsiWhiteSpace(' ')

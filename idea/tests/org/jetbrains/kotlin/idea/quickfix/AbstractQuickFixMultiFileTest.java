@@ -83,7 +83,7 @@ public abstract class AbstractQuickFixMultiFileTest extends KotlinDaemonAnalyzer
                 assert mainFileDir != null;
 
                 final String mainFileName = mainFile.getName();
-                final String extraFileNamePrefix = mainFileName.replace(".Main.kt", ".");
+                final String extraFileNamePrefix = mainFileName.replace("_Main.kt", "_");
                 File[] extraFiles = mainFileDir.listFiles(
                         new FilenameFilter() {
                             @Override
@@ -183,11 +183,11 @@ public abstract class AbstractQuickFixMultiFileTest extends KotlinDaemonAnalyzer
                 }
             }
 
-            checkResultByFile(testFullPath.replace(".before.Main.", ".after."));
+            checkResultByFile(testFullPath.replace("_before_Main.kt", "_after.kt"));
 
             PsiFile mainFile = myFile;
             String mainFileName = mainFile.getName();
-            String extraFileNamePrefix = mainFileName.replace(".Main.kt", ".");
+            String extraFileNamePrefix = mainFileName.replace("_Main.kt", "_");
             for (PsiFile file : mainFile.getContainingDirectory().getFiles()) {
                 String fileName = file.getName();
                 if (fileName.equals(mainFileName) || !fileName.startsWith(extraFileNamePrefix)) continue;
@@ -195,7 +195,7 @@ public abstract class AbstractQuickFixMultiFileTest extends KotlinDaemonAnalyzer
                 myFile = file;
                 String extraFileFullPath = testFullPath.replace(mainFileName, fileName);
                 try {
-                    checkResultByFile(extraFileFullPath.replace(".before.", ".after."));
+                    checkResultByFile(extraFileFullPath.replace("_before_", "_after_"));
                 }
                 catch (AssertionError e) {
                     if (e.getMessage().startsWith("Cannot find file")) {

@@ -35,11 +35,11 @@ public class AddOpenToClassDeclarationTest extends AbstractQuickFixMultiFileTest
     }
 
     public void testFinalJavaSupertype() throws Exception {
-        doTestWithoutExtraFile("FinalJavaSupertype.before.kt");
+        doTestWithoutExtraFile("FinalJavaSupertype_before.kt");
     }
 
     public void testFinalJavaUpperBound() throws Exception {
-        doTestWithoutExtraFile("FinalJavaUpperBound.before.kt");
+        doTestWithoutExtraFile("FinalJavaUpperBound_before.kt");
     }
 
     @Override

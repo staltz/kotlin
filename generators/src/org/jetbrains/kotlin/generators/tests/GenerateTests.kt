@@ -362,7 +362,7 @@ fun main(args: Array<String>) {
         }
 
         testClass(javaClass<AbstractQuickFixTest>()) {
-            model("quickfix", pattern = "^([\\w\\-_]+)\\.kt$")
+            model("quickfix", pattern = "^([a-zA-Z0-9]+)\\.kt$")
         }
 
         testClass(javaClass<AbstractGotoSuperTest>()) {
@@ -388,7 +388,7 @@ fun main(args: Array<String>) {
         }
 
         testClass(javaClass<AbstractQuickFixMultiFileTest>()) {
-            model("quickfix", pattern = """^(\w+)\.before\.Main\.kt$""", testMethod = "doTestWithExtraFile")
+            model("quickfix", pattern = """^(\w+)_before_Main\.kt$""", testMethod = "doTestWithExtraFile")
         }
 
         testClass(javaClass<AbstractHighlightingTest>()) {

@@ -20,32 +20,33 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.codegen.OwnerKind;
 import org.jetbrains.kotlin.codegen.state.JetTypeMapper;
-import org.jetbrains.kotlin.descriptors.FunctionDescriptor;
+import org.jetbrains.kotlin.descriptors.VariableDescriptor;
 
 import static org.jetbrains.kotlin.codegen.binding.CodegenBinding.anonymousClassForCallable;
 
-public class ClosureContext extends ClassContext {
-    private final FunctionDescriptor functionDescriptor;
+public class PropertyReferenceContext extends ClassContext {
+    // NOTE: this is not the target property referenced by the double colon operator, but rather a temporary variable
+    private final VariableDescriptor variableDescriptor;
 
-    public ClosureContext(
+    public PropertyReferenceContext(
             @NotNull JetTypeMapper typeMapper,
-            @NotNull FunctionDescriptor functionDescriptor,
+            @NotNull VariableDescriptor variableDescriptor,
             @Nullable CodegenContext parentContext,
-            @NotNull LocalLookup localLookup
+            @Nullable LocalLookup localLookup
     ) {
-        super(typeMapper, anonymousClassForCallable(typeMapper.getBindingContext(), functionDescriptor),
+        super(typeMapper, anonymousClassForCallable(typeMapper.getBindingContext(), variableDescriptor),
               OwnerKind.IMPLEMENTATION, parentContext, localLookup);
 
-        this.functionDescriptor = functionDescriptor;
+        this.variableDescriptor = variableDescriptor;
     }
 
     @NotNull
-    public FunctionDescriptor getFunctionDescriptor() {
-        return functionDescriptor;
+    public VariableDescriptor getVariableDescriptor() {
+        return variableDescriptor;
     }
 
     @Override
     public String toString() {
-        return "Closure: " + getContextDescriptor();
+        return "Property reference: " + variableDescriptor;
     }
 }

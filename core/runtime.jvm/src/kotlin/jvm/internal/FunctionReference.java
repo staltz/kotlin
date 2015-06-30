@@ -37,27 +37,20 @@ public class FunctionReference extends FunctionImpl implements KFunction {
         return arity;
     }
 
-    // The following methods provide the information identifying this function, which is used by the reflection implementation.
-    // They are supposed to be overridden in each subclass (each anonymous class generated for a function reference).
+    // See CallableReference
 
     public KDeclarationContainer getOwner() {
         throw error();
     }
 
-    // Kotlin name of the function, the one which was declared in the source code (@platformName can't change it)
+    @Override
     public String getName() {
         throw error();
     }
 
-    // JVM signature of the function, e.g. "println(Ljava/lang/Object;)V"
     public String getSignature() {
         throw error();
     }
-
-    // The following methods are the stub implementations of reflection functions.
-    // They are called when you're using reflection on a function reference without the reflection implementation in the classpath.
-
-    // (nothing here yet)
 
     private static Error error() {
         throw new KotlinReflectionNotSupportedError();

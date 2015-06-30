@@ -198,6 +198,15 @@ public abstract class CodegenContext<T extends DeclarationDescriptor> {
         return new ClosureContext(typeMapper, funDescriptor, this, localLookup);
     }
 
+    @NotNull
+    public PropertyReferenceContext intoPropertyReference(
+            @NotNull VariableDescriptor variableDescriptor,
+            @NotNull LocalLookup localLookup,
+            @NotNull JetTypeMapper typeMapper
+    ) {
+        return new PropertyReferenceContext(typeMapper, variableDescriptor, this, localLookup);
+    }
+
     @Nullable
     public CodegenContext getParentContext() {
         return parentContext;

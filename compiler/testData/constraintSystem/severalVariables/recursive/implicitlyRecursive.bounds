@@ -1,0 +1,26 @@
+VARIABLES T P E
+
+SUBTYPE T My<P>
+SUBTYPE P My<E>
+SUBTYPE E My<P>
+
+type parameter bounds:
+T <: My<P>*, <: My<out My<E>>*, <: My<out My<out My<P>>>*
+P <: My<E>*
+E <: My<P>*
+
+status:
+-hasCannotCaptureTypesError: false
+-hasConflictingConstraints: false
+-hasContradiction: false
+-hasErrorInConstrainingTypes: false
+-hasTypeConstructorMismatch: false
+-hasTypeInferenceIncorporationError: false
+-hasUnknownParameters: true
+-hasViolatedUpperBound: false
+-isSuccessful: false
+
+result:
+T=???
+P=???
+E=???

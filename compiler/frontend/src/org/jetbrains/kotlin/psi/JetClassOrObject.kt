@@ -64,7 +64,17 @@ abstract public class JetClassOrObject : JetTypeParameterListOwnerStub<KotlinCla
 
     public fun getSecondaryConstructors(): List<JetSecondaryConstructor> = getBody()?.getSecondaryConstructors().orEmpty()
 
-    public fun isAnnotation(): Boolean = hasModifier(JetTokens.ANNOTATION_KEYWORD)
+    public fun isAnnotation(): Boolean = hasAnnotation(JetTokens.ANNOTATION_KEYWORD.getValue()) //hasModifier(JetTokens.ANNOTATION_KEYWORD)
+
+    private fun hasAnnotation(name: String): Boolean {
+        val modifierList = getModifierList() ?: return false
+        for (entry in modifierList.getAnnotationEntries()) {
+            val typeReference = entry.getTypeReference()
+            val userType = typeReference?.getStubOrPsiChild(JetStubElementTypes.USER_TYPE) ?: continue
+            if (name == userType.getReferencedName()) return true
+        }
+        return false
+    }
 
     public override fun delete() {
         CheckUtil.checkWritable(this);

@@ -230,6 +230,9 @@ public class QualifiedExpressionResolver {
             boolean packageLevel
     ) {
         Name referencedName = referenceExpression.getReferencedNameAsName();
+        if ("annotation".equals(referencedName.asString())) {
+            referencedName = Name.identifier("__annotation");
+        }
 
         Collection<DeclarationDescriptor> descriptors = Sets.newLinkedHashSet();
         PackageViewDescriptor packageDescriptor = outerScope.getPackage(referencedName);

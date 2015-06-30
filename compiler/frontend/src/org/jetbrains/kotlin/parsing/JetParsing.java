@@ -485,12 +485,24 @@ public class JetParsing extends AbstractJetParsing {
             advance(); // AT
         }
 
-        if (atSet(MODIFIER_KEYWORDS)) {
+        boolean isAnnotation = at(ANNOTATION_KEYWORD);
+        if (isAnnotation) {
+            PsiBuilder.Marker annotationEntry = mark();
+            boolean result = parseAnnotation(AnnotationParsingMode.ALLOW_UNESCAPED_REGULAR_ANNOTATIONS);
+            if (result) {
+                annotationEntry.done(ANNOTATION_ENTRY);
+            }
+            else {
+                annotationEntry.rollbackTo();
+                return result;
+            }
+        }
+        else if (atSet(MODIFIER_KEYWORDS)) {
             IElementType tt = tt();
             if (tokenConsumer != null) {
                 tokenConsumer.consume(tt);
             }
-            boolean isAnnotation = at(ANNOTATION_KEYWORD);
+
             advance(); // MODIFIER
             marker.collapse(tt);
             // Possible "annotation" modifier arguments
@@ -690,7 +702,7 @@ public class JetParsing extends AbstractJetParsing {
      *   ;
      */
     private boolean parseAnnotation(AnnotationParsingMode mode) {
-        assert _at(IDENTIFIER) ||
+        assert _at(IDENTIFIER) || _at(ANNOTATION_KEYWORD) ||
                (_at(AT) && !WHITE_SPACE_OR_COMMENT_BIT_SET.contains(myBuilder.rawLookup(1)));
 
         PsiBuilder.Marker annotation = mark();

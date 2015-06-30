@@ -5,7 +5,12 @@ JetFile: options.kt
     <empty list>
   CLASS
     MODIFIER_LIST
-      PsiElement(annotation)('annotation')
+      ANNOTATION_ENTRY
+        CONSTRUCTOR_CALLEE
+          TYPE_REFERENCE
+            USER_TYPE
+              REFERENCE_EXPRESSION
+                PsiElement(IDENTIFIER)('annotation')
     PsiWhiteSpace(' ')
     PsiElement(class)('class')
     PsiWhiteSpace(' ')
@@ -13,13 +18,12 @@ JetFile: options.kt
   PsiWhiteSpace('\n\n')
   CLASS
     MODIFIER_LIST
-      PsiElement(annotation)('annotation')
       ANNOTATION_ENTRY
         CONSTRUCTOR_CALLEE
           TYPE_REFERENCE
             USER_TYPE
-              ANNOTATION_MODIFIER_REFERENCE_EXPRESSION
-                <empty list>
+              REFERENCE_EXPRESSION
+                PsiElement(IDENTIFIER)('annotation')
         VALUE_ARGUMENT_LIST
           PsiElement(LPAR)('(')
           PsiElement(RPAR)(')')
@@ -30,13 +34,12 @@ JetFile: options.kt
   PsiWhiteSpace('\n\n')
   CLASS
     MODIFIER_LIST
-      PsiElement(annotation)('annotation')
       ANNOTATION_ENTRY
         CONSTRUCTOR_CALLEE
           TYPE_REFERENCE
             USER_TYPE
-              ANNOTATION_MODIFIER_REFERENCE_EXPRESSION
-                <empty list>
+              REFERENCE_EXPRESSION
+                PsiElement(IDENTIFIER)('annotation')
         VALUE_ARGUMENT_LIST
           PsiElement(LPAR)('(')
           VALUE_ARGUMENT
@@ -56,13 +59,12 @@ JetFile: options.kt
   PsiWhiteSpace('\n\n')
   CLASS
     MODIFIER_LIST
-      PsiElement(annotation)('annotation')
       ANNOTATION_ENTRY
         CONSTRUCTOR_CALLEE
           TYPE_REFERENCE
             USER_TYPE
-              ANNOTATION_MODIFIER_REFERENCE_EXPRESSION
-                <empty list>
+              REFERENCE_EXPRESSION
+                PsiElement(IDENTIFIER)('annotation')
         VALUE_ARGUMENT_LIST
           PsiElement(LPAR)('(')
           VALUE_ARGUMENT
@@ -85,13 +87,12 @@ JetFile: options.kt
   PsiWhiteSpace('\n\n')
   CLASS
     MODIFIER_LIST
-      PsiElement(annotation)('annotation')
       ANNOTATION_ENTRY
         CONSTRUCTOR_CALLEE
           TYPE_REFERENCE
             USER_TYPE
-              ANNOTATION_MODIFIER_REFERENCE_EXPRESSION
-                <empty list>
+              REFERENCE_EXPRESSION
+                PsiElement(IDENTIFIER)('annotation')
         VALUE_ARGUMENT_LIST
           PsiElement(LPAR)('(')
           VALUE_ARGUMENT
@@ -150,13 +151,12 @@ JetFile: options.kt
                 PsiElement(IDENTIFIER)('EXPRESSION')
           PsiElement(RPAR)(')')
       PsiWhiteSpace('\n')
-      PsiElement(annotation)('annotation')
       ANNOTATION_ENTRY
         CONSTRUCTOR_CALLEE
           TYPE_REFERENCE
             USER_TYPE
-              ANNOTATION_MODIFIER_REFERENCE_EXPRESSION
-                <empty list>
+              REFERENCE_EXPRESSION
+                PsiElement(IDENTIFIER)('annotation')
         VALUE_ARGUMENT_LIST
           PsiElement(LPAR)('(')
           VALUE_ARGUMENT

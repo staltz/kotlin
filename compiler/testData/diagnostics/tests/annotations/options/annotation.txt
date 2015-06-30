@@ -43,14 +43,14 @@ target(allowedTargets = {Target.CLASSIFIER}) kotlin.__annotation(retention = Ann
     public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
 }
 
-internal final annotation class some : kotlin.Annotation {
+kotlin.__annotation() internal final annotation class some : kotlin.Annotation {
     public constructor some()
     public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
     public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
     public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
 }
 
-target(allowedTargets = {Target.CLASSIFIER}) public final annotation class target : kotlin.Annotation {
+target(allowedTargets = {Target.CLASSIFIER}) kotlin.__annotation() public final annotation class target : kotlin.Annotation {
     public constructor target(/*0*/ vararg allowedTargets: Target /*kotlin.Array<out Target>*/)
     internal final val allowedTargets: kotlin.Array<out Target>
     public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean

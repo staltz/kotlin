@@ -21,13 +21,13 @@ fun box(): String {
 }
 
 //SMAP
-//smap.1.kt
+//smap_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 smap.1.kt
+//+ 1 smap_1.kt
 //Smap_1
-//+ 2 smap.2.kt
+//+ 2 smap_2.kt
 //builders/Smap_2
 //*L
 //1#1,38:1

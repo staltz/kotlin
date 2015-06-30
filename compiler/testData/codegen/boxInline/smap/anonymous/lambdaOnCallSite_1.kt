@@ -20,13 +20,13 @@ fun box(): String {
 
 
 //SMAP
-//lambdaOnCallSite.1.kt
+//lambdaOnCallSite_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 lambdaOnCallSite.1.kt
+//+ 1 lambdaOnCallSite_1.kt
 //LambdaOnCallSite_1
-//+ 2 lambdaOnCallSite.2.kt
+//+ 2 lambdaOnCallSite_2.kt
 //builders/LambdaOnCallSite_2
 //*L
 //1#1,34:1

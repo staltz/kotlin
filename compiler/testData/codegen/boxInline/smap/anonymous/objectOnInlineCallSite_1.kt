@@ -22,13 +22,13 @@ fun box(): String {
 //NO_CHECK_LAMBDA_INLINING
 //TODO SHOULD BE LESS
 //SMAP
-//objectOnInlineCallSite.1.kt
+//objectOnInlineCallSite_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 objectOnInlineCallSite.1.kt
+//+ 1 objectOnInlineCallSite_1.kt
 //ObjectOnInlineCallSite_1
-//+ 2 objectOnInlineCallSite.2.kt
+//+ 2 objectOnInlineCallSite_2.kt
 //builders/ObjectOnInlineCallSite_2
 //*L
 //1#1,58:1
@@ -36,22 +36,22 @@ fun box(): String {
 //*E
 //
 //SMAP
-//objectOnInlineCallSite.1.kt
+//objectOnInlineCallSite_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 objectOnInlineCallSite.1.kt
+//+ 1 objectOnInlineCallSite_1.kt
 //ObjectOnInlineCallSite_1$test$1$1
 //*L
 //1#1,58:1
 //*E
 //
 //SMAP
-//objectOnInlineCallSite.1.kt
+//objectOnInlineCallSite_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 objectOnInlineCallSite.1.kt
+//+ 1 objectOnInlineCallSite_1.kt
 //ObjectOnInlineCallSite_1$test$1$1
 //*L
 //1#1,58:1

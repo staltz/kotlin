@@ -7,13 +7,13 @@ fun box(): String {
 }
 
 //SMAP
-//inlineComponent.1.kt
+//inlineComponent_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 inlineComponent.1.kt
+//+ 1 inlineComponent_1.kt
 //InlineComponent_1
-//+ 2 inlineComponent.2.kt
+//+ 2 inlineComponent_2.kt
 //zzz/InlineComponent_2
 //*L
 //1#1,21:1

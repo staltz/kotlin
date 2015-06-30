@@ -11,11 +11,11 @@ inline fun test(p: () -> String): String {
 }
 //TODO should be empty
 //SMAP
-//oneFile.1.kt
+//oneFile_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 oneFile.1.kt
+//+ 1 oneFile_1.kt
 //OneFile_1
 //*L
 //1#1,22:1

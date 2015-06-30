@@ -10,13 +10,13 @@ fun box(): String {
 }
 
 //SMAP
-//assertion.1.kt
+//assertion_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 assertion.1.kt
+//+ 1 assertion_1.kt
 //Assertion_1
-//+ 2 assertion.2.kt
+//+ 2 assertion_2.kt
 //test/Assertion_2
 //*L
 //1#1,25:1

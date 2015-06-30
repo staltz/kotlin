@@ -18,13 +18,13 @@ fun box(): String {
 //NO_CHECK_LAMBDA_INLINING
 
 //SMAP
-//lambda.1.kt
+//lambda_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 lambda.1.kt
+//+ 1 lambda_1.kt
 //Lambda_1
-//+ 2 lambda.2.kt
+//+ 2 lambda_2.kt
 //builders/Lambda_2
 //*L
 //1#1,46:1
@@ -32,13 +32,13 @@ fun box(): String {
 //*E
 //
 //SMAP
-//lambda.2.kt
+//lambda_2.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 lambda.2.kt
+//+ 1 lambda_2.kt
 //builders/Lambda_2$call$1
-//+ 2 lambda.1.kt
+//+ 2 lambda_1.kt
 //Lambda_1
 //*L
 //1#1,18:1

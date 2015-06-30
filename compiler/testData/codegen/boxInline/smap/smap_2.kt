@@ -17,11 +17,11 @@ inline fun html(init: () -> Unit) {
 }
 //TODO SHOULD BE EMPTY
 //SMAP
-//smap.2.kt
+//smap_2.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 smap.2.kt
+//+ 1 smap_2.kt
 //builders/Smap_2
 //*L
 //1#1,28:1

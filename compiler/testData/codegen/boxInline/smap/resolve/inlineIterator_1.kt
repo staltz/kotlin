@@ -10,13 +10,13 @@ fun box(): String {
 }
 
 //SMAP
-//inlineIterator.1.kt
+//inlineIterator_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 inlineIterator.1.kt
+//+ 1 inlineIterator_1.kt
 //InlineIterator_1
-//+ 2 inlineIterator.2.kt
+//+ 2 inlineIterator_2.kt
 //zzz/InlineIterator_2
 //*L
 //1#1,24:1

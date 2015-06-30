@@ -20,22 +20,22 @@ inline fun test(): String {
 //TODO SHOULD BE LESS
 
 //SXMAP
-//objectOnInlineCallSite2.2.kt
+//objectOnInlineCallSite2_2.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 objectOnInlineCallSite2.2.kt
+//+ 1 objectOnInlineCallSite2_2.kt
 //builders/BuildersPackage
 //*L
 //1#1,42:1
 //*E
 //
 //SXMAP
-//objectOnInlineCallSite2.2.kt
+//objectOnInlineCallSite2_2.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 objectOnInlineCallSite2.2.kt
+//+ 1 objectOnInlineCallSite2_2.kt
 //builders/BuildersPackage$objectOnInlineCallSite2_2$HASH$test$1$1
 //*L
 //1#1,42:1

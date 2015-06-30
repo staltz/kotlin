@@ -10,11 +10,11 @@ inline fun call(inlineOptions(InlineOption.ONLY_LOCAL_RETURN) init: () -> Unit) 
 
 
 //SMAP
-//object.2.kt
+//object_2.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 object.2.kt
+//+ 1 object_2.kt
 //builders/Object_2$call$1
 //*L
 //1#1,21:1

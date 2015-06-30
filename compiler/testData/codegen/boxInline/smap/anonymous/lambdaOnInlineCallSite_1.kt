@@ -20,13 +20,13 @@ fun box(): String {
 //NO_CHECK_LAMBDA_INLINING
 //TODO SHOULD BE LESS
 //SMAP
-//lambdaOnInlineCallSite.1.kt
+//lambdaOnInlineCallSite_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 lambdaOnInlineCallSite.1.kt
+//+ 1 lambdaOnInlineCallSite_1.kt
 //LambdaOnInlineCallSite_1
-//+ 2 lambdaOnInlineCallSite.2.kt
+//+ 2 lambdaOnInlineCallSite_2.kt
 //builders/LambdaOnInlineCallSite_2
 //*L
 //1#1,56:1
@@ -34,22 +34,22 @@ fun box(): String {
 //*E
 //
 //SMAP
-//lambdaOnInlineCallSite.1.kt
+//lambdaOnInlineCallSite_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 lambdaOnInlineCallSite.1.kt
+//+ 1 lambdaOnInlineCallSite_1.kt
 //LambdaOnInlineCallSite_1$test$1$1
 //*L
 //1#1,56:1
 //*E
 //
 //SMAP
-//lambdaOnInlineCallSite.1.kt
+//lambdaOnInlineCallSite_1.kt
 //Kotlin
 //*S Kotlin
 //*F
-//+ 1 lambdaOnInlineCallSite.1.kt
+//+ 1 lambdaOnInlineCallSite_1.kt
 //LambdaOnInlineCallSite_1$test$1$1
 //*L
 //1#1,56:1

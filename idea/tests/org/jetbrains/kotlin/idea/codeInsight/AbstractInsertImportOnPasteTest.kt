@@ -65,7 +65,7 @@ public abstract class AbstractInsertImportOnPasteTest : AbstractCopyPasteTest() 
 
         KotlinCopyPasteReferenceProcessor.declarationsToImportSuggested = emptyList()
 
-        configureTargetFile(testFileName.replace(".kt", ".to.kt"))
+        configureTargetFile(testFileName.replace(".kt", "_to.kt"))
         performNotWriteEditorAction(IdeActions.ACTION_PASTE)
 
         val namesToImportDump = KotlinCopyPasteReferenceProcessor.declarationsToImportSuggested.joinToString("\n")

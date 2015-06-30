@@ -565,8 +565,8 @@ fun main(args: Array<String>) {
         }
 
         testClass(javaClass<AbstractInsertImportOnPasteTest>()) {
-            model("copyPaste/imports", pattern = """^([^\.]+)\.kt$""", testMethod = "doTestCopy", testClassName = "Copy", recursive = false)
-            model("copyPaste/imports", pattern = """^([^\.]+)\.kt$""", testMethod = "doTestCut", testClassName = "Cut", recursive = false)
+            model("copyPaste/imports", pattern = """^([^\._]+)\.kt$""", testMethod = "doTestCopy", testClassName = "Copy", recursive = false)
+            model("copyPaste/imports", pattern = """^([^\._]+)\.kt$""", testMethod = "doTestCut", testClassName = "Cut", recursive = false)
         }
 
         testClass(javaClass<AbstractHighlightExitPointsTest>()) {

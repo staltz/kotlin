@@ -34,7 +34,7 @@ public class InsertImportOnPasteTestGenerated extends AbstractInsertImportOnPast
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Copy extends AbstractInsertImportOnPasteTest {
         public void testAllFilesPresentInCopy() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("idea/testData/copyPaste/imports"), Pattern.compile("^([^\\.]+)\\.kt$"), false);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("idea/testData/copyPaste/imports"), Pattern.compile("^([^\\._]+)\\.kt$"), false);
         }
 
         @TestMetadata("AlreadyImportedExtensions.kt")
@@ -373,7 +373,7 @@ public class InsertImportOnPasteTestGenerated extends AbstractInsertImportOnPast
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Cut extends AbstractInsertImportOnPasteTest {
         public void testAllFilesPresentInCut() throws Exception {
-            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("idea/testData/copyPaste/imports"), Pattern.compile("^([^\\.]+)\\.kt$"), false);
+            JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("idea/testData/copyPaste/imports"), Pattern.compile("^([^\\._]+)\\.kt$"), false);
         }
 
         @TestMetadata("AlreadyImportedExtensions.kt")

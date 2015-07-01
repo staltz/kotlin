@@ -20,5 +20,6 @@ abstract class Types {
     abstract val starList: List<*>
     abstract val starFun: Function1<*, *>
     abstract val extFun: @extension Function2<Int, Int, Unit>
-    abstract val listExtStarFunf: List<@extension Function1<*, *>>
+    abstract val listExtStarFun: List<@extension Function1<*, *>>
+    abstract val funTypeWithStarAndNonStar: Function1<*, Int>
 }

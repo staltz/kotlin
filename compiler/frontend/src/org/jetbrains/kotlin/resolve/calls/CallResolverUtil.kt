@@ -18,12 +18,16 @@ package org.jetbrains.kotlin.resolve.calls.callResolverUtil
 
 import com.google.common.collect.Lists
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
-import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.descriptors.CallableDescriptor
+import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
+import org.jetbrains.kotlin.descriptors.ReceiverParameterDescriptor
+import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.psi.Call
 import org.jetbrains.kotlin.psi.JetSimpleNameExpression
 import org.jetbrains.kotlin.psi.JetSuperExpression
 import org.jetbrains.kotlin.psi.ValueArgument
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystem
+import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemImpl
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind.EXPECTED_TYPE_POSITION
 import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver
 import org.jetbrains.kotlin.types.*
@@ -60,22 +64,17 @@ public fun replaceReturnTypeByUnknown(type: JetType): JetType {
     return JetTypeImpl(type.getAnnotations(), type.getConstructor(), type.isMarkedNullable(), newArguments, type.getMemberScope())
 }
 
-private fun hasReturnTypeDependentOnUninferredParams(candidateDescriptor: CallableDescriptor, constraintSystem: ConstraintSystem): Boolean {
-    val returnType = candidateDescriptor.getReturnType() ?: return false
+private fun CallableDescriptor.hasReturnTypeDependentOnUninferredParams(constraintSystem: ConstraintSystem): Boolean {
+    val returnType = getReturnType() ?: return false
 
-    for (typeVariable in constraintSystem.getTypeVariables()) {
-        val inferredValueForTypeVariable = constraintSystem.getTypeBounds(typeVariable).value
-        if (inferredValueForTypeVariable == null) {
-            if (TypeUtils.dependsOnTypeParameters(returnType, setOf(typeVariable))) {
-                return true
-            }
-        }
+    val nestedTypeVariables = with (constraintSystem as ConstraintSystemImpl) {
+        returnType.getNestedTypeVariables(original = true)
     }
-    return false
+    return nestedTypeVariables.any { constraintSystem.getTypeBounds(it).value == null }
 }
 
-public fun hasInferredReturnType(candidateDescriptor: CallableDescriptor, constraintSystem: ConstraintSystem): Boolean {
-    if (hasReturnTypeDependentOnUninferredParams(candidateDescriptor, constraintSystem)) return false
+public fun CallableDescriptor.hasInferredReturnType(constraintSystem: ConstraintSystem): Boolean {
+    if (hasReturnTypeDependentOnUninferredParams(constraintSystem)) return false
 
     // Expected type mismatch was reported before as 'TYPE_INFERENCE_EXPECTED_TYPE_MISMATCH'
     if (constraintSystem.getStatus().hasOnlyErrorsFromPosition(EXPECTED_TYPE_POSITION.position())) return false

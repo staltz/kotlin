@@ -175,8 +175,8 @@ public class KotlinBuiltIns {
         public final FqName noinline = fqName("noinline");
         public final FqName inlineOptions = fqName("inlineOptions");
         public final FqName extension = fqName("extension");
-        public final FqName target = fqName("target");
-        public final FqName annotation = fqName("__annotation");
+        public final FqName target = new FqName("kotlin.annotation.target");
+        public final FqName annotation = new FqName("kotlin.annotation.annotation");
 
         public final FqNameUnsafe kClass = new FqName("kotlin.reflect.KClass").toUnsafe();
 

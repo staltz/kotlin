@@ -232,7 +232,7 @@ public class QualifiedExpressionResolver {
     ) {
         Name referencedName = referenceExpression.getReferencedNameAsName();
         if (underscoreToAnnotation && "annotation".equals(referencedName.asString())) {
-            referencedName = Name.identifier("__annotation");
+            //referencedName = Name.identifier("__annotation");
         }
 
         Collection<DeclarationDescriptor> descriptors = Sets.newLinkedHashSet();

@@ -19,4 +19,8 @@ package kotlin.jvm.internal;
 import kotlin.reflect.KMutableProperty;
 
 public class MutablePropertyReference extends PropertyReference implements KMutableProperty {
+    @Override
+    public Setter getSetter() {
+        throw error();
+    }
 }

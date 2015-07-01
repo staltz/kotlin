@@ -19,4 +19,8 @@ package kotlin.jvm.internal;
 import kotlin.reflect.KProperty;
 
 public class PropertyReference extends CallableReference implements KProperty {
+    @Override
+    public Getter getGetter() {
+        throw error();
+    }
 }

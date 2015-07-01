@@ -27,3 +27,5 @@ import java.lang.annotation.RetentionPolicy
  */
 Retention(RetentionPolicy.CLASS)
 public annotation class jvmOverloads
+
+public annotation class PurelyImplements(val value: String)

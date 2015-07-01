@@ -46,34 +46,34 @@ public val KPackage.javaFacade: Class<*>
  * or `null` if the property has no backing field.
  */
 public val KProperty<*>.javaField: Field?
-    get() = (this as KPropertyImpl<*>).field
+    get() = (this as KPropertyImpl<*>).javaField
 
 /**
  * Returns a Java [Method] instance corresponding to the getter of the given property,
  * or `null` if the property has no getter, for example in case of a simple private `val` in a class.
  */
 public val KProperty<*>.javaGetter: Method?
-    get() = (this as? KPropertyImpl<*>)?.getter
+    get() = (this as? KPropertyImpl<*>)?.javaGetter
 
 /**
  * Returns a Java [Method] instance corresponding to the setter of the given mutable property,
  * or `null` if the property has no setter, for example in case of a simple private `var` in a class.
  */
 public val KMutableProperty<*>.javaSetter: Method?
-    get() = (this as? KMutablePropertyImpl<*>)?.setter
+    get() = (this as? KMutablePropertyImpl<*>)?.javaSetter
 
 
 /**
  * Returns a Java [Method] instance corresponding to the getter of the given property.
  */
 public val KProperty0<*>.javaGetter: Method
-    get() = (this as KProperty0Impl<*>).getter
+    get() = (this as KProperty0Impl<*>).javaGetter
 
 /**
  * Returns a Java [Method] instance corresponding to the setter of the given property.
  */
 public val KMutableProperty0<*>.javaSetter: Method
-    get() = (this as KMutableProperty0Impl<*>).setter
+    get() = (this as KMutableProperty0Impl<*>).javaSetter
 
 
 
@@ -111,6 +111,6 @@ public val Field.kotlin: KProperty<*>?
 
         // TODO: optimize (search by name)
         return clazz.properties.firstOrNull { p: KProperty<*> ->
-            (p as KPropertyImpl<*>).field == this
+            (p as KPropertyImpl<*>).javaField == this
         }
     }

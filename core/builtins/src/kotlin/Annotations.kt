@@ -16,8 +16,7 @@
 
 package kotlin
 
-import kotlin.annotation
-
+import kotlin.annotation.*
 
 /**
  * Marks the annotated class as a data class. The compiler automatically generates
@@ -25,7 +24,7 @@ import kotlin.annotation
  * See [the Kotlin language documentation](http://kotlinlang.org/docs/reference/data-classes.html)
  * for more information.
  */
-//target(AnnotationTarget.CLASSIFIER)
+target(AnnotationTarget.CLASSIFIER)
 public annotation class data
 
 /**
@@ -34,7 +33,7 @@ public annotation class data
  * @property replaceWith if present, specifies a code fragment which should be used as a replacement for
  *     the deprecated API usage.
  */
-//target(AnnotationTarget.CLASSIFIER, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
+target(AnnotationTarget.CLASSIFIER, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
 public annotation class deprecated(val value: String, val replaceWith: ReplaceWith = ReplaceWith(""))
 
 /**
@@ -69,5 +68,5 @@ public annotation class suppress(vararg val names: String)
  * growing the stack depth. Tail call optimization is currently only supported by the JVM
  * backend.
  */
-//target(AnnotationTarget.FUNCTION)
+target(AnnotationTarget.FUNCTION)
 public annotation class tailRecursive

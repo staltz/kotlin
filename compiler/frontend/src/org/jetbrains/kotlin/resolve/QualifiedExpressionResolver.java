@@ -182,7 +182,7 @@ public class QualifiedExpressionResolver {
         for (DeclarationDescriptor declarationDescriptor : declarationDescriptors) {
             if (declarationDescriptor instanceof PackageViewDescriptor) {
                 results.add(lookupSimpleNameReference(selector, ((PackageViewDescriptor) declarationDescriptor).getMemberScope(),
-                                                      lookupMode, true, false));
+                                                      lookupMode, true));
             }
             if (declarationDescriptor instanceof ClassDescriptor) {
                 addResultsForClass(results, selector, lookupMode, (ClassDescriptor) declarationDescriptor);
@@ -200,9 +200,9 @@ public class QualifiedExpressionResolver {
         JetScope scope = lookupMode == LookupMode.ONLY_CLASSES_AND_PACKAGES
                          ? descriptor.getUnsubstitutedInnerClassesScope()
                          : descriptor.getDefaultType().getMemberScope();
-        results.add(lookupSimpleNameReference(selector, scope, lookupMode, false, false));
+        results.add(lookupSimpleNameReference(selector, scope, lookupMode, false));
 
-        results.add(lookupSimpleNameReference(selector, descriptor.getStaticScope(), lookupMode, true, false));
+        results.add(lookupSimpleNameReference(selector, descriptor.getStaticScope(), lookupMode, true));
     }
 
 
@@ -217,7 +217,7 @@ public class QualifiedExpressionResolver {
             boolean packageLevel,
             boolean storeResult
     ) {
-        LookupResult lookupResult = lookupSimpleNameReference(referenceExpression, outerScope, lookupMode, packageLevel, true);
+        LookupResult lookupResult = lookupSimpleNameReference(referenceExpression, outerScope, lookupMode, packageLevel);
         return filterAndStoreResolutionResult(Collections.singletonList(lookupResult), referenceExpression, trace, shouldBeVisibleFrom,
                                               lookupMode, storeResult);
     }
@@ -227,13 +227,9 @@ public class QualifiedExpressionResolver {
             @NotNull JetSimpleNameExpression referenceExpression,
             @NotNull JetScope outerScope,
             @NotNull LookupMode lookupMode,
-            boolean packageLevel,
-            boolean underscoreToAnnotation
+            boolean packageLevel
     ) {
         Name referencedName = referenceExpression.getReferencedNameAsName();
-        if (underscoreToAnnotation && "annotation".equals(referencedName.asString())) {
-            //referencedName = Name.identifier("__annotation");
-        }
 
         Collection<DeclarationDescriptor> descriptors = Sets.newLinkedHashSet();
         PackageViewDescriptor packageDescriptor = outerScope.getPackage(referencedName);

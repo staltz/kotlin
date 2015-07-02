@@ -467,7 +467,7 @@ public class CandidateResolver {
     }
 
     @Nullable
-    private static JetType updateResultTypeForSmartCasts(
+    private JetType updateResultTypeForSmartCasts(
             @Nullable JetType type,
             @Nullable JetExpression argumentExpression,
             @NotNull ResolutionContext context
@@ -505,7 +505,7 @@ public class CandidateResolver {
         return new ValueArgumentsCheckingResult(resultStatus, checkingResult.argumentTypes);
     }
 
-    private static <D extends CallableDescriptor> ResolutionStatus checkReceivers(
+    private <D extends CallableDescriptor> ResolutionStatus checkReceivers(
             @NotNull CallCandidateResolutionContext<D> context,
             @NotNull BindingTrace trace
     ) {
@@ -588,7 +588,7 @@ public class CandidateResolver {
     }
 
     @Nullable
-    private static JetType smartCastValueArgumentTypeIfPossible(
+    private JetType smartCastValueArgumentTypeIfPossible(
             @NotNull JetExpression expression,
             @NotNull JetType expectedType,
             @NotNull JetType actualType,
@@ -604,7 +604,7 @@ public class CandidateResolver {
         return null;
     }
 
-    private static <D extends CallableDescriptor> ResolutionStatus checkReceiverTypeError(
+    private <D extends CallableDescriptor> ResolutionStatus checkReceiverTypeError(
             @NotNull CallCandidateResolutionContext<D> context
     ) {
         MutableResolvedCall<D> candidateCall = context.candidateCall;
@@ -622,7 +622,7 @@ public class CandidateResolver {
         return status;
     }
 
-    private static <D extends CallableDescriptor> ResolutionStatus checkReceiverTypeError(
+    private <D extends CallableDescriptor> ResolutionStatus checkReceiverTypeError(
             @NotNull CallCandidateResolutionContext<D> context,
             @Nullable ReceiverParameterDescriptor receiverParameterDescriptor,
             @NotNull ReceiverValue receiverArgument
@@ -641,7 +641,7 @@ public class CandidateResolver {
         return SUCCESS;
     }
 
-    private static <D extends CallableDescriptor> ResolutionStatus checkReceiver(
+    private <D extends CallableDescriptor> ResolutionStatus checkReceiver(
             @NotNull CallCandidateResolutionContext<D> context,
             @NotNull ResolvedCall<D> candidateCall,
             @NotNull BindingTrace trace,
@@ -684,7 +684,7 @@ public class CandidateResolver {
         return SUCCESS;
     }
 
-    public static class ValueArgumentsCheckingResult {
+    public class ValueArgumentsCheckingResult {
         @NotNull
         public final List<JetType> argumentTypes;
         @NotNull
@@ -697,7 +697,7 @@ public class CandidateResolver {
     }
 
     @NotNull
-    public static JetType getEffectiveExpectedType(ValueParameterDescriptor parameterDescriptor, ValueArgument argument) {
+    public JetType getEffectiveExpectedType(ValueParameterDescriptor parameterDescriptor, ValueArgument argument) {
         if (argument.getSpreadElement() != null) {
             if (parameterDescriptor.getVarargElementType() == null) {
                 // Spread argument passed to a non-vararg parameter, an error is already reported by ValueArgumentsToParametersMapper
@@ -717,7 +717,7 @@ public class CandidateResolver {
         }
     }
 
-    private static void checkGenericBoundsInAFunctionCall(
+    private void checkGenericBoundsInAFunctionCall(
             @NotNull List<JetTypeProjection> jetTypeArguments,
             @NotNull List<JetType> typeArguments,
             @NotNull CallableDescriptor functionDescriptor,

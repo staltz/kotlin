@@ -45,9 +45,13 @@ private fun JetType.enhancePossiblyFlexible(qualifiers: (Int) -> JavaTypeQualifi
         with(this.flexibility()) {
             val lowerResult = lowerBound.enhanceInflexible(qualifiers, index, TypeComponentPosition.FLEXIBLE_LOWER)
             val upperResult = upperBound.enhanceInflexible(qualifiers, index, TypeComponentPosition.FLEXIBLE_UPPER)
+            assert(lowerResult.subtreeSize == upperResult.subtreeSize) {
+                "Different tree sizes of bounds: " +
+                "lower = ($lowerBound, ${lowerResult.subtreeSize}), " +
+                "upper = ($upperBound, ${upperResult.subtreeSize})"
+            }
             Result(
-                DelegatingFlexibleType.create(lowerResult.type, upperResult.type, extraCapabilities),
-                lowerResult.subtreeSize + upperResult.subtreeSize + 1
+                DelegatingFlexibleType.create(lowerResult.type, upperResult.type, extraCapabilities), lowerResult.subtreeSize
             )
         }
     }

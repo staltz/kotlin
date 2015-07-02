@@ -14,125 +14,93 @@
  * limitations under the License.
  */
 
-package org.jetbrains.kotlin.idea.refactoring.changeSignature;
+package org.jetbrains.kotlin.idea.refactoring.changeSignature
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiElement;
-import com.intellij.refactoring.RefactoringBundle;
-import com.intellij.refactoring.changeSignature.ChangeSignatureProcessorBase;
-import com.intellij.refactoring.changeSignature.ChangeSignatureUsageProcessor;
-import com.intellij.refactoring.changeSignature.JavaChangeInfo;
-import com.intellij.refactoring.changeSignature.JavaChangeSignatureUsageProcessor;
-import com.intellij.refactoring.rename.RenameUtil;
-import com.intellij.refactoring.ui.ConflictsDialog;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usageView.UsageViewDescriptor;
-import com.intellij.util.containers.HashSet;
-import com.intellij.util.containers.MultiMap;
-import kotlin.KotlinPackage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.idea.refactoring.changeSignature.usages.JetUsageInfo;
-import org.jetbrains.kotlin.idea.refactoring.changeSignature.usages.KotlinWrapperForJavaUsageInfos;
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Ref
+import com.intellij.psi.PsiElement
+import com.intellij.refactoring.BaseRefactoringProcessor
+import com.intellij.refactoring.RefactoringBundle
+import com.intellij.refactoring.changeSignature.ChangeSignatureProcessorBase
+import com.intellij.refactoring.changeSignature.ChangeSignatureUsageProcessor
+import com.intellij.refactoring.changeSignature.JavaChangeSignatureUsageProcessor
+import com.intellij.refactoring.rename.RenameUtil
+import com.intellij.usageView.UsageInfo
+import com.intellij.usageView.UsageViewDescriptor
+import com.intellij.util.containers.MultiMap
+import org.jetbrains.kotlin.idea.refactoring.changeSignature.usages.JetUsageInfo
+import org.jetbrains.kotlin.idea.refactoring.changeSignature.usages.KotlinWrapperForJavaUsageInfos
+import java.util.ArrayList
+import java.util.Arrays
 
-import java.util.*;
-
-public class JetChangeSignatureProcessor extends ChangeSignatureProcessorBase {
-    private final String commandName;
-
-    public JetChangeSignatureProcessor(Project project, JetChangeInfo changeInfo, String commandName) {
-        super(project, changeInfo);
-        this.commandName = commandName;
+public class JetChangeSignatureProcessor(project: Project,
+                                         changeInfo: JetChangeInfo,
+                                         private val commandName: String) : ChangeSignatureProcessorBase(project, changeInfo) {
+    override fun createUsageViewDescriptor(usages: Array<UsageInfo>): UsageViewDescriptor {
+        val subject = if (getChangeInfo().kind.isConstructor) "constructor" else "function"
+        return JetUsagesViewDescriptor(myChangeInfo.getMethod(), RefactoringBundle.message("0.to.change.signature", subject))
     }
 
-    @NotNull
-    @Override
-    protected UsageViewDescriptor createUsageViewDescriptor(UsageInfo[] usages) {
-        String subject = ChangeSignaturePackage.getKind(getChangeInfo()).getIsConstructor() ? "constructor" : "function";
-        return new JetUsagesViewDescriptor(myChangeInfo.getMethod(), RefactoringBundle.message("0.to.change.signature", subject));
-    }
+    override fun getChangeInfo() = super.getChangeInfo() as JetChangeInfo
 
-    @Override
-    public JetChangeInfo getChangeInfo() {
-        return (JetChangeInfo) super.getChangeInfo();
-    }
-
-    @NotNull
-    @Override
-    protected UsageInfo[] findUsages() {
-        List<UsageInfo> allUsages = new ArrayList<UsageInfo>();
-
-        List<JavaChangeInfo> javaChangeInfos = getChangeInfo().getOrCreateJavaChangeInfos();
-        if (javaChangeInfos != null) {
-            JavaChangeSignatureUsageProcessor javaProcessor = new JavaChangeSignatureUsageProcessor();
-            for (JavaChangeInfo javaChangeInfo : javaChangeInfos) {
-                UsageInfo[] javaUsages = javaProcessor.findUsages(javaChangeInfo);
-                allUsages.add(new KotlinWrapperForJavaUsageInfos(javaChangeInfo, javaUsages, getChangeInfo().getMethod()));
+    override fun findUsages(): Array<UsageInfo> {
+        val allUsages = ArrayList<UsageInfo>()
+        getChangeInfo().getOrCreateJavaChangeInfos()?.let { javaChangeInfos ->
+            val javaProcessor = JavaChangeSignatureUsageProcessor()
+            javaChangeInfos.mapTo(allUsages) {
+                KotlinWrapperForJavaUsageInfos(it, javaProcessor.findUsages(it), getChangeInfo().getMethod())
             }
         }
-        KotlinPackage.filterIsInstanceTo(super.findUsages(), allUsages, JetUsageInfo.class);
+        super.findUsages().filterIsInstanceTo(allUsages, javaClass<JetUsageInfo<PsiElement>>())
 
-        return allUsages.toArray(new UsageInfo[allUsages.size()]);
+        return allUsages.toTypedArray()
     }
 
-    @Override
-    protected boolean preprocessUsages(Ref<UsageInfo[]> refUsages) {
-        for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensions()) {
-            if (!processor.setupDefaultValues(myChangeInfo, refUsages, myProject)) return false;
-        }
-        MultiMap<PsiElement, String> conflictDescriptions = new MultiMap<PsiElement, String>();
-        for (ChangeSignatureUsageProcessor usageProcessor : ChangeSignatureUsageProcessor.EP_NAME.getExtensions()) {
-            MultiMap<PsiElement, String> conflicts = usageProcessor.findConflicts(myChangeInfo, refUsages);
-            for (PsiElement key : conflicts.keySet()) {
-                Collection<String> collection = conflictDescriptions.get(key);
-                if (collection.size() == 0) collection = new HashSet<String>();
-                collection.addAll(conflicts.get(key));
-                conflictDescriptions.put(key, collection);
-            }
-        }
+    override fun preprocessUsages(refUsages: Ref<Array<UsageInfo>>): Boolean {
+        val usageProcessors = ChangeSignatureUsageProcessor.EP_NAME.getExtensions()
 
-        UsageInfo[] usagesIn = refUsages.get();
-        RenameUtil.addConflictDescriptions(usagesIn, conflictDescriptions);
-        Set<UsageInfo> usagesSet = new HashSet<UsageInfo>(Arrays.asList(usagesIn));
-        RenameUtil.removeConflictUsages(usagesSet);
+        if (!usageProcessors.all { it.setupDefaultValues(myChangeInfo, refUsages, myProject) }) return false
+
+        val conflictDescriptions = MultiMap<PsiElement, String>()
+        usageProcessors.forEach { conflictDescriptions.putAllValues(it.findConflicts(myChangeInfo, refUsages)) }
+
+        val usages = refUsages.get()
+        val usagesSet = usages.toHashSet()
+
+        RenameUtil.addConflictDescriptions(usages, conflictDescriptions)
+        RenameUtil.removeConflictUsages(usagesSet)
         if (!conflictDescriptions.isEmpty()) {
             if (ApplicationManager.getApplication().isUnitTestMode()) {
-                throw new ConflictsInTestsException(conflictDescriptions.values());
+                throw BaseRefactoringProcessor.ConflictsInTestsException(conflictDescriptions.values())
             }
-            if (myPrepareSuccessfulSwingThreadCallback != null) {
-                ConflictsDialog dialog = prepareConflictsDialog(conflictDescriptions, usagesIn);
-                dialog.show();
+
+            myPrepareSuccessfulSwingThreadCallback?.let {
+                val dialog = prepareConflictsDialog(conflictDescriptions, usages)
+                dialog.show()
                 if (!dialog.isOK()) {
-                    if (dialog.isShowConflicts()) prepareSuccessful();
-                    return false;
+                    if (dialog.isShowConflicts()) prepareSuccessful()
+                    return false
                 }
             }
         }
 
-        UsageInfo[] array = usagesSet.toArray(new UsageInfo[usagesSet.size()]);
-        Arrays.sort(array, new Comparator<UsageInfo>() {
-            @Override
-            public int compare(@NotNull UsageInfo u1, @NotNull UsageInfo u2) {
-                PsiElement element1 = u1.getElement();
-                PsiElement element2 = u2.getElement();
-                int rank1 = element1 != null ? element1.getTextOffset() : -1;
-                int rank2 = element2 != null ? element2.getTextOffset() : -1;
-                return rank2 - rank1; // Reverse order
-            }
-        });
-        refUsages.set(array);
-        prepareSuccessful();
-        return true;
+        val usageArray = usagesSet.toTypedArray()
+        Arrays.sort(usageArray) { u1, u2 ->
+            val element1 = u1.getElement()
+            val element2 = u2.getElement()
+            val rank1 = if (element1 != null) element1.getTextOffset() else -1
+            val rank2 = if (element2 != null) element2.getTextOffset() else -1
+            rank2 - rank1 // Reverse order
+        }
+        refUsages.set(usageArray)
+
+        prepareSuccessful()
+
+        return true
     }
 
-    @Override
-    protected boolean isPreviewUsages(UsageInfo[] usages) {
-        return isPreviewUsages();
-    }
+    override fun isPreviewUsages(usages: Array<UsageInfo>?) = isPreviewUsages()
 
-    @Override
-    protected String getCommandName() {
-        return commandName;
-    }
+    override fun getCommandName() = commandName
 }

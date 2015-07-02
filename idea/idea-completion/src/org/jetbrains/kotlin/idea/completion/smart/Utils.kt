@@ -210,7 +210,7 @@ private fun lookupElementsForNullable(factory: () -> LookupElement?): Collection
         }
         lookupElement = lookupElement!!.suppressAutoInsertion()
         lookupElement = lookupElement!!.assignSmartCompletionPriority(SmartCompletionItemPriority.NULLABLE)
-        result.add(lookupElement)
+        result.add(lookupElement!!)
     }
 
     lookupElement = factory()
@@ -226,7 +226,7 @@ private fun lookupElementsForNullable(factory: () -> LookupElement?): Collection
         }
         lookupElement = lookupElement!!.suppressAutoInsertion()
         lookupElement = lookupElement!!.assignSmartCompletionPriority(SmartCompletionItemPriority.NULLABLE)
-        result.add(lookupElement)
+        result.add(lookupElement!!)
     }
 
     return result

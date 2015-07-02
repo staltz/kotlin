@@ -211,7 +211,7 @@ public class CallCompleter(
         for (valueArgument in context.call.getValueArguments()) {
             val argumentMapping = getArgumentMapping(valueArgument!!)
             val expectedType = when (argumentMapping) {
-                is ArgumentMatch -> CandidateResolver.getEffectiveExpectedType(argumentMapping.valueParameter, valueArgument)
+                is ArgumentMatch -> candidateResolver.getEffectiveExpectedType(argumentMapping.valueParameter, valueArgument)
                 else -> TypeUtils.NO_EXPECTED_TYPE
             }
             val newContext = context.replaceDataFlowInfo(getDataFlowInfoForArgument(valueArgument)).replaceExpectedType(expectedType)

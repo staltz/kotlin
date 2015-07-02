@@ -96,7 +96,7 @@ private fun JetType.enhanceInflexible(qualifiers: (Int) -> JavaTypeQualifiers, i
                 enhancedClassifier.getMemberScope(enhancedArguments)
             else enhancedClassifier.getDefaultType().getMemberScope()
     )
-    return Result(enhancedType, globalArgIndex - index + 1)
+    return Result(enhancedType, globalArgIndex - index)
 }
 
 private fun TypeComponentPosition.shouldEnhance() = this != TypeComponentPosition.INFLEXIBLE

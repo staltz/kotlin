@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.builtins.functions
 import org.jetbrains.kotlin.builtins.KOTLIN_REFLECT_FQ_NAME
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns.BUILT_INS_PACKAGE_FQ_NAME
+import org.jetbrains.kotlin.builtins.KotlinBuiltIns.ANNOTATION_PACKAGE_FQ_NAME
 import org.jetbrains.kotlin.builtins.functions.FunctionClassDescriptor.Kind
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.annotations.Annotations
@@ -69,7 +70,7 @@ public class FunctionClassDescriptor(
         val KFunctions = EnumSet.complementOf(Functions)
 
         fun byPackage(fqName: FqName) = when (fqName) {
-            BUILT_INS_PACKAGE_FQ_NAME -> Functions
+            BUILT_INS_PACKAGE_FQ_NAME, ANNOTATION_PACKAGE_FQ_NAME -> Functions
             KOTLIN_REFLECT_FQ_NAME -> KFunctions
             else -> error(fqName)
         }

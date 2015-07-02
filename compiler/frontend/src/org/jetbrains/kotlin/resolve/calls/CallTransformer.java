@@ -31,6 +31,7 @@ import org.jetbrains.kotlin.resolve.DelegatingBindingTrace;
 import org.jetbrains.kotlin.resolve.TemporaryBindingTrace;
 import org.jetbrains.kotlin.resolve.calls.context.BasicCallResolutionContext;
 import org.jetbrains.kotlin.resolve.calls.context.CallCandidateResolutionContext;
+import org.jetbrains.kotlin.resolve.calls.context.CandidatePerformMode;
 import org.jetbrains.kotlin.resolve.calls.context.ContextDependency;
 import org.jetbrains.kotlin.resolve.calls.model.MutableResolvedCall;
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCallImpl;
@@ -73,10 +74,12 @@ public class CallTransformer<D extends CallableDescriptor, F extends D> {
     @NotNull
     public Collection<CallCandidateResolutionContext<D>> createCallContexts(@NotNull ResolutionCandidate<D> candidate,
             @NotNull ResolutionTask<D, F> task,
-            @NotNull TemporaryBindingTrace candidateTrace
+            @NotNull TemporaryBindingTrace candidateTrace,
+            @NotNull CandidatePerformMode candidatePerformMode
     ) {
         ResolvedCallImpl<D> candidateCall = ResolvedCallImpl.create(candidate, candidateTrace, task.tracing, task.dataFlowInfoForArguments);
-        return Collections.singleton(CallCandidateResolutionContext.create(candidateCall, task, candidateTrace, task.tracing));
+        return Collections.singleton(CallCandidateResolutionContext.create(candidateCall, task, candidateTrace, task.tracing, task.call,
+                                                                           ReceiverValue.NO_RECEIVER, candidatePerformMode));
     }
 
     /**
@@ -100,10 +103,11 @@ public class CallTransformer<D extends CallableDescriptor, F extends D> {
         @NotNull
         @Override
         public Collection<CallCandidateResolutionContext<CallableDescriptor>> createCallContexts(@NotNull ResolutionCandidate<CallableDescriptor> candidate,
-                @NotNull ResolutionTask<CallableDescriptor, FunctionDescriptor> task, @NotNull TemporaryBindingTrace candidateTrace) {
+                @NotNull ResolutionTask<CallableDescriptor, FunctionDescriptor> task, @NotNull TemporaryBindingTrace candidateTrace,
+                @NotNull CandidatePerformMode candidatePerformMode) {
 
             if (candidate.getDescriptor() instanceof FunctionDescriptor) {
-                return super.createCallContexts(candidate, task, candidateTrace);
+                return super.createCallContexts(candidate, task, candidateTrace, candidatePerformMode);
             }
 
             assert candidate.getDescriptor() instanceof VariableDescriptor;
@@ -120,11 +124,11 @@ public class CallTransformer<D extends CallableDescriptor, F extends D> {
             if (!hasReceiver) {
                 CallCandidateResolutionContext<CallableDescriptor> context = CallCandidateResolutionContext.create(
                         ResolvedCallImpl.create(variableCandidate, candidateTrace, task.tracing, task.dataFlowInfoForArguments),
-                        task, candidateTrace, task.tracing, variableCall);
+                        task, candidateTrace, task.tracing, variableCall, ReceiverValue.NO_RECEIVER, candidatePerformMode);
                 return Collections.singleton(context);
             }
             CallCandidateResolutionContext<CallableDescriptor> contextWithReceiver = createContextWithChainedTrace(
-                    variableCandidate, variableCall, candidateTrace, task, ReceiverValue.NO_RECEIVER);
+                    variableCandidate, variableCall, candidateTrace, task, ReceiverValue.NO_RECEIVER, candidatePerformMode);
 
             Call variableCallWithoutReceiver = stripReceiver(variableCall);
             ResolutionCandidate<CallableDescriptor> candidateWithoutReceiver = ResolutionCandidate.create(
@@ -135,18 +139,20 @@ public class CallTransformer<D extends CallableDescriptor, F extends D> {
                     ExplicitReceiverKind.NO_EXPLICIT_RECEIVER, null);
 
             CallCandidateResolutionContext<CallableDescriptor> contextWithoutReceiver = createContextWithChainedTrace(
-                    candidateWithoutReceiver, variableCallWithoutReceiver, candidateTrace, task, variableCall.getExplicitReceiver());
+                    candidateWithoutReceiver, variableCallWithoutReceiver, candidateTrace, task, variableCall.getExplicitReceiver(),
+                    candidatePerformMode);
 
             return Lists.newArrayList(contextWithReceiver, contextWithoutReceiver);
         }
 
         private CallCandidateResolutionContext<CallableDescriptor> createContextWithChainedTrace(
                 @NotNull ResolutionCandidate<CallableDescriptor> candidate, @NotNull Call call, @NotNull TemporaryBindingTrace temporaryTrace,
-                @NotNull ResolutionTask<CallableDescriptor, FunctionDescriptor> task, @NotNull ReceiverValue receiverValue
+                @NotNull ResolutionTask<CallableDescriptor, FunctionDescriptor> task, @NotNull ReceiverValue receiverValue,
+                @NotNull CandidatePerformMode candidatePerformMode
         ) {
             ChainedTemporaryBindingTrace chainedTrace = ChainedTemporaryBindingTrace.create(temporaryTrace, "chained trace to resolve candidate", candidate);
             ResolvedCallImpl<CallableDescriptor> resolvedCall = ResolvedCallImpl.create(candidate, chainedTrace, task.tracing, task.dataFlowInfoForArguments);
-            return CallCandidateResolutionContext.create(resolvedCall, task, chainedTrace, task.tracing, call, receiverValue);
+            return CallCandidateResolutionContext.create(resolvedCall, task, chainedTrace, task.tracing, call, receiverValue, candidatePerformMode);
         }
 
         private Call stripCallArguments(@NotNull Call call) {

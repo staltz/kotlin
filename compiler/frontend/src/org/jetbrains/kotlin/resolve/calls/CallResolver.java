@@ -523,7 +523,7 @@ public class CallResolver {
 
             TemporaryBindingTrace taskTrace =
                     TemporaryBindingTrace.create(context.trace, "trace to resolve a task for", task.call.getCalleeExpression());
-            OverloadResolutionResultsImpl<F> results = performResolution(task.replaceBindingTrace(taskTrace), callTransformer);
+            OverloadResolutionResultsImpl<F> results = performResolution(task.replaceBindingTrace(taskTrace), callTransformer, CandidatePerformMode.EXIT_ON_FIRST_ERROR);
 
 
             allCandidates.addAll(task.getResolvedCalls());
@@ -570,7 +570,8 @@ public class CallResolver {
     @NotNull
     private <D extends CallableDescriptor, F extends D> OverloadResolutionResultsImpl<F> performResolution(
             @NotNull final ResolutionTask<D, F> task,
-            @NotNull final CallTransformer<D, F> callTransformer
+            @NotNull final CallTransformer<D, F> callTransformer,
+            @NotNull final CandidatePerformMode performMode
     ) {
 
         for (final ResolutionCandidate<D> resolutionCandidate : task.getCandidates()) {
@@ -579,7 +580,7 @@ public class CallResolver {
                 public Unit invoke() {
                     TemporaryBindingTrace candidateTrace = TemporaryBindingTrace.create(
                             task.trace, "trace to resolve candidate");
-                    Collection<CallCandidateResolutionContext<D>> contexts = callTransformer.createCallContexts(resolutionCandidate, task, candidateTrace, CandidatePerformMode.FULLY);
+                    Collection<CallCandidateResolutionContext<D>> contexts = callTransformer.createCallContexts(resolutionCandidate, task, candidateTrace, performMode);
                     for (CallCandidateResolutionContext<D> context : contexts) {
 
                         candidateResolver.performResolutionForCandidateCall(context, task);
@@ -604,6 +605,10 @@ public class CallResolver {
 
         OverloadResolutionResultsImpl<F> results = ResolutionResultsHandler.INSTANCE.computeResultAndReportErrors(
                 task, task.getResolvedCalls());
+        if (!results.isSuccess() && performMode != CandidatePerformMode.FULLY) {
+            return performResolution(task, callTransformer, CandidatePerformMode.FULLY);
+        }
+
         if (!results.isSingleResult() && !results.isIncomplete()) {
             argumentTypeResolver.checkTypesWithNoCallee(task.toBasic());
         }

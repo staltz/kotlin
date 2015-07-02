@@ -16,6 +16,8 @@
 
 package org.jetbrains.kotlin.load.java.lazy
 
+import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
+import org.jetbrains.kotlin.descriptors.annotations.AnnotationTarget
 import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.load.java.lazy.descriptors.resolveAnnotation
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation
@@ -38,6 +40,8 @@ class LazyJavaAnnotations(
     override fun findExternalAnnotation(fqName: FqName) =
             c.externalAnnotationResolver.findExternalAnnotation(annotationOwner, fqName)?.let(annotationDescriptors)
 
+    override fun getTargetedAnnotations() = emptySequence<AnnotationDescriptor>()
+
     override fun iterator() =
             annotationOwner.getAnnotations().asSequence().map(annotationDescriptors).filterNotNull().iterator()
 
@@ -56,16 +60,21 @@ class FilteredAnnotations(
             if (fqNameFilter(fqName)) delegate.findExternalAnnotation(fqName)
             else null
 
-    override fun iterator() = delegate.asSequence()
-            .filter { annotation ->
-                val descriptor = annotation.getType().getConstructor().getDeclarationDescriptor()
-                descriptor != null && DescriptorUtils.getFqName(descriptor).let { fqName ->
-                    fqName.isSafe() && fqNameFilter(fqName.toSafe())
-                }
-            }
-            .iterator()
+    override fun getTargetedAnnotations() = filterAnnotations(delegate.getTargetedAnnotations())
+
+    override fun iterator() = filterAnnotations(delegate.asSequence()).iterator()
 
     override fun isEmpty() = !iterator().hasNext()
+
+    private fun filterAnnotations(annotations: Sequence<AnnotationDescriptor>): Sequence<AnnotationDescriptor> {
+        return annotations
+                .filter { annotation ->
+                    val descriptor = annotation.getType().getConstructor().getDeclarationDescriptor()
+                    descriptor != null && DescriptorUtils.getFqName(descriptor).let { fqName ->
+                        fqName.isSafe() && fqNameFilter(fqName.toSafe())
+                    }
+                }
+    }
 }
 
 fun LazyJavaResolverContext.resolveAnnotations(annotationsOwner: JavaAnnotationOwner): Annotations

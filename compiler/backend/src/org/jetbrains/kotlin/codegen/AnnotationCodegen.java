@@ -95,6 +95,15 @@ public abstract class AnnotationCodegen {
         Set<String> annotationDescriptorsAlreadyPresent = new HashSet<String>();
 
         for (AnnotationDescriptor annotation : annotated.getAnnotations()) {
+            String descriptor = genAnnotation(annotation);
+            if (descriptor != null) {
+                annotationDescriptorsAlreadyPresent.add(descriptor);
+            }
+        }
+
+        Iterator<AnnotationDescriptor> annotationsIterator = annotated.getAnnotations().getTargetedAnnotations().iterator();
+        while (annotationsIterator.hasNext()) {
+            AnnotationDescriptor annotation = annotationsIterator.next();
             if (!isApplicable(annotated, annotation)) continue;
 
             String descriptor = genAnnotation(annotation);
@@ -108,7 +117,9 @@ public abstract class AnnotationCodegen {
 
     private boolean isApplicable(Annotated annotated, AnnotationDescriptor annotation) {
         AnnotationTarget annotationTarget = annotation.getTarget();
-        if (annotationTarget == AnnotationTarget.NO_TARGET) return true;
+        if (annotationTarget == AnnotationTarget.NO_TARGET) {
+            throw new IllegalArgumentException(annotationTarget.name() + " target is not allowed here");
+        }
 
         if (annotationTarget == AnnotationTarget.FIELD) {
             return annotated instanceof PropertyDescriptor;

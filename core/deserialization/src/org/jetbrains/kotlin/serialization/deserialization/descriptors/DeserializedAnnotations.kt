@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.serialization.deserialization.descriptors
 
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
+import org.jetbrains.kotlin.descriptors.annotations.AnnotationTarget
 import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.resolve.DescriptorUtils
@@ -39,6 +40,8 @@ class DeserializedAnnotations(
     }
 
     override fun findExternalAnnotation(fqName: FqName) = null
+
+    override fun getTargetedAnnotations() = emptySequence<AnnotationDescriptor>()
 
     override fun iterator(): Iterator<AnnotationDescriptor> = annotations().iterator()
 }

@@ -345,7 +345,9 @@ public class ModifiersChecker {
     }
 
     private void checkAnnotationsTargetApplicability(@NotNull DeclarationDescriptor descriptor) {
-        for (AnnotationDescriptor annotation : descriptor.getAnnotations()) {
+        Iterator<AnnotationDescriptor> annotationIterator = descriptor.getAnnotations().getTargetedAnnotations().iterator();
+        while (annotationIterator.hasNext()) {
+            AnnotationDescriptor annotation = annotationIterator.next();
             AnnotationTarget target = annotation.getTarget();
 
             if (AnnotationTarget.FIELD == target) {

@@ -20,8 +20,18 @@ import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 
-public class AnnotationsImpl(private val annotations: List<AnnotationDescriptor>) : Annotations {
-    override fun isEmpty() = annotations.isEmpty()
+public class AnnotationsImpl(annotations: List<AnnotationDescriptor>) : Annotations {
+
+    private val annotations: List<AnnotationDescriptor>
+    private val targetedAnnotations: List<AnnotationDescriptor>
+
+    init {
+        val (withoutTarget, withTarget) = annotations.partition { it.getTarget() == AnnotationTarget.NO_TARGET }
+        this.annotations = withoutTarget
+        this.targetedAnnotations = withTarget
+    }
+
+    override fun isEmpty() = annotations.isEmpty() && targetedAnnotations.isEmpty()
 
     override fun findAnnotation(fqName: FqName) = annotations.firstOrNull {
         val descriptor = it.getType().getConstructor().getDeclarationDescriptor()
@@ -30,7 +40,9 @@ public class AnnotationsImpl(private val annotations: List<AnnotationDescriptor>
 
     override fun findExternalAnnotation(fqName: FqName) = null
 
+    override fun getTargetedAnnotations() = targetedAnnotations.asSequence()
+
     override fun iterator() = annotations.iterator()
 
-    override fun toString() = annotations.toString()
+    override fun toString() = (annotations + targetedAnnotations).toString()
 }

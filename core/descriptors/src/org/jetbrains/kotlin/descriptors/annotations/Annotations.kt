@@ -18,13 +18,15 @@ package org.jetbrains.kotlin.descriptors.annotations
 
 import org.jetbrains.kotlin.name.FqName
 
-public trait Annotations : Iterable<AnnotationDescriptor> {
+public interface Annotations : Iterable<AnnotationDescriptor> {
 
     public fun isEmpty(): Boolean
 
     public fun findAnnotation(fqName: FqName): AnnotationDescriptor?
 
     public fun findExternalAnnotation(fqName: FqName): AnnotationDescriptor?
+
+    public fun getTargetedAnnotations(): Sequence<AnnotationDescriptor>
 
     companion object {
         public val EMPTY: Annotations = object : Annotations {
@@ -33,6 +35,8 @@ public trait Annotations : Iterable<AnnotationDescriptor> {
             override fun findAnnotation(fqName: FqName) = null
 
             override fun findExternalAnnotation(fqName: FqName) = null
+
+            override fun getTargetedAnnotations() = emptySequence<AnnotationDescriptor>()
 
             override fun iterator() = emptyList<AnnotationDescriptor>().iterator()
 

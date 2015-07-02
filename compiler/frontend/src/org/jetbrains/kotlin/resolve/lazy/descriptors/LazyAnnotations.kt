@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationTarget
 import org.jetbrains.kotlin.descriptors.annotations.Annotations
+import org.jetbrains.kotlin.lexer.JetKeywordToken
 import org.jetbrains.kotlin.lexer.JetTokens
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.JetAnnotationEntry
@@ -67,8 +68,7 @@ public class LazyAnnotations(
             val annotationType = annotationDescriptor.getType()
             if (annotationType.isError()) continue
 
-            val descriptor = annotationType.getConstructor().getDeclarationDescriptor()
-            if (descriptor == null) continue
+            val descriptor = annotationType.getConstructor().getDeclarationDescriptor() ?: continue
 
             if (DescriptorUtils.getFqNameSafe(descriptor) == fqName) {
                 return annotationDescriptor
@@ -80,11 +80,20 @@ public class LazyAnnotations(
 
     override fun findExternalAnnotation(fqName: FqName) = null
 
-    override fun iterator(): Iterator<AnnotationDescriptor> = annotationEntries.asSequence().map(annotation).iterator()
+    override fun getTargetedAnnotations() = getAnnotations(true)
+
+    override fun iterator() = getAnnotations(false).iterator()
+
+    private fun getAnnotations(targeted: Boolean): Sequence<AnnotationDescriptor> {
+        return annotationEntries.asSequence()
+                .filter { it.isTargeted() == targeted }
+                .map(annotation)
+    }
 
     override fun forceResolveAllContents() {
         // To resolve all entries
         this.toList()
+        getTargetedAnnotations().toList()
     }
 }
 

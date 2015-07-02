@@ -30,6 +30,7 @@ import org.jetbrains.kotlin.types.TypeProjection;
 import org.jetbrains.kotlin.types.TypesPackage;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 public class ForceResolveUtil {
     private static final Logger LOG = Logger.getInstance(ForceResolveUtil.class);
@@ -65,6 +66,11 @@ public class ForceResolveUtil {
         doForceResolveAllContents(annotations);
         for (AnnotationDescriptor annotation : annotations) {
             doForceResolveAllContents(annotation);
+        }
+
+        Iterator<AnnotationDescriptor> targetedAnnotationsIterator = annotations.getTargetedAnnotations().iterator();
+        while (targetedAnnotationsIterator.hasNext()) {
+            doForceResolveAllContents(targetedAnnotationsIterator.next());
         }
     }
 

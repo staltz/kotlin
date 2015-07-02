@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.idea.quickfix;
 
 import org.jetbrains.kotlin.idea.core.codeInsight.ImplementMethodsHandler;
+import org.jetbrains.kotlin.idea.inspections.AddReflectionQuickFix;
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createCallable.*;
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createClass.CreateClassFromCallWithConstructorCalleeActionFactory;
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createClass.CreateClassFromConstructorCallActionFactory;
@@ -26,10 +27,10 @@ import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createVariable.CreateL
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createVariable.CreateParameterActionFactory;
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createVariable.CreateParameterByNamedArgumentActionFactory;
 import org.jetbrains.kotlin.psi.JetClass;
-import org.jetbrains.kotlin.resolve.jvm.diagnostics.ErrorsJvm;
 
 import static org.jetbrains.kotlin.diagnostics.Errors.*;
 import static org.jetbrains.kotlin.lexer.JetTokens.*;
+import static org.jetbrains.kotlin.resolve.jvm.diagnostics.ErrorsJvm.*;
 
 public class QuickFixRegistrar {
     public static void registerQuickFixes() {
@@ -314,8 +315,8 @@ public class QuickFixRegistrar {
         QuickFixes.factories.put(EXPLICIT_DELEGATION_CALL_REQUIRED, InsertDelegationCallQuickfix.InsertThisDelegationCallFactory.INSTANCE$);
         QuickFixes.factories.put(EXPLICIT_DELEGATION_CALL_REQUIRED, InsertDelegationCallQuickfix.InsertSuperDelegationCallFactory.INSTANCE$);
 
-        QuickFixes.factories.put(ErrorsJvm.DEPRECATED_ANNOTATION_METHOD_CALL, MigrateAnnotationMethodCallFix.Companion);
-        QuickFixes.factories.put(ErrorsJvm.DEPRECATED_ANNOTATION_METHOD_CALL, MigrateAnnotationMethodCallInWholeFile.Companion);
+        QuickFixes.factories.put(DEPRECATED_ANNOTATION_METHOD_CALL, MigrateAnnotationMethodCallFix.Companion);
+        QuickFixes.factories.put(DEPRECATED_ANNOTATION_METHOD_CALL, MigrateAnnotationMethodCallInWholeFile.Companion);
 
         QuickFixes.factories.put(ENUM_ENTRY_USES_DEPRECATED_SUPER_CONSTRUCTOR, DeprecatedEnumEntrySuperConstructorSyntaxFix.Companion);
         QuickFixes.factories.put(ENUM_ENTRY_USES_DEPRECATED_SUPER_CONSTRUCTOR, DeprecatedEnumEntrySuperConstructorSyntaxFix.Companion.createWholeProjectFixFactory());
@@ -335,6 +336,8 @@ public class QuickFixRegistrar {
         QuickFixes.factories.put(DEPRECATED_SYMBOL_WITH_MESSAGE, DeprecatedSymbolUsageFix.Companion);
         QuickFixes.factories.put(DEPRECATED_SYMBOL_WITH_MESSAGE, DeprecatedSymbolUsageInWholeProjectFix.Companion);
         
-        QuickFixes.factories.put(ErrorsJvm.POSITIONED_VALUE_ARGUMENT_FOR_JAVA_ANNOTATION, ReplaceJavaAnnotationPositionedArgumentsFix.Companion);
+        QuickFixes.factories.put(POSITIONED_VALUE_ARGUMENT_FOR_JAVA_ANNOTATION, ReplaceJavaAnnotationPositionedArgumentsFix.Companion);
+
+        QuickFixes.factories.put(NO_REFLECTION_IN_CLASS_PATH, AddReflectionQuickFix.Companion);
     }
 }

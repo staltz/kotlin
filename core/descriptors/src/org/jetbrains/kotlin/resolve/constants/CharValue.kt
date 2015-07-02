@@ -20,19 +20,18 @@ import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationArgumentVisitor
 import org.jetbrains.kotlin.types.JetType
 
-public class CharValue(value: Char, canBeUsedInAnnotations: Boolean, pure: Boolean, usesVariableAsConstant: Boolean) : IntegerValueConstant<Char>(value, canBeUsedInAnnotations, pure, usesVariableAsConstant) {
+public class CharValue(
+        value: Char,
+        canBeUsedInAnnotations: Boolean,
+        pure: Boolean,
+        usesVariableAsConstant: Boolean
+) : IntegerValueConstant<Char>(value, canBeUsedInAnnotations, pure, usesVariableAsConstant) {
 
-    override fun getType(kotlinBuiltIns: KotlinBuiltIns): JetType {
-        return kotlinBuiltIns.getCharType()
-    }
+    override fun getType(kotlinBuiltIns: KotlinBuiltIns) = kotlinBuiltIns.getCharType()
 
-    override fun <R, D> accept(visitor: AnnotationArgumentVisitor<R, D>, data: D): R {
-        return visitor.visitCharValue(this, data)
-    }
+    override fun <R, D> accept(visitor: AnnotationArgumentVisitor<R, D>, data: D) = visitor.visitCharValue(this, data)
 
-    override fun toString(): String {
-        return java.lang.String.format("\\u%04X ('%s')", value as Int, getPrintablePart(value))
-    }
+    override fun toString() = java.lang.String.format("\\u%04X ('%s')", value as Int, getPrintablePart(value))
 
     private fun getPrintablePart(c: Char): String {
         when (c) {

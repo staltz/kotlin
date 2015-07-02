@@ -140,7 +140,9 @@ public interface DescriptorRenderer : Renderer<DeclarationDescriptor> {
                 ClassKind.INTERFACE -> "interface"
                 ClassKind.ENUM_CLASS -> "enum class"
                 ClassKind.OBJECT -> "object"
-                ClassKind.ANNOTATION_CLASS -> "annotation class"
+                // We do not want to print "annotation class" here because "annotation" is now an annotation itself
+                // and is printed as kotlin.annotation.annotation() before
+                ClassKind.ANNOTATION_CLASS -> "class"
                 ClassKind.ENUM_ENTRY -> "enum entry"
             }
         }

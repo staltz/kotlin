@@ -920,6 +920,12 @@ public class JetParsingTestGenerated extends AbstractJetParsingTest {
                     doParsingTest(fileName);
                 }
 
+                @TestMetadata("local.kt")
+                public void testLocal() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/options/local.kt");
+                    doParsingTest(fileName);
+                }
+
                 @TestMetadata("options.kt")
                 public void testOptions() throws Exception {
                     String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/options/options.kt");

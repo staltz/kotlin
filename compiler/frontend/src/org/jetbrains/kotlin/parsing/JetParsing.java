@@ -461,7 +461,7 @@ public class JetParsing extends AbstractJetParsing {
             else if (tryParseModifier(tokenConsumer)) {
                 // modifier advanced
             }
-            else if (annotationParsingMode.allowShortAnnotations && at(IDENTIFIER)) {
+            else if ((annotationParsingMode.allowShortAnnotations || at(ANNOTATION_KEYWORD)) && at(IDENTIFIER)) {
                 parseAnnotation(annotationParsingMode);
             }
             else {

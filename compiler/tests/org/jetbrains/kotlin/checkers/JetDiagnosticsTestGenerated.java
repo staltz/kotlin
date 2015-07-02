@@ -10109,6 +10109,39 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                     doTest(fileName);
                 }
             }
+
+            @TestMetadata("compiler/testData/diagnostics/tests/platformTypes/typeEnhancement")
+            @TestDataPath("$PROJECT_ROOT")
+            @RunWith(JUnit3RunnerWithInners.class)
+            public static class TypeEnhancement extends AbstractJetDiagnosticsTest {
+                public void testAllFilesPresentInTypeEnhancement() throws Exception {
+                    JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/diagnostics/tests/platformTypes/typeEnhancement"), Pattern.compile("^(.+)\\.kt$"), true);
+                }
+
+                @TestMetadata("annotatedTypeArguments.kt")
+                public void testAnnotatedTypeArguments() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/platformTypes/typeEnhancement/annotatedTypeArguments.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("overriddenExtensions.kt")
+                public void testOverriddenExtensions() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/platformTypes/typeEnhancement/overriddenExtensions.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("supertypeDifferentParameterNullability.kt")
+                public void testSupertypeDifferentParameterNullability() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/platformTypes/typeEnhancement/supertypeDifferentParameterNullability.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("supertypeDifferentReturnNullability.kt")
+                public void testSupertypeDifferentReturnNullability() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/platformTypes/typeEnhancement/supertypeDifferentReturnNullability.kt");
+                    doTest(fileName);
+                }
+            }
         }
 
         @TestMetadata("compiler/testData/diagnostics/tests/recovery")

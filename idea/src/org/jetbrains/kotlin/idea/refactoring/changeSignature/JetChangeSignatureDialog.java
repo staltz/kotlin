@@ -416,7 +416,7 @@ public class JetChangeSignatureDialog extends ChangeSignatureDialogBase<
                 getMethodName(),
                 myDefaultValueContext
         );
-        return changeInfo.getNewSignature(getMethodDescriptor().getOriginalPrimaryFunction());
+        return changeInfo.getNewSignature(getMethodDescriptor().getOriginalPrimaryCallable());
     }
 
     @Override
@@ -520,11 +520,8 @@ public class JetChangeSignatureDialog extends ChangeSignatureDialogBase<
         }
 
         String returnTypeText = returnTypeCodeFragment != null ? returnTypeCodeFragment.getText().trim() : "";
-        JetMethodDescriptor descriptor = methodDescriptor instanceof JetMutableMethodDescriptor
-                                         ? ((JetMutableMethodDescriptor) methodDescriptor).getOriginal()
-                                         : methodDescriptor;
         JetType returnType = getType((JetTypeCodeFragment) returnTypeCodeFragment);
-        return new JetChangeInfo(descriptor, methodName, returnType, returnTypeText,
+        return new JetChangeInfo(methodDescriptor.getOriginal(), methodName, returnType, returnTypeText,
                                  visibility, parameters, parametersModel.getReceiver(), defaultValueContext);
     }
 

@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package kotlin.reflect
+package kotlin.reflect.jvm.internal
 
-/**
- * Represents a callable entity, such as a function or a property.
- *
- * @param R return type of the callable.
- */
-public interface KCallable<out R> {
-    /**
-     * The name of this callable as it was declared in the source code.
-     */
-    public val name: String
+import kotlin.reflect.KParameter
 
-    /**
-     * Parameters required to make a call to this callable.
-     */
-    public val parameters: List<KParameter>
+class KParameterImpl : KParameter {
+    override val name: String
+        get() = throw UnsupportedOperationException()
+
 }

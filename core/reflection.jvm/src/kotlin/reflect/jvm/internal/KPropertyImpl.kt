@@ -32,6 +32,8 @@ interface KPropertyImpl<out R> : KProperty<R>, KCallableImpl<R> {
 
     interface Getter<out R> : KProperty.Getter<R>, KCallableImpl<R> {
         override val name: String get() = "<get-${property.name}>" // TODO: discuss, specify somewhere?, test
+
+        override val parameters: List<KParameter> get() = listOf() // TODO
     }
 }
 
@@ -43,5 +45,7 @@ interface KMutablePropertyImpl<R> : KMutableProperty<R>, KPropertyImpl<R> {
 
     interface Setter<R> : KMutableProperty.Setter<R>, KPropertyImpl.Accessor<R>, KCallableImpl<Unit> {
         override val name: String get() = "<set-${property.name}>"
+
+        override val parameters: List<KParameter> get() = listOf() // TODO
     }
 }

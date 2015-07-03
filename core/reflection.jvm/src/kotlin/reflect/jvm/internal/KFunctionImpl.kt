@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.resolve.scopes.JetScope
 import kotlin.jvm.internal.FunctionImpl
 import kotlin.reflect.KFunction
+import kotlin.reflect.KParameter
 import kotlin.reflect.KotlinReflectionInternalError
 
 open class KFunctionImpl protected constructor(
@@ -40,6 +41,8 @@ open class KFunctionImpl protected constructor(
 
     // TODO: test
     override val name: String get() = descriptor.getName().asString()
+
+    override val parameters: List<KParameter> get() = listOf() // TODO
 
     override fun getArity(): Int {
         // TODO: test?

@@ -19,6 +19,9 @@ package kotlin.jvm.internal;
 import kotlin.jvm.KotlinReflectionNotSupportedError;
 import kotlin.reflect.KDeclarationContainer;
 import kotlin.reflect.KFunction;
+import kotlin.reflect.KParameter;
+
+import java.util.List;
 
 public class FunctionReference extends FunctionImpl implements KFunction {
     private final int arity;
@@ -49,6 +52,10 @@ public class FunctionReference extends FunctionImpl implements KFunction {
     }
 
     public String getSignature() {
+        throw error();
+    }
+
+    public List<KParameter> getParameters() {
         throw error();
     }
 

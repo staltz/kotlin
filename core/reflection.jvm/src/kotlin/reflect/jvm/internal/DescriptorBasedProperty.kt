@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.serialization.deserialization.descriptors.Deserializ
 import org.jetbrains.kotlin.serialization.jvm.JvmProtoBuf
 import java.lang.reflect.Field
 import java.lang.reflect.Method
+import kotlin.reflect.KParameter
 
 abstract class DescriptorBasedProperty protected constructor(
         container: KCallableContainerImpl,
@@ -53,6 +54,8 @@ abstract class DescriptorBasedProperty protected constructor(
     protected val descriptor: PropertyDescriptor by ReflectProperties.lazySoft<PropertyDescriptor>(descriptorInitialValue) {
         container.findPropertyDescriptor(name, signature)
     }
+
+    public /* override */ val parameters: List<KParameter> get() = listOf() // TODO
 
     // null if this is a property declared in a foreign (Java) class
     private val protoData: PropertyProtoData? by ReflectProperties.lazyWeak {

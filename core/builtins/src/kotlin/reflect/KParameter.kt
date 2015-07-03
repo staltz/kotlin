@@ -17,18 +17,14 @@
 package kotlin.reflect
 
 /**
- * Represents a callable entity, such as a function or a property.
- *
- * @param R return type of the callable.
+ * Represents a parameter passed to a function or a property getter/setter,
+ * including `this` and extension receiver parameters.
  */
-public interface KCallable<out R> {
+public interface KParameter {
     /**
-     * The name of this callable as it was declared in the source code.
+     * Name of this parameter as it was declared in the source code.
+     * If this is a `this` parameter, the returned name is "<this>".
+     * If this is an extension receiver parameter, the returned name is "<extension>".
      */
     public val name: String
-
-    /**
-     * Parameters required to make a call to this callable.
-     */
-    public val parameters: List<KParameter>
 }

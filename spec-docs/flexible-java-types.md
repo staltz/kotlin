@@ -255,7 +255,7 @@ Enhancement rules (the result of their application is called a *propagated signa
  - for parts other than return type (which may be covariantly overridden) if there are conflicts (`@Nullable` together with `@NotNull` or
    `@ReadOnly` together with `@Mutable`), discard the respective annotations and issue appropriate warnings
  - for return types (full if the type from override is `~~`-equivalent to all from supertypes, and only 0-index (see below) otherwise)):
-     - fist, take annotations from supertypes, and among them: if there's `@Nullable`, discard `@NotNull`, if there's `@Mutable` discard `@ReadOnly`
+     - fist, take annotations from supertypes, and among them: if there's `@NotNull`, discard `@Nullable`, if there's `@Mutable` discard `@ReadOnly`
      - then if in the subtype there's `@Nullable` and in the supertype there's `@NotNull`, discard the nullability annotations (analogously,
        for mutability annotations)
  - apply the annotations and check compatibility with all parts from supertypes, if there's any incompatibility, issue a warning and take

@@ -179,6 +179,7 @@ class GenericFunction(val signature: String, val keyword: String = "fun") : Comp
                 answer.append(when (token) {
                                   "SELF" -> if (receiver == "Array<T>") "Array<out T>" else receiver
                                   "PRIMITIVE" -> primitive?.name() ?: token
+                                  "ARRAY" -> primitive?.let { it.name + "Array" } ?: "Array<T>"
                                   "SUM" -> {
                                       when (primitive) {
                                           PrimitiveType.Byte, PrimitiveType.Short, PrimitiveType.Char -> "Int"

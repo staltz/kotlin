@@ -24,7 +24,7 @@ public class DoubleValue(
         value: Double,
         canBeUsedInAnnotations: Boolean,
         usesVariableAsConstant: Boolean
-) : CompileTimeConstant<Double>(value, canBeUsedInAnnotations, false, usesVariableAsConstant) {
+) : CompileTimeConstant<Double>(value, CompileTimeConstant.Parameters(canBeUsedInAnnotations, false, usesVariableAsConstant)) {
 
     override fun getType(kotlinBuiltIns: KotlinBuiltIns) = kotlinBuiltIns.getDoubleType()
 

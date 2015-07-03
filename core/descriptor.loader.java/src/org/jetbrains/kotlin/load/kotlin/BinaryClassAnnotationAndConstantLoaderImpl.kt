@@ -66,8 +66,7 @@ public class BinaryClassAnnotationAndConstantLoaderImpl(
         }
 
         val compileTimeConstant = createCompileTimeConstant(
-                normalizedValue, canBeUsedInAnnotation = true, isPureIntConstant = true,
-                usesVariableAsConstant = true, expectedType = null
+                normalizedValue, CompileTimeConstant.Parameters(true, true, true)
         )
         return compileTimeConstant
     }
@@ -141,9 +140,13 @@ public class BinaryClassAnnotationAndConstantLoaderImpl(
             }
 
             private fun createConstant(name: Name?, value: Any?): CompileTimeConstant<*> {
-                return createCompileTimeConstant(value, canBeUsedInAnnotation = true, isPureIntConstant = false,
-                                                 usesVariableAsConstant = false, expectedType = null)
-                       ?: ErrorValue.create("Unsupported annotation argument: $name")
+                return createCompileTimeConstant(
+                        value,
+                        CompileTimeConstant.Parameters(
+                                canBeUsedInAnnotation = true,
+                                isPure = false,
+                                usesVariableAsConstant = false)
+                ) ?: ErrorValue.create("Unsupported annotation argument: $name")
             }
 
             private fun setArgumentValueByName(name: Name, argumentValue: CompileTimeConstant<*>) {

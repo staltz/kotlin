@@ -100,7 +100,7 @@ class LazyJavaAnnotationDescriptor(
 
     private fun resolveAnnotationArgument(argument: JavaAnnotationArgument?): CompileTimeConstant<*>? {
         return when (argument) {
-            is JavaLiteralAnnotationArgument -> createCompileTimeConstant(argument.value, true, false, false, null)
+            is JavaLiteralAnnotationArgument -> createCompileTimeConstant(argument.value, CompileTimeConstant.Parameters(true, false, false))
             is JavaEnumValueAnnotationArgument -> resolveFromEnumValue(argument.resolve())
             is JavaArrayAnnotationArgument -> resolveFromArray(argument.name ?: DEFAULT_ANNOTATION_MEMBER_NAME, argument.getElements())
             is JavaAnnotationAsAnnotationArgument -> resolveFromAnnotation(argument.getAnnotation())

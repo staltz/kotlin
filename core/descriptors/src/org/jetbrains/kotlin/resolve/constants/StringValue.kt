@@ -24,7 +24,7 @@ public class StringValue(
         value: String,
         canBeUsedInAnnotations: Boolean,
         usesVariableAsConstant: Boolean
-) : CompileTimeConstant<String>(value, canBeUsedInAnnotations, false, usesVariableAsConstant) {
+) : CompileTimeConstant<String>(value, CompileTimeConstant.Parameters(canBeUsedInAnnotations, false, usesVariableAsConstant)) {
 
     override fun getType(kotlinBuiltIns: KotlinBuiltIns) = kotlinBuiltIns.getStringType()
 

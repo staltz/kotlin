@@ -24,7 +24,7 @@ public class ArrayValue(
         value: List<CompileTimeConstant<*>>,
         private val type: JetType,
         usesVariableAsConstant: Boolean
-) : CompileTimeConstant<List<CompileTimeConstant<*>>>(value, true, false, usesVariableAsConstant) {
+) : CompileTimeConstant<List<CompileTimeConstant<*>>>(value, CompileTimeConstant.Parameters(true, false, usesVariableAsConstant)) {
 
     init {
         assert(KotlinBuiltIns.isArray(type) || KotlinBuiltIns.isPrimitiveArray(type)) { "Type should be an array, but was " + type + ": " + value }

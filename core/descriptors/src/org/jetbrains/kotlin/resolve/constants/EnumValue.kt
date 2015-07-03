@@ -26,7 +26,7 @@ import org.jetbrains.kotlin.utils.sure
 public class EnumValue(
         value: ClassDescriptor,
         usesVariableAsConstant: Boolean
-) : CompileTimeConstant<ClassDescriptor>(value, true, false, usesVariableAsConstant) {
+) : CompileTimeConstant<ClassDescriptor>(value, CompileTimeConstant.Parameters(true, false, usesVariableAsConstant)) {
 
     override fun getType(kotlinBuiltIns: KotlinBuiltIns) = getType()
 

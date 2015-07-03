@@ -24,7 +24,7 @@ public class FloatValue(
         value: Float,
         canBeUsedInAnnotations: Boolean,
         usesVariableAsConstant: Boolean
-) : CompileTimeConstant<Float>(value, canBeUsedInAnnotations, false, usesVariableAsConstant) {
+) : CompileTimeConstant<Float>(value, CompileTimeConstant.Parameters(canBeUsedInAnnotations, false, usesVariableAsConstant)) {
 
     override fun getType(kotlinBuiltIns: KotlinBuiltIns) = kotlinBuiltIns.getFloatType()
 

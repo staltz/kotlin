@@ -68,12 +68,13 @@ public class AnnotationDeserializer(private val module: ModuleDescriptor) {
             value: Value,
             nameResolver: NameResolver
     ): CompileTimeConstant<*> {
+        val parameters = CompileTimeConstant.Parameters(true, true, true)
         val result = when (value.getType()) {
-            Type.BYTE -> ByteValue(value.getIntValue().toByte(), true, true, true)
-            Type.CHAR -> CharValue(value.getIntValue().toChar(), true, true, true)
-            Type.SHORT -> ShortValue(value.getIntValue().toShort(), true, true, true)
-            Type.INT -> IntValue(value.getIntValue().toInt(), true, true, true)
-            Type.LONG -> LongValue(value.getIntValue(), true, true, true)
+            Type.BYTE -> ByteValue(value.getIntValue().toByte(), parameters)
+            Type.CHAR -> CharValue(value.getIntValue().toChar(), parameters)
+            Type.SHORT -> ShortValue(value.getIntValue().toShort(), parameters)
+            Type.INT -> IntValue(value.getIntValue().toInt(), parameters)
+            Type.LONG -> LongValue(value.getIntValue(), parameters)
             Type.FLOAT -> FloatValue(value.getFloatValue(), true, true)
             Type.DOUBLE -> DoubleValue(value.getDoubleValue(), true, true)
             Type.BOOLEAN -> BooleanValue(value.getIntValue() != 0L, true, true)

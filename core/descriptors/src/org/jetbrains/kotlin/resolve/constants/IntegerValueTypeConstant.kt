@@ -27,7 +27,7 @@ public class IntegerValueTypeConstant(
         value: Number,
         canBeUsedInAnnotations: Boolean,
         usesVariableAsConstant: Boolean
-) : IntegerValueConstant<Number>(value, canBeUsedInAnnotations, true, usesVariableAsConstant) {
+) : IntegerValueConstant<Number>(value, CompileTimeConstant.Parameters(canBeUsedInAnnotations, true, usesVariableAsConstant)) {
 
     private val typeConstructor = IntegerValueTypeConstructor(value.toLong())
 

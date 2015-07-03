@@ -1,0 +1,3 @@
+package
+
+public fun </*0*/ T> arrayListOf(/*0*/ vararg values: T /*kotlin.Array<out T>*/): java.util.ArrayList<T>

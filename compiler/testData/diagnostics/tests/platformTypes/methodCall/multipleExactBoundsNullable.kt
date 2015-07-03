@@ -15,11 +15,11 @@ interface WithFoo {
 
 fun <M2: WithFoo> foo(delegateResolver: ResolverForProject<M2?>): ResolverForProject<M2> {
     val descriptorByModule = HashMap<M2, String>()
-    val result = ResolverForProjectImpl(descriptorByModule, delegateResolver)
-    result.exposeM.foo() // M is not M2?
-    result.exposeM?.foo() // no warning, M is not M2, hense M is M2!
+    val result = <!TYPE_INFERENCE_CONFLICTING_SUBSTITUTIONS!>ResolverForProjectImpl<!>(descriptorByModule, delegateResolver)
+    <!DEBUG_INFO_ELEMENT_WITH_ERROR_TYPE!>result<!>.<!DEBUG_INFO_ELEMENT_WITH_ERROR_TYPE!>exposeM<!>.<!DEBUG_INFO_ELEMENT_WITH_ERROR_TYPE!>foo<!>() // M is not M2?
+    <!DEBUG_INFO_ELEMENT_WITH_ERROR_TYPE!>result<!>.<!DEBUG_INFO_ELEMENT_WITH_ERROR_TYPE!>exposeM<!>?.<!DEBUG_INFO_ELEMENT_WITH_ERROR_TYPE!>foo<!>() // no warning, M is not M2, hense M is M2!
 
-    return ResolverForProjectImpl(descriptorByModule, delegateResolver) // another bound check
+    return <!TYPE_INFERENCE_CONFLICTING_SUBSTITUTIONS!>ResolverForProjectImpl<!>(descriptorByModule, delegateResolver) // another bound check
 }
 
 // HashMap<M2, String> :< Map<M, String> => M = M2!

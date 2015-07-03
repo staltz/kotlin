@@ -83,11 +83,13 @@ private val IMPLEMENTING_MARK: Icon = AllIcons.Gutter.ImplementingMethod
 private val OVERRIDDEN_MARK: Icon = AllIcons.Gutter.OverridenMethod
 private val IMPLEMENTED_MARK: Icon = AllIcons.Gutter.ImplementedMethod
 
+
+
 private val SUBCLASSED_CLASS = MarkerType(
-        { getPsiClass(it)?.let { MarkerType.getSubclassedClassTooltip(it) } },
+        { getPsiClass(it)?.let { MarkerTypeUtil.getSubclassedClassTooltip(it) } },
         object : LineMarkerNavigator() {
             override fun browse(e: MouseEvent?, element: PsiElement?) {
-                getPsiClass(element)?.let { MarkerType.navigateToSubclassedClass(e, it) }
+                getPsiClass(element)?.let { MarkerTypeUtil.navigateToSubclassedClass(e, it) }
             }
         })
 

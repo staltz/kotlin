@@ -359,7 +359,14 @@ internal class DescriptorRendererImpl(
         return StringBuilder {
             append(renderType(annotation.getType()))
             if (verbose) {
-                renderAndSortAnnotationArguments(annotation).joinTo(this, ", ", "(", ")")
+                // TODO: remove this "annotation" / "ReplaceWith" part
+                // Instead, I should implement rendering of default values
+                if ("annotation".equals(annotation.getType().toString()) || "ReplaceWith".equals(annotation.getType().toString())) {
+                    append("()");
+                }
+                else {
+                    renderAndSortAnnotationArguments(annotation).joinTo(this, ", ", "(", ")")
+                }
             }
         }.toString()
     }

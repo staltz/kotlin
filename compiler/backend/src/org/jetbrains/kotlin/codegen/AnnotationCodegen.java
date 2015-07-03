@@ -320,6 +320,24 @@ public abstract class AnnotationCodegen {
 
     @NotNull
     private RetentionPolicy getRetentionPolicy(@NotNull Annotated descriptor) {
+        AnnotationDescriptor kotlinAnnotation = descriptor.getAnnotations().findAnnotation(KotlinBuiltIns.FQ_NAMES.annotation);
+        if (kotlinAnnotation != null) {
+            Collection<CompileTimeConstant<?>> valueArguments = kotlinAnnotation.getAllValueArguments().values();
+            for (CompileTimeConstant<?> valueArgument: valueArguments) {
+                if (valueArgument instanceof EnumValue) {
+                    ClassDescriptor enumEntry = ((EnumValue) valueArgument).getValue();
+                    JetType classObjectType = getClassObjectType(enumEntry);
+                    if (classObjectType != null) {
+                        if ("kotlin/annotation/AnnotationRetention".equals(typeMapper.mapType(classObjectType).getInternalName())) {
+                            String entryName = enumEntry.getName().asString();
+                            if (entryName.contains("BINARY")) return RetentionPolicy.CLASS;
+                            if (entryName.contains("SOURCE")) return RetentionPolicy.SOURCE;
+                            if (entryName.contains("RUNTIME")) return RetentionPolicy.RUNTIME;
+                        }
+                    }
+                }
+            }
+        }
         AnnotationDescriptor retentionAnnotation = descriptor.getAnnotations().findAnnotation(new FqName(Retention.class.getName()));
         if (retentionAnnotation != null) {
             Collection<CompileTimeConstant<?>> valueArguments = retentionAnnotation.getAllValueArguments().values();
@@ -337,7 +355,7 @@ public abstract class AnnotationCodegen {
             }
         }
 
-        return RetentionPolicy.CLASS;
+        return RetentionPolicy.RUNTIME;
     }
 
     @NotNull

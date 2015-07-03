@@ -31,7 +31,7 @@ public class CharValue(
 
     override fun <R, D> accept(visitor: AnnotationArgumentVisitor<R, D>, data: D) = visitor.visitCharValue(this, data)
 
-    override fun toString() = java.lang.String.format("\\u%04X ('%s')", value, getPrintablePart(value))
+    override fun toString() = java.lang.String.format("\\u%04X ('%s')", value.toInt(), getPrintablePart(value))
 
     private fun getPrintablePart(c: Char): String {
         when (c) {

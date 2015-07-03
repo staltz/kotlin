@@ -119,6 +119,13 @@ public abstract class AnnotationCodegen {
                 generateNullabilityAnnotation(descriptor.getReturnType(), annotationDescriptorsAlreadyPresent);
             }
         }
+        if (annotated instanceof ClassDescriptor) {
+            ClassDescriptor classDescriptor = (ClassDescriptor) annotated;
+            if (classDescriptor.getKind() == ClassKind.ANNOTATION_CLASS) {
+                // Generate java.lang.retention!
+                generateRetentionAnnotation(classDescriptor, annotationDescriptorsAlreadyPresent);
+            }
+        }
     }
 
     private static boolean isInvisibleFromTheOutside(@Nullable DeclarationDescriptor descriptor) {
@@ -158,6 +165,16 @@ public abstract class AnnotationCodegen {
         Class<?> annotationClass = isNullableType ? Nullable.class : NotNull.class;
 
         generateAnnotationIfNotPresent(annotationDescriptorsAlreadyPresent, annotationClass);
+    }
+
+    private void generateRetentionAnnotation(@NotNull ClassDescriptor classDescriptor, @NotNull Set<String> annotationDescriptorsAlreadyPresent) {
+        RetentionPolicy policy = getRetentionPolicy(classDescriptor);
+        if (policy == RetentionPolicy.CLASS) return;
+        String descriptor = Type.getType(Retention.class).getDescriptor();
+        if (annotationDescriptorsAlreadyPresent.contains(descriptor)) return;
+        AnnotationVisitor visitor = visitAnnotation(descriptor, true);
+        visitor.visitEnum("value", Type.getType(RetentionPolicy.class).getDescriptor(), policy.name());
+        visitor.visitEnd();
     }
 
     private void generateAnnotationIfNotPresent(Set<String> annotationDescriptorsAlreadyPresent, Class<?> annotationClass) {

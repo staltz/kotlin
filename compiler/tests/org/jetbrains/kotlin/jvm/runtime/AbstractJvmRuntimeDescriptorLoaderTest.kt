@@ -44,6 +44,7 @@ import org.jetbrains.kotlin.test.util.RecursiveDescriptorComparator.Configuratio
 import org.jetbrains.kotlin.types.TypeSubstitutor
 import org.jetbrains.kotlin.utils.sure
 import java.io.File
+import java.lang.annotation.Retention
 import java.net.URLClassLoader
 import java.util.regex.Pattern
 
@@ -53,10 +54,7 @@ public abstract class AbstractJvmRuntimeDescriptorLoaderTest : TestCaseWithTmpdi
             withDefinedIn = false
             excludedAnnotationClasses = (listOf(
                     ExpectedLoadErrorsUtil.ANNOTATION_CLASS_NAME,
-                    // TODO: add these annotations when they are retained at runtime
-                    "kotlin.deprecated",
-                    "kotlin.data",
-                    "kotlin.inline"
+                    "java.lang.annotation.Retention"
             ).map { FqName(it) } + JvmAnnotationNames.ANNOTATIONS_COPIED_TO_TYPES).toSet()
             overrideRenderingPolicy = OverrideRenderingPolicy.RENDER_OPEN_OVERRIDE
             parameterNameRenderingPolicy = ParameterNameRenderingPolicy.NONE
@@ -67,6 +65,7 @@ public abstract class AbstractJvmRuntimeDescriptorLoaderTest : TestCaseWithTmpdi
 
     // NOTE: this test does a dirty hack of text substitution to make all annotations defined in source code retain at runtime.
     // Specifically each "annotation class" in Kotlin sources is replaced by "Retention(RUNTIME) annotation class", and the same in Java
+    // UPDATE: now the dirty hack is performed only for Java classes and not for Kotlin
     protected fun doTest(fileName: String) {
         val file = File(fileName)
         val text = FileUtil.loadFile(file, true)
@@ -166,10 +165,7 @@ public abstract class AbstractJvmRuntimeDescriptorLoaderTest : TestCaseWithTmpdi
     }
 
     private fun addRuntimeRetentionToKotlinSource(text: String): String {
-        return text.replace(
-                "annotation class",
-                "@[java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)] annotation class"
-        )
+        return text
     }
 
     private fun addRuntimeRetentionToJavaSource(text: String): String {

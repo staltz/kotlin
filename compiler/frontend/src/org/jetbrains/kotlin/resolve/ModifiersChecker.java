@@ -151,7 +151,6 @@ public class ModifiersChecker {
             checkVarargsModifiers(modifierListOwner, descriptor);
         }
         checkPlatformNameApplicability(descriptor);
-        checkPublicFieldApplicability(descriptor);
         checkAnnotationsTargetApplicability(descriptor);
         runDeclarationCheckers(modifierListOwner, descriptor);
     }
@@ -166,7 +165,6 @@ public class ModifiersChecker {
         reportIllegalModalityModifiers(modifierListOwner);
         reportIllegalVisibilityModifiers(modifierListOwner);
         checkPlatformNameApplicability(descriptor);
-        checkPublicFieldApplicability(descriptor);
         checkAnnotationsTargetApplicability(descriptor);
         runDeclarationCheckers(modifierListOwner, descriptor);
     }
@@ -326,24 +324,6 @@ public class ModifiersChecker {
 
     }
 
-    private void checkPublicFieldApplicability(@NotNull DeclarationDescriptor descriptor) {
-        AnnotationDescriptor annotation = AnnotationsPackage.findPublicFieldAnnotation(descriptor);
-        if (annotation == null) return;
-
-        JetAnnotationEntry annotationEntry = trace.get(BindingContext.ANNOTATION_DESCRIPTOR_TO_PSI_ELEMENT, annotation);
-        if (annotationEntry == null) return;
-
-        if (!(descriptor instanceof PropertyDescriptor)) {
-            trace.report(INAPPLICABLE_PUBLIC_FIELD.on(annotationEntry));
-            return;
-        }
-
-        PropertyDescriptor propertyDescriptor = (PropertyDescriptor) descriptor;
-        if (Boolean.FALSE.equals(trace.getBindingContext().get(BindingContext.BACKING_FIELD_REQUIRED, propertyDescriptor))) {
-            trace.report(INAPPLICABLE_PUBLIC_FIELD.on(annotationEntry));
-        }
-    }
-
     private void checkAnnotationsTargetApplicability(@NotNull DeclarationDescriptor descriptor) {
         Iterator<AnnotationDescriptor> annotationIterator = descriptor.getAnnotations().getTargetedAnnotations().iterator();
         while (annotationIterator.hasNext()) {
@@ -471,7 +451,7 @@ public class ModifiersChecker {
 
     private void runDeclarationCheckers(@NotNull JetDeclaration declaration, @NotNull DeclarationDescriptor descriptor) {
         for (DeclarationChecker checker : additionalCheckerProvider.getDeclarationCheckers()) {
-            checker.check(declaration, descriptor, trace);
+            checker.check(declaration, descriptor, trace, trace.getBindingContext());
         }
     }
 

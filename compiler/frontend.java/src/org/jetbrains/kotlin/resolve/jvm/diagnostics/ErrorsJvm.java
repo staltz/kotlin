@@ -58,6 +58,9 @@ public interface ErrorsJvm {
 
     DiagnosticFactory0<JetElement> INAPPLICABLE_PUBLIC_FIELD = DiagnosticFactory0.create(ERROR);
 
+    DiagnosticFactory0<JetElement> INAPPLICABLE_FIELD_TARGET = DiagnosticFactory0.create(ERROR);
+    DiagnosticFactory0<JetElement> FIELD_TARGET_NO_BACKING_FIELD = DiagnosticFactory0.create(ERROR);
+
     // TODO: make this a warning
     DiagnosticFactory1<JetExpression, JetExpression> NO_REFLECTION_IN_CLASS_PATH = DiagnosticFactory1.create(ERROR);
 

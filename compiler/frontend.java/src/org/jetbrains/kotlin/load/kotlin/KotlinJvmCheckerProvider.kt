@@ -18,8 +18,9 @@ package org.jetbrains.kotlin.load.kotlin
 
 import org.jetbrains.kotlin.cfg.WhenChecker
 import org.jetbrains.kotlin.descriptors.*
-import org.jetbrains.kotlin.diagnostics.DiagnosticSink
-import org.jetbrains.kotlin.diagnostics.Errors
+import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
+import org.jetbrains.kotlin.descriptors.annotations.AnnotationTarget
+import org.jetbrains.kotlin.diagnostics.*
 import org.jetbrains.kotlin.lexer.JetTokens
 import org.jetbrains.kotlin.load.java.lazy.types.isMarkedNotNull
 import org.jetbrains.kotlin.load.java.lazy.types.isMarkedNullable
@@ -56,7 +57,8 @@ public object KotlinJvmCheckerProvider : AdditionalCheckerProvider(
                                                ReifiedTypeParameterAnnotationChecker(),
                                                NativeFunChecker(),
                                                OverloadsAnnotationChecker(),
-                                               PublicFieldAnnotationChecker()),
+                                               PublicFieldAnnotationChecker(),
+                                               TargetedAnnotationChecker()),
 
         additionalCallCheckers = listOf(NeedSyntheticChecker(), JavaAnnotationCallChecker(),
                                         JavaAnnotationMethodCallChecker(), TraitDefaultMethodCallChecker()),
@@ -174,6 +176,30 @@ public class PublicFieldAnnotationChecker: DeclarationChecker {
         }
         else if (!bindingContext.get<PropertyDescriptor, Boolean>(BindingContext.BACKING_FIELD_REQUIRED, descriptor)) {
             report()
+        }
+    }
+}
+
+public class TargetedAnnotationChecker : DeclarationChecker {
+    override fun check(declaration: JetDeclaration, descriptor: DeclarationDescriptor, diagnosticHolder: DiagnosticSink, bindingContext: BindingContext) {
+        for (annotation in descriptor.getAnnotations().getTargetedAnnotations()) {
+            fun report(diagnostic: DiagnosticFactory0<JetElement>) {
+                val annotationEntry = bindingContext.get<AnnotationDescriptor, JetAnnotationEntry>(BindingContext.ANNOTATION_DESCRIPTOR_TO_PSI_ELEMENT, annotation) ?: return
+                diagnosticHolder.report(diagnostic.on(annotationEntry))
+            }
+
+            val target = annotation.getTarget()
+
+            if (AnnotationTarget.FIELD === target) {
+                if (descriptor !is PropertyDescriptor) {
+                    report(ErrorsJvm.INAPPLICABLE_FIELD_TARGET)
+                    continue
+                }
+
+                if (!bindingContext.get(BindingContext.BACKING_FIELD_REQUIRED, descriptor)) {
+                    report(ErrorsJvm.FIELD_TARGET_NO_BACKING_FIELD)
+                }
+            }
         }
     }
 }

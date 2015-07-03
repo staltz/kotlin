@@ -70,6 +70,9 @@ public class DefaultErrorMessagesJvm implements DefaultErrorMessages.Extension {
         MAP.put(ErrorsJvm.WHEN_ENUM_CAN_BE_NULL_IN_JAVA, "Enum argument can be null in Java, but exhaustive when contains no null branch");
 
         MAP.put(ErrorsJvm.INAPPLICABLE_PUBLIC_FIELD, "publicField annotation is not applicable to this declaration");
+
+        MAP.put(ErrorsJvm.INAPPLICABLE_FIELD_TARGET, "''@field:'' annotations could be applied only to the property declarations");
+        MAP.put(ErrorsJvm.FIELD_TARGET_NO_BACKING_FIELD, "''@field:'' annotations could not be applied to the property without a backing field");
     }
 
     @NotNull

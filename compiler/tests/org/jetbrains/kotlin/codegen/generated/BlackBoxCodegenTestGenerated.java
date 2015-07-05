@@ -292,6 +292,12 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
             doTest(fileName);
         }
 
+        @TestMetadata("intrinsicAny.kt")
+        public void testIntrinsicAny() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/binaryOp/intrinsicAny.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("intrinsicNullable.kt")
         public void testIntrinsicNullable() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/binaryOp/intrinsicNullable.kt");
